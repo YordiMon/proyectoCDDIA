@@ -1,35 +1,33 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import ListaEspera from './pages/ListaEspera';
+import Consultas from './pages/Consultas';
+import Pacientes from './pages/Pacientes';
+import Perfil from './pages/Perfil';
+import Estadisticas from './pages/Estadisticas';
+import Ajustes from './pages/Ajustes';
 
-function App(): React.JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-
+function App() {
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
+    <Router>
+      <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
+        {/* MENÚ LATERAL FIJO */}
+        <Sidebar />
+
+        {/* CONTENIDO VARIABLE */}
+        <main style={{ flex: 1, padding: '20px', overflowY: 'auto', backgroundColor: '#fdfdfdff' }}>
+          <Routes>
+            <Route path="/" element={<ListaEspera />} />
+            <Route path="/consultas" element={<Consultas />} />
+            <Route path="/pacientes" element={<Pacientes />} />
+            <Route path="/perfil" element={<Perfil />} />
+            <Route path="/estadisticas" element={<Estadisticas />} />
+            <Route path="/ajustes" element={<Ajustes />} />
+          </Routes>
+        </main>
       </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;

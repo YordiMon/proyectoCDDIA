@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+
+  font-family: "Segoe UI";
+  
+  -webkit-font-smoothing: antialiased;
+  color: #333;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
