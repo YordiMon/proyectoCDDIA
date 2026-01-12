@@ -5,12 +5,12 @@ import React from 'react'
 
 
 function App(): React.JSX.Element {
+  //const navigate = useNavigate(){
   //const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
     // <title>App Clinica</title>
 
-
-}
+    return (
     <div className="app-consulta">
       <head>
         <h1>Registar paciente</h1>

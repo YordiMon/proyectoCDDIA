@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import './Sidebar.css';
 
-export default function Sidebar() {
+export default function Sidebar(): React.ReactNode {
   const location = useLocation();
 
   const menuItems = [
