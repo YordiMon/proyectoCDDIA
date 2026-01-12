@@ -1,7 +1,7 @@
 export default function Perfil() {
   return (
     <div>
-      <h1>Perfil</h1>
+      <p>Perfil</p>
       {/* Tu HTML irá aquí */}
     </div>
   );

@@ -1,7 +1,7 @@
 export default function Consultas() {
   return (
     <div>
-      <h1>Consultas</h1>
+      <p>Consultas</p>
       {/* Tu HTML irá aquí */}
     </div>
   );
