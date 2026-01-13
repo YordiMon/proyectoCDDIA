@@ -1,7 +1,7 @@
 export default function Pacientes() {
   return (
     <div>
-      <h1>Pacientes</h1>
+      <p>Pacientes</p>
       {/* Tu HTML irá aquí */}
     </div>
   );

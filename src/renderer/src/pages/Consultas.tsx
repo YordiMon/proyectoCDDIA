@@ -32,6 +32,7 @@ export default function Consultas() {
   }, [])
 
   return (
+
     <div className="consulta-container">
       <header>
         <h1>Consulta</h1>
@@ -225,6 +226,8 @@ export default function Consultas() {
         <h4>Observaciones</h4>
         <div className="field"><textarea rows={4} /></div>
       </section>
+=======
+
     </div>
   )
 }

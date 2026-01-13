@@ -1,7 +1,7 @@
 export default function Ajustes() {
   return (
     <div>
-      <h1>Ajustes</h1>
+      <p>Ajustes</p>
       {/* Tu HTML irá aquí */}
     </div>
   );
