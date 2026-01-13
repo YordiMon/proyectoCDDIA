@@ -10,8 +10,25 @@ export default function Consultas() {
 
   useEffect(() => {
     const now = new Date()
-    const local = now.toISOString().slice(0, 16)
-    setFechaEvaluacion(local)
+    function formatToTimeZone(date: Date, timeZone: string) {
+      const dtf = new Intl.DateTimeFormat('en-GB', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+      const parts = dtf.formatToParts(date).reduce((acc, p) => {
+        acc[p.type] = p.value
+        return acc
+      }, {} as Record<string, string>)
+      return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`
+    }
+
+    const hermosillo = formatToTimeZone(now, 'America/Hermosillo')
+    setFechaEvaluacion(hermosillo)
   }, [])
 
   return (
@@ -78,12 +95,7 @@ export default function Consultas() {
 
         <div className="field">
           <label>Fecha de evaluación</label>
-          <input
-            type="datetime-local"
-            name="fechaEvaluacion"
-            value={fechaEvaluacion}
-            readOnly
-          />
+          <input type="datetime-local" name="fechaEvaluacion" value={fechaEvaluacion} readOnly />
         </div>
 
         <h4>Historial médico</h4>
@@ -95,8 +107,8 @@ export default function Consultas() {
             <label><input type="radio" checked={enfermedades} onChange={() => setEnfermedades(true)} /> Sí</label>
           </div>
           {enfermedades && (
-            <textarea name="enfermedades" rows={4} />
-          )}
+            <textarea name="enfermedades" rows={4} /> 
+            )}
         </div>
 
         <div className="field">
@@ -105,9 +117,7 @@ export default function Consultas() {
             <label><input type="radio" checked={!alergias} onChange={() => setAlergias(false)} /> No</label>
             <label><input type="radio" checked={alergias} onChange={() => setAlergias(true)} /> Sí</label>
           </div>
-          {alergias && (
-            <textarea name="alergias" rows={4} />
-          )}
+          {alergias && ( <textarea name="alergias" rows={4} /> )}
         </div>
 
         <div className="field">
@@ -116,9 +126,7 @@ export default function Consultas() {
             <label><input type="radio" checked={!cirugias} onChange={() => setCirugias(false)} /> No</label>
             <label><input type="radio" checked={cirugias} onChange={() => setCirugias(true)} /> Sí</label>
           </div>
-          {cirugias && (
-            <textarea name="cirugias" rows={4} />
-          )}
+          {cirugias && ( <textarea name="cirugias" rows={4} /> )}
         </div>
 
         <h4>Motivo de consulta</h4>
