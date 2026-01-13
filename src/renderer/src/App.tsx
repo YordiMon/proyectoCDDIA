@@ -6,6 +6,7 @@ import Pacientes from './pages/Pacientes';
 import Perfil from './pages/Perfil';
 import Estadisticas from './pages/Estadisticas';
 import Ajustes from './pages/Ajustes';
+import AñadirPaciente from './pages/AñadirPaciente';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/estadisticas" element={<Estadisticas />} />
             <Route path="/ajustes" element={<Ajustes />} />
+            <Route path="/añadirpaciente" element={<AñadirPaciente />} />
           </Routes>
         </main>
       </div>

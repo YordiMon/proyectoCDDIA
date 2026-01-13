@@ -2,8 +2,24 @@
 
 .contenedor-espera {
   padding: 10px;
+  position: relative;
+  min-height: 100vh;
 }
 
+/* --- NUEVO: Resumen Superior --- */
+.texto-resumen {
+  margin-bottom: 20px;
+  color: #555;
+  font-size: 1rem;
+}
+
+.contador-azul {
+  color: #1976d2;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+/* --- TABLA (Tu diseño original) --- */
 .tabla-pacientes {
   width: 100%;
   border-collapse: collapse;
@@ -12,70 +28,43 @@
   table-layout: fixed;
 }
 
+/* Configuración de Columnas (Tu diseño original) */
 .col-afiliacion { width: 12%; }
 .col-nombre { width: auto; }
 .col-creado { width: 10%; }
 .col-estado { width: 12%; }
+
 .col-acciones { 
-  width: 160px; 
-  border-left: 2px solid #eee; /* Borde izquierdo de la columna */
+  width: 220px; 
+  border-left: 2px solid #eee;
 }
 
-/* Estructura interna de la columna acciones */
 .contenedor-acciones {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding-left: 5px;
 }
 
 .grupo-acciones {
   display: flex;
   gap: 8px;
+  align-items: center;
+}
+
+.grupo-principal {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .divisor-interno {
   width: 1px;
   height: 20px;
-  background-color: #ddd; /* Línea divisoria solicitada */
+  background-color: #ddd;
 }
 
-/* Estilo Base de los Botones */
-.btn-accion {
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  background-color: transparent; /* Fondo inicial transparente */
-  transition: all 0.2s ease;
-}
-
-/* Colores por Default (Iconos) */
-.btn-atender { color: #1976d2; }
-.btn-info { color: #666; }
-.btn-eliminar { color: #e7483c; }
-
-/* Efectos HOVER: Cambio de fondo y aumento de tamaño */
-.btn-atender:hover {
-  background-color: #e3f2fd; /* Fondo leve azul */
-  transform: scale(1.15);
-}
-
-.btn-info:hover {
-  background-color: #f5f5f5; /* Fondo leve gris */
-  transform: scale(1.15);
-}
-
-.btn-eliminar:hover {
-  background-color: #fdeaea; /* Fondo leve rojo */
-  transform: scale(1.15);
-}
-
-/* Estilos de tabla comunes */
+/* Estilos de Tabla Base (Tu diseño original) */
 .tabla-pacientes th {
   background-color: #ffffff;
   color: #2c3e50;
@@ -94,10 +83,133 @@
   text-overflow: ellipsis;
 }
 
+/* --- BADGES DE ESTADO --- */
 .status-badge {
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.85rem;
   background: #e3f2fd;
   color: #1976d2;
+}
+
+/* NUEVO: Variante para "En consulta" (Verde) */
+.status-badge.estado-consulta {
+  background-color: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+}
+
+/* --- BOTONES DE ACCIÓN (Tu diseño original) --- */
+.btn-accion {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  border-radius: 6px;
+  background-color: transparent;
+  transition: all 0.2s ease;
+  padding: 0 6px;
+}
+
+.btn-atender { 
+  color: #1976d2; 
+  gap: 6px;
+  padding: 0 10px;
+}
+
+.texto-boton {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.btn-info { color: #666; width: 32px; }
+.btn-eliminar { color: #e7483c; width: 32px; }
+
+/* Efectos HOVER (Tu diseño original) */
+.btn-atender:hover {
+  background-color: #e3f2fd;
+  transform: scale(1.05);
+}
+
+.btn-info:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.15);
+}
+
+.btn-eliminar:hover {
+  background-color: #fdeaea;
+  transform: scale(1.15);
+}
+
+/* NUEVO: Estado Deshabilitado para Atender (Gris) */
+/* Sobrescribe el hover original para que no se mueva ni cambie de color */
+.btn-atendido-deshabilitado {
+  color: #9e9e9e !important;
+  background-color: rgba(158, 158, 158, 0.1) !important;
+  cursor: default !important;
+  transform: none !important;
+}
+
+.btn-atendido-deshabilitado:hover {
+  background-color: rgba(158, 158, 158, 0.1) !important;
+  transform: none !important;
+}
+
+/* --- BOTONES FLOTANTES (Modificado para soportar 2 botones) --- */
+.contenedor-botones-flotantes {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espacio entre el botón de actualizar y el de añadir */
+  z-index: 100;
+}
+
+/* Botón Añadir (Tu diseño original, pero sin la posición fixed directa) */
+.btn-flotante-añadir {
+  /* position: fixed;  <-- Quitamos esto porque ahora el padre lo controla */
+  /* bottom: 30px; */
+  /* right: 30px; */
+  background-color: #1976d2;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 15px; /* Tu borde original */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none; /* Asegura que no tenga borde por ser <Link> o <button> */
+}
+
+.btn-flotante-añadir:hover {
+  background-color: #1266ba;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* NUEVO: Botón Actualizar (Secundario) */
+.btn-flotante-secundario {
+  background-color: #1976d2;
+  color: white;
+  border: 2px solid #1976d2;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-flotante-secundario:hover {
+  background-color: #1266ba;
+  transform: rotate(180deg);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }

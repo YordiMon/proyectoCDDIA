@@ -1,0 +1,170 @@
+/* src/renderer/src/styles/AnadirPaciente.css */
+.contenedor-anadir {
+    width: 100%;
+}
+
+.cabecera-anadir {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-volver-minimal {
+  background: none;
+  border: none;
+  color: #2c3e50;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.btn-volver-minimal:hover {
+  color: #1976d2;
+  transform: translateX(-3px);
+}
+
+.formulario-limpio {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.campo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.campo-form label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.campo-form input {
+  padding: 10px 15px;
+  border: 2px solid #eee;
+  border-radius: 1px;
+  background-color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.campo-form input:focus {
+  border-color: #1976d2;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+}
+
+.btn-flotante-registrar {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-flotante-registrar:hover:not(:disabled) {
+  background-color: #1266ba;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-flotante-registrar:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Agrega esto a tu archivo AñadirPaciente.css */
+
+.label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 5px;
+}
+
+.contador {
+  font-size: 0.75rem;
+  color: #999;
+  font-weight: 400;
+}
+
+/* Mantengo tus estilos intactos del input */
+.campo-form input {
+  padding: 10px 15px;
+  border: 2px solid #eee;
+  border-radius: 5px;
+  background-color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+/* ... resto de tus estilos ... */
+.label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contador {
+  font-size: 0.75rem;
+  color: #999;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+/* Cuando se llega al máximo de caracteres */
+.limite-alcanzado {
+  color: #e7483c;
+  font-weight: bold;
+}
+
+/* Mensaje de error personalizado */
+.mensaje-error-flotante {
+  position: fixed;
+  bottom: 100px; /* Arriba del botón flotante */
+  right: 30px;
+  background-color: rgba(231, 72, 60, 0.15); /* Rojo con transparencia */
+  color: #e7483c; /* Texto rojo sólido */
+  padding: 12px 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  animation: slideIn 0.3s ease-out;
+  backdrop-filter: blur(4px); /* Opcional: difuminado de fondo */
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Asegurar que el input se vea rojo si hay error (Opcional, pero recomendado) */
+.campo-form input:invalid {
+  border-color: rgba(231, 72, 60, 0.5);
+}
