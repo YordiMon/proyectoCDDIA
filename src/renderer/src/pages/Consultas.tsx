@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import '../CSS/consulta.css'
 
 export default function Consultas() {
   const [fechaEvaluacion, setFechaEvaluacion] = useState('')
+  const location = useLocation()
+  const state = (location.state ?? {}) as { nombre?: string; numero_afiliacion?: string }
 
   const [enfermedades, setEnfermedades] = useState(false)
   const [alergias, setAlergias] = useState(false)
@@ -39,13 +42,21 @@ export default function Consultas() {
       </header>
 
       <section>
-        <h2>Detalles de la consulta</h2>
+        <h1>Detalles de la consulta</h1>
 
         <h4>Datos personales</h4>
+        <div className="field">
+          <label>Nombre Completo</label>
+          <input type="text" name="nombre" defaultValue={state.nombre ?? ''} />
+        </div>
+        <div className="field">
+          <label>Número de afiliación</label>
+          <input type="text" name="numero_afiliacion" defaultValue={state.numero_afiliacion ?? ''} />
+        </div>  
 
         <div className="field">
           <label>Fecha de nacimiento</label>
-          <input type="date" name="fecha" />
+          <input type="date" name="fecha_nacimiento" />
         </div>
 
         <div className="field">
@@ -56,6 +67,7 @@ export default function Consultas() {
         <div className="field">
           <label>Sexo</label>
           <select name="sexo">
+            <option value="Seleccionar">Otro</option>
             <option value="masculino">Masculino</option>
             <option value="femenino">Femenino</option>
           </select>
@@ -63,7 +75,8 @@ export default function Consultas() {
 
         <div className="field">
           <label>Tipo de sangre</label>
-          <select name="tipoSangre">
+          <select name="tipo_sangre">
+            <option>Seleccionar</option>
             <option>A+</option><option>A-</option>
             <option>B+</option><option>B-</option>
             <option>AB+</option><option>AB-</option>
@@ -73,9 +86,11 @@ export default function Consultas() {
 
         <div className="field">
           <label>Recibe donaciones</label>
-          <select name="donaciones">
-            <option value="si">Sí</option>
+          <select name="recibe_donaciones">
+            <option value="Seleccionar">Seleccionar</option>
             <option value="no">No</option>
+            <option value="si">Sí</option>
+            
           </select>
         </div>
 
@@ -85,19 +100,16 @@ export default function Consultas() {
         </div>
 
         <div className="field">
-          <label>Teléfono</label>
-          <input type="tel" name="telefono" />
+          <label>Celular</label>
+          <input type="tel" name="celular" />
         </div>
 
         <div className="field">
           <label>Contacto de emergencia</label>
-          <input type="text" name="contactoEmergencia" />
+          <input type="text" name="contacto_emergencia" />
         </div>
 
-        <div className="field">
-          <label>Fecha de evaluación</label>
-          <input type="datetime-local" name="fechaEvaluacion" value={fechaEvaluacion} readOnly />
-        </div>
+      
 
         <h4>Historial médico</h4>
 
@@ -127,12 +139,31 @@ export default function Consultas() {
             <label><input type="radio" checked={!cirugias} onChange={() => setCirugias(false)} /> No</label>
             <label><input type="radio" checked={cirugias} onChange={() => setCirugias(true)} /> Sí</label>
           </div>
-          {cirugias && ( <textarea name="cirugias" rows={4} /> )}
+          {cirugias && ( <textarea name="cirugias_previas" rows={4} /> )}
         </div>
 
-        <h4>Motivo de consulta</h4>
         <div className="field">
-          <textarea name="motivoConsulta" rows={4} />
+        <label>Medicamentos actuales</label>
+          <textarea name="medicamentos_actuales" rows={4} />
+        </div>
+
+        <h4>Información General de la consulta</h4>
+
+        <div className="field">
+          <label>Fecha de evaluación</label>
+          <input type="datetime-local" name="fecha_consulta" value={fechaEvaluacion} readOnly />
+        </div>
+        <div className="field">
+          <label>Motivo de consulta</label>
+          <textarea name="motivo" rows={4} />
+        </div>
+        <div className="field">
+          <label>Síntomas</label>
+          <textarea name="sintomas" rows={4} />
+        </div>
+        <div className="field">
+          <label>Tiempo de evolución</label>
+          <textarea name="tiempo_enfermedad" rows={4} />
         </div>
 
         <h4>Exploración física</h4>
@@ -161,12 +192,25 @@ export default function Consultas() {
           <label>Frecuencia cardiaca (lpm)</label>
           <input
             type="number"
-            name="frecuenciaCardiaca"
+            name="frecuencia_cardiaca"
             min={30}
             max={220}
             placeholder="Ej. 72"
           />
         </div>
+        
+             <div className="field">
+          <label>Frecuencia respiratoria (rpm)</label>
+          <input
+            type="number"
+            name="frecuencia_respiratoria"
+            min={5}
+            max={60}
+            placeholder="Ej. 18"
+          />
+        </div>
+
+
 
         <div className="field">
           <label>Temperatura (°C)</label>
@@ -180,16 +224,7 @@ export default function Consultas() {
           />
         </div>
 
-        <div className="field">
-          <label>Frecuencia respiratoria (rpm)</label>
-          <input
-            type="number"
-            name="frecuenciaRespiratoria"
-            min={5}
-            max={60}
-            placeholder="Ej. 18"
-          />
-        </div>
+     
 
         <div className="field">
           <label>Peso (kg)</label>
@@ -215,19 +250,26 @@ export default function Consultas() {
 
 
         <h4>Diagnóstico</h4>
-        <div className="field"><textarea rows={4} /></div>
+        <div className="field"><textarea name="diagnostico" rows={4} /></div> 
 
         <h4>Tratamiento</h4>
-        <div className="field"><textarea rows={4} /></div>
+        <div className="field"><textarea name="tratamiento" rows={4} /></div>
 
         <h4>Medicamentos recetados</h4>
-        <div className="field"><textarea rows={4} /></div>
+        <div className="field"><textarea name="medicamentos_recetados" rows={4} /></div>
 
         <h4>Observaciones</h4>
-        <div className="field"><textarea rows={4} /></div>
+        <div className="field"><textarea name="observaciones" rows={4} /></div>
       </section>
-=======
+
+      
+      <div className="contenedor-botones-consulta">
+        <button className="btn-consulta btn-guardar">Guardar cambios</button>
+        <button className="btn-consulta btn-finalizar">Finalizar consulta</button>
+      </div>
+
 
     </div>
+    
   )
 }
