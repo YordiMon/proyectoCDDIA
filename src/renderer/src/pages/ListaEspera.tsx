@@ -1,5 +1,6 @@
 // src/renderer/src/pages/ListaEspera.tsx
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePacientes } from '../hooks/pacientesEspera';
 import { CheckCircle, Info, Trash2, UserPlus, RefreshCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -14,7 +15,7 @@ export default function ListaEspera() {
     quitarPaciente, 
     recargarLista 
   } = usePacientes();
-  
+  const navigate = useNavigate(); 
   const botonAnadirRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -23,15 +24,17 @@ export default function ListaEspera() {
     }
   }, [loading]);
 
-  const handleAtender = (id: number) => {
-    atenderPaciente(id);
+  // ahora recibe el objeto paciente, marca como atendido y navega a /consultas pasando datos por state
+  const handleAtender = (p: { id: number; nombre: string; numero_afiliacion: string }) => {
+    atenderPaciente(p.id);
+    navigate('/consultas', { state: { nombre: p.nombre, numero_afiliacion: p.numero_afiliacion } });
   };
-
+  
   // Se eliminó el window.confirm para una eliminación directa
   const handleQuitar = (id: number) => {
     quitarPaciente(id);
   };
-
+  
   if (loading) return <div className="contenedor-espera"><p>Cargando datos...</p></div>;
 
   return (
@@ -66,12 +69,13 @@ export default function ListaEspera() {
               <td className="col-acciones">
                 <div className="contenedor-acciones">
                   <div className="grupo-acciones grupo-principal">
-                    <button 
+                    <button
                       className={`btn-accion btn-atender ${p.estado === '2' ? 'btn-atendido-deshabilitado' : ''}`}
-                      onClick={() => p.estado === '1' && handleAtender(p.id)}
+                      onClick={() => p.estado === '1' && handleAtender(p)}
                       disabled={p.estado === '2'}
                       title={p.estado === '1' ? "Atender paciente" : "Paciente ya en consulta"}
                       tabIndex={0}
+                
                     >
                       <CheckCircle size={20} strokeWidth={2.5} />
                       <span className="texto-boton">Atender</span>
