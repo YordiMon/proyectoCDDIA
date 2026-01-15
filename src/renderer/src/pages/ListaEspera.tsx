@@ -1,5 +1,6 @@
 // src/renderer/src/pages/ListaEspera.tsx
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePacientes } from '../hooks/pacientesEspera';
 import { 
   CheckCircle, 
@@ -24,7 +25,7 @@ export default function ListaEspera() {
     quitarPaciente, 
     recargarLista 
   } = usePacientes();
-  
+  const navigate = useNavigate(); 
   const botonAnadirRef = useRef<HTMLAnchorElement>(null);
 
   // Foco automático al botón de añadir cuando termina la carga inicial
@@ -34,6 +35,7 @@ export default function ListaEspera() {
     }
   }, [loading]);
 
+<<<<<<< HEAD
   // 1. ESTADO DE CARGA INICIAL (Pantalla completa)
   if (loading) {
     return (
@@ -43,6 +45,20 @@ export default function ListaEspera() {
       </div>
     );
   }
+=======
+  // ahora recibe el objeto paciente, marca como atendido y navega a /consultas pasando datos por state
+  const handleAtender = (p: { id: number; nombre: string; numero_afiliacion: string }) => {
+    atenderPaciente(p.id);
+    navigate('/consultas', { state: { nombre: p.nombre, numero_afiliacion: p.numero_afiliacion } });
+  };
+  
+  // Se eliminó el window.confirm para una eliminación directa
+  const handleQuitar = (id: number) => {
+    quitarPaciente(id);
+  };
+  
+  if (loading) return <div className="contenedor-espera"><p>Cargando datos...</p></div>;
+>>>>>>> 19b075cb01c30794a48a15425e17059f0529a5cf
 
   return (
     <div className="contenedor-espera">
@@ -52,6 +68,7 @@ export default function ListaEspera() {
         En este momento hay un total de <span className="contador-azul">{totalEspera}</span> persona(s) esperando su turno para entrar a consulta.
       </p>
 
+<<<<<<< HEAD
       <div className="zona-contenido">
         
         {/* 2. ESTADO DE ERROR (Servidor apagado o error de red) */}
@@ -82,6 +99,43 @@ export default function ListaEspera() {
                 <Loader2 className="spinner-animado" size={40} />
               </div>
             )}
+=======
+      <table className="tabla-pacientes">
+        <thead>
+          <tr>
+            <th className="col-afiliacion">Afiliación</th>
+            <th className="col-nombre">Nombre</th>
+            <th className="col-creado">Creado</th>
+            <th className="col-estado">Estado</th>
+            <th className="col-acciones">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pacientes.map((p) => (
+            <tr key={p.id}>
+              <td className="col-afiliacion">{p.numero_afiliacion}</td>
+              <td className="col-nombre">{p.nombre}</td>
+              <td className="col-creado">{p.creado}</td>
+              <td className="col-estado">
+                <span className={`status-badge ${p.estado === '2' ? 'estado-consulta' : ''}`}>
+                  {p.estado === '1' ? 'En espera' : 'En consulta'}
+                </span>
+              </td>
+              <td className="col-acciones">
+                <div className="contenedor-acciones">
+                  <div className="grupo-acciones grupo-principal">
+                    <button
+                      className={`btn-accion btn-atender ${p.estado === '2' ? 'btn-atendido-deshabilitado' : ''}`}
+                      onClick={() => p.estado === '1' && handleAtender(p)}
+                      disabled={p.estado === '2'}
+                      title={p.estado === '1' ? "Atender paciente" : "Paciente ya en consulta"}
+                      tabIndex={0}
+                
+                    >
+                      <CheckCircle size={20} strokeWidth={2.5} />
+                      <span className="texto-boton">Atender</span>
+                    </button>
+>>>>>>> 19b075cb01c30794a48a15425e17059f0529a5cf
 
             <table className={`tabla-pacientes ${isRefreshing ? 'tabla-opaca' : ''}`}>
               <thead>
