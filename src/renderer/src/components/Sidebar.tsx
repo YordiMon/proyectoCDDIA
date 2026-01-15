@@ -4,6 +4,7 @@ import {
   Stethoscope, 
   Users, 
   UserCircle, 
+  UserSearch,
   BarChart3, 
   Settings 
 } from 'lucide-react';
@@ -13,28 +14,43 @@ export default function Sidebar() {
   const location = useLocation();
 
   const menuItems = [
-    { name: 'Lista de espera', path: '/', icon: <ClipboardList size={15} /> },
-    { name: 'Consultas', path: '/consultas', icon: <Stethoscope size={15} /> },
-    { name: 'Pacientes', path: '/pacientes', icon: <Users size={15} /> },
-    { name: 'Perfil', path: '/perfil', icon: <UserCircle size={15} /> },
-    { name: 'Estadísticas', path: '/estadisticas', icon: <BarChart3 size={15} /> },
-    { name: 'Ajustes', path: '/ajustes', icon: <Settings size={15} /> },
+    { name: 'Lista de espera', path: '/', icon: <ClipboardList size={18} /> },
+    { name: 'Expedientes', path: '/expedientes', icon: <Stethoscope size={18} /> },
+
+    { type: 'divider' }, 
+
+    { name: 'Estadísticas', path: '/estadisticas', icon: <BarChart3 size={18} /> },
+    
+    { type: 'divider' }, 
+    
+    { name: 'Perfil', path: '/perfil', icon: <UserCircle size={18} /> },
+    { name: 'Usuarios', path: '/usuarios', icon: <UserSearch size={18} /> },
+
+    { type: 'divider' }, 
+    
+    { name: 'Ajustes', path: '/ajustes', icon: <Settings size={18} /> },
   ];
 
   return (
     <nav className="sidebar">
       <ul className="sidebar-list">
-        {menuItems.map((item) => (
-          <li key={item.path}>
-            <Link
-              to={item.path}
-              className={`sidebar-link ${location.pathname === item.path ? 'active' : ''}`}
-            >
-              <span className="sidebar-icon">{item.icon}</span>
-              <span className="sidebar-text">{item.name}</span>
-            </Link>
-          </li>
-        ))}
+        {menuItems.map((item, index) => {
+          if (item.type === 'divider') {
+            return <li key={`divider-${index}`} className="sidebar-divider" />;
+          }
+
+          return (
+            <li key={item.path}>
+              <Link
+                to={item.path!}
+                className={`sidebar-link ${location.pathname === item.path ? 'active' : ''}`}
+              >
+                <span className="sidebar-icon">{item.icon}</span>
+                <span className="sidebar-text">{item.name}</span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

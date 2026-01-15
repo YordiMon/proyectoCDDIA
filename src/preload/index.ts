@@ -1,22 +1,25 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-// Custom APIs for renderer
-const api = {}
+// Definimos tu API personalizada con un nombre único para evitar conflictos
+const customWindowControls = {
+  minimize: () => ipcRenderer.send('window-control', 'minimize'),
+  maximize: () => ipcRenderer.send('window-control', 'maximize'),
+  close: () => ipcRenderer.send('window-control', 'close')
+}
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
 if (process.contextIsolated) {
   try {
+    // Mantenemos la de la librería
     contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
+    // Exponemos la tuya con el nombre que el Renderer espera
+    contextBridge.exposeInMainWorld('electronAPI', customWindowControls)
   } catch (error) {
     console.error(error)
   }
 } else {
-  // @ts-ignore (define in dts)
+  // @ts-ignore
   window.electron = electronAPI
-  // @ts-ignore (define in dts)
-  window.api = api
+  // @ts-ignore
+  window.electronAPI = customWindowControls
 }

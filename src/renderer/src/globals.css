@@ -46,3 +46,23 @@ button, input, select, textarea {
   padding: 0 15px;
   color: white;
 }
+
+/* Asegura que la app ocupe toda la ventana sin scroll innecesario */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Evita scroll doble */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto; /* El scroll solo sucede en el contenido, no en la barra */
+  background-color: #f5f5f5; /* Opcional: fondo para diferenciar de la barra blanca */
+}

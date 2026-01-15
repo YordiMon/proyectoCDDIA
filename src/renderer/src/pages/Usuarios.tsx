@@ -1,7 +1,7 @@
-export default function Consultas() {
+export default function Usuarios() {
   return (
     <div>
-      <p>Consultas</p>
+      <p>Usuarios</p>
       {/* Tu HTML irá aquí */}
     </div>
   );

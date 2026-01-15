@@ -3,12 +3,30 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+ipcMain.on('window-control', (event, action) => {
+  const win = BrowserWindow.fromWebContents(event.sender)
+  if (!win) return
+
+  switch (action) {
+    case 'minimize':
+      win.minimize()
+      break
+    case 'maximize':
+      win.isMaximized() ? win.unmaximize() : win.maximize()
+      break
+    case 'close':
+      win.close()
+      break
+  }
+})
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
+    frame: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
