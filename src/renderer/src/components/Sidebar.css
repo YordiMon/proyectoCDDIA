@@ -18,7 +18,7 @@
   padding: 7px 13px;
   color: #000000;
   text-decoration: none;
-  transition: 0.3s;
+  transition: 0.2s;
   font-weight: 480;
 }
 
@@ -37,3 +37,13 @@
   background-color: #dadada;
   border-radius: 4px;
 }
+
+/* Sidebar.css */
+
+.sidebar-divider {
+  height: 0.5px;
+  background-color: #e0e0e0; /* Gris clarito */
+  margin: 5px 10px; 
+  list-style: none;
+}
+

@@ -1,0 +1,196 @@
+/* RESET DE CAJA PARA EVITAR SCROLL LATERAL */
+.contenedor-pacientes {
+  width: 100%;
+  min-height: 100vh;
+  padding: 10px;
+  background-color: #fcfcfc;
+  /* El box-sizing asegura que el padding no sume al ancho total */
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.cabecera-pacientes {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-bottom: 50px; /* Margen añadido entre buscador y tarjetas */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.titulo-fila {
+  align-items: center;
+  gap: 15px;
+}
+
+.conteo-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+/* BUSCADOR: ESTILO HEREDADO DE ANADIR PACIENTE */
+.buscador-wrapper {
+  position: relative;
+  width: 100%;
+  /* Eliminado max-width para que ocupe todo el ancho */
+  box-sizing: border-box;
+}
+
+.icon-search {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  z-index: 2;
+}
+
+.input-busqueda-moderno {
+  width: 100%;
+  padding: 12px 15px 12px 45px; 
+  border: 2px solid #eee; 
+  border-radius: 5px;   
+  background-color: #ffffff;
+  font-size: 1.05rem;
+  color: #2c3e50;
+  transition: all 0.3s ease;
+  outline: none;
+  /* Vital para que el padding no desborde el input */
+  box-sizing: border-box; 
+}
+
+.input-busqueda-moderno:focus {
+  border-color: #1976d2;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+}
+
+/* GRID DE TARJETAS */
+.lista-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tarjeta-paciente-pro {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.tarjeta-paciente-pro:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+  border-color: #1976d2;
+}
+
+.tarjeta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background: #f0f7ff;
+  color: #1976d2;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.id-afiliacion {
+  text-align: right;
+}
+
+.nro-seguro { font-size: 0.9rem; color: #2c3e50; font-weight: 600; }
+
+.paciente-nombre {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+.info-secundaria {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-bottom: 15px;
+}
+
+.icon-sangre { color: #e74c3c; }
+
+.divisor {
+  border: 0;
+  border-top: 1px solid #f5f5f5;
+  margin: 15px 0;
+}
+
+.seccion-clinica {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.clinica-item label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #95a5a6;
+  margin-bottom: 4px;
+}
+
+.texto-clinico {
+  font-size: 0.9rem;
+  color: #34495e;
+  margin: 0;
+}
+
+.texto-clinico.alerta {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+/* MENSAJES DE ESTADO */
+.estado-mensaje {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  color: #94a3b8;
+  gap: 15px;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

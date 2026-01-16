@@ -213,3 +213,90 @@
   transform: rotate(180deg);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
+
+/* Nuevos estilos para la carga parcial */
+
+.tabla-wrapper {
+  position: relative; /* Para posicionar el overlay encima */
+  min-height: 200px;
+}
+
+.overlay-carga {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  border-radius: 8px;
+}
+
+.tabla-opaca {
+  opacity: 0.5;
+  filter: blur(1px);
+  pointer-events: none; /* Evita clics mientras carga */
+}
+
+.spinner-animado {
+  color: #1976d2;
+  animation: rotate 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.btn-flotante-secundario.girando {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-flotante-secundario.girando svg {
+  animation: rotate 1s linear infinite;
+}
+
+/* Centrar carga inicial */
+.centro-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+/* Cuadros de mensaje (Error y Vacío) */
+.mensaje-estado {
+  display: flex;
+  flex-direction: column;
+  padding: 60px;
+  margin-top: 40;
+}
+
+.mensaje-estado h4 {
+  margin: 20px 0 0 0;
+  color: #333;
+}
+
+.mensaje-estado p {
+  color: #666;
+  max-width: 300px;
+}
+
+.btn-reintentar { 
+  font-style: italic;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+  text-decoration: underline;
+}
+
+.btn-reintentar:hover {
+  font-size: 15.9px;
+}

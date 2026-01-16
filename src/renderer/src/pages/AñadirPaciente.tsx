@@ -1,30 +1,36 @@
-// src/renderer/src/pages/AnadirPaciente.tsx
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react';
-import { API_BASE_URL } from '../config'
-import '../styles/AñadirPaciente.css'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'; 
+import { API_BASE_URL } from '../config';
+import '../styles/AñadirPaciente.css';
 
 export default function AnadirPaciente() {
-  const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const [errorVisible, setErrorVisible] = useState(false)
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  
+  // Nuevo estado para manejar el mensaje de error dinámicamente
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     nombre: '',
     numero_afiliacion: ''
   })
 
-  // Aseguramos que el componente esté limpio al montar
   useEffect(() => {
-    setLoading(false)
-  }, [])
+    setLoading(false);
+  }, []);
+
+  // Función para mostrar el error por unos segundos y luego ocultarlo
+  const mostrarError = (mensaje: string) => {
+    setErrorMessage(mensaje);
+    setTimeout(() => setErrorMessage(null), 4000);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.nombre.trim() || !formData.numero_afiliacion.trim()) {
-      setErrorVisible(true)
-      setTimeout(() => setErrorVisible(false), 3000)
-      return
+      mostrarError('Todos los campos son obligatorios');
+      return;
     }
 
     setLoading(true)
@@ -37,11 +43,13 @@ export default function AnadirPaciente() {
       if (response.ok) {
         navigate('/')
       } else {
-        alert('Error al crear el paciente')
+        // En lugar de alert, usamos nuestra función
+        mostrarError('Error en el servidor al crear el paciente');
       }
     } catch (error) {
-      console.error('Error:', error)
-      alert('No se pudo conectar con el servidor')
+      console.error('Error:', error);
+      // En lugar de alert, usamos nuestra función
+      mostrarError('No se pudo conectar al servidor. Verifica tu conexión.');
     } finally {
       setLoading(false)
     }
@@ -50,7 +58,6 @@ export default function AnadirPaciente() {
   return (
     <div className="contenedor-anadir">
       <div className="cabecera-anadir">
-        {/* tabindex="-1" para que el foco no se detenga en el botón de volver al usar Tab */}
         <button
           onClick={() => navigate(-1)}
           className="btn-volver-minimal"
@@ -64,7 +71,7 @@ export default function AnadirPaciente() {
       </div>
 
       <form className="formulario-limpio" id="form-paciente" onSubmit={handleSubmit} noValidate>
-        {/* 1. FOCO INICIAL: Número de afiliación */}
+        
         <div className="campo-form">
           <div className="label-container">
             <label htmlFor="afiliacion">Número de afiliación</label>
@@ -80,13 +87,12 @@ export default function AnadirPaciente() {
             maxLength={8}
             value={formData.numero_afiliacion}
             onChange={(e) => setFormData({ ...formData, numero_afiliacion: e.target.value })}
-            autoFocus /* Esto pone el cursor aquí al abrir la pantalla */
-            tabIndex={1} /* Primer salto de Tab */
+            autoFocus 
+            tabIndex={1}
             autoComplete="off"
           />
         </div>
 
-        {/* 2. SEGUNDO FOCO: Nombre completo */}
         <div className="campo-form">
           <div className="label-container">
             <label htmlFor="nombre">Nombre completo</label>
@@ -101,25 +107,25 @@ export default function AnadirPaciente() {
             maxLength={60}
             value={formData.nombre}
             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-            tabIndex={2} /* Segundo salto de Tab */
+            tabIndex={2}
             autoComplete="off"
           />
         </div>
 
-        {errorVisible && (
+        {/* Mensaje de error unificado y dinámico */}
+        {errorMessage && (
           <div className="mensaje-error-flotante">
             <AlertCircle size={18} />
-            <span>Todos los campos son obligatorios</span>
+            <span>{errorMessage}</span>
           </div>
         )}
 
-        {/* 3. TERCER FOCO: Botón registrar */}
-        <button
-          type="submit"
-          className="btn-flotante-registrar"
+        <button 
+          type="submit" 
+          className="btn-flotante-registrar" 
           disabled={loading}
           title="Registrar en lista"
-          tabIndex={3} /* Tercer salto de Tab */
+          tabIndex={3}
         >
           <UserPlus size={24} />
           <span>{loading ? 'Guardando...' : 'Registrar paciente en lista de espera'}</span>

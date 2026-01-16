@@ -1,4 +1,3 @@
-// src/renderer/src/hooks/usePacientes.ts
 import { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '../config';
 
@@ -12,22 +11,32 @@ export interface Paciente {
 
 export function usePacientes() {
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
-  const [totalEspera, setTotalEspera] = useState(0);
+  const [totalEspera, setTotalEspera] = useState<number | string>('X');
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null); 
 
-  const fetchPacientes = useCallback(async (showLoading = true) => {
+  const fetchPacientes = useCallback(async (isUpdate = false) => {
     try {
-      if (showLoading) setLoading(true);
+      if (isUpdate) setIsRefreshing(true);
+      else setLoading(true);
+      
+      setError(null); 
+
       const response = await fetch(`${API_BASE_URL}/lista_pacientes_en_espera`);
-      if (!response.ok) throw new Error('Error al cargar');
+      
+      if (!response.ok) throw new Error('Servidor no disponible');
       
       const data = await response.json();
       setPacientes(data.pacientes);
       setTotalEspera(data.resumen.total_espera);
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (err) {
+      console.error("Error de conexión:", err);
+      setError("No se pudo conectar con el servidor. Verifica tu conexión a internet.");
+      setTotalEspera("?"); 
     } finally {
-      if (showLoading) setLoading(false);
+      setLoading(false);
+      setIsRefreshing(false);
     }
   }, []);
 
@@ -38,7 +47,7 @@ export function usePacientes() {
         setPacientes(prev => prev.map(p => 
           p.id === id ? { ...p, estado: '2' } : p
         ));
-        setTotalEspera(prev => Math.max(0, prev - 1));
+        setTotalEspera(prev => typeof prev === 'number' ? Math.max(0, prev - 1) : prev);
         return true;
       }
     } catch (e) { console.error(e); }
@@ -53,7 +62,7 @@ export function usePacientes() {
         setPacientes(prev => prev.filter(p => p.id !== id));
         
         if (pacienteEliminado?.estado === '1') {
-          setTotalEspera(prev => Math.max(0, prev - 1));
+          setTotalEspera(prev => typeof prev === 'number' ? Math.max(0, prev - 1) : prev);
         }
         return true;
       }
@@ -61,7 +70,7 @@ export function usePacientes() {
     return false;
   };
 
-  useEffect(() => {
+useEffect(() => {
     fetchPacientes();
   }, [fetchPacientes]);
 
@@ -69,6 +78,8 @@ export function usePacientes() {
     pacientes, 
     totalEspera, 
     loading, 
+    isRefreshing, 
+    error, 
     atenderPaciente, 
     quitarPaciente,
     recargarLista: () => fetchPacientes(true)

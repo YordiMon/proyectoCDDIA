@@ -1,3 +1,10 @@
+<<<<<<< HEAD:src/renderer/src/pages/Usuarios.tsx
+export default function Usuarios() {
+  return (
+    <div>
+      <p>Usuarios</p>
+      {/* Tu HTML irá aquí */}
+=======
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import '../CSS/consulta.css'
@@ -178,6 +185,8 @@ export default function Consultas() {
         <button className="btn-consulta btn-guardar">Guardar cambios</button>
         <button className="btn-consulta btn-finalizar">Finalizar consulta</button>
       </div>
+
+
     </div>
     
   )

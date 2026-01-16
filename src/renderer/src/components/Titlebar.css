@@ -1,0 +1,84 @@
+.custom-titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  background-color: #1976d2;
+  user-select: none;
+  padding-right: 10px;
+}
+
+.app-title {
+    font-size: 1.1rem;
+    margin-left: 10px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.app-subtitle {
+    font-size: 0.9rem;
+    margin-left: 15px;
+    color: white;
+    font-weight: 350;
+    letter-spacing: 1px;
+}
+
+
+.titlebar-drag-region {
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  height: 100%;
+  flex-shrink: 0; 
+  -webkit-app-region: drag; 
+}
+
+.app-user-welcome {
+    font-size: 0.9rem;
+    margin-right: 10px;
+    color: white;
+    font-weight: 350;
+    letter-spacing: 1px;
+}
+
+.titlebar-user {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex: 1; 
+  justify-content: flex-end; 
+  padding-right: 20px;
+  -webkit-app-region: drag;
+}
+
+.titlebar-controls {
+  display: flex;
+  height: 60%; 
+  align-items: center;
+  -webkit-app-region: no-drag; 
+}
+
+.control-btn {
+    color: white;
+  width: 45px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-app-region: no-drag; /* Refuerzo */
+  transition: 0.1s;
+}
+
+.hover-gray:hover { background-color: #1e66ae; }
+.hover-red:hover { background-color: #e81123; color: white; }
+
+
+
+
+
+
+
