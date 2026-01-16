@@ -5,6 +5,8 @@ import { usePacientes } from '../hooks/pacientesEspera';
 import { CheckCircle, Info, Trash2, UserPlus, RefreshCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import '../styles/ListaEspera.css';
+import { existePaciente } from '../services/pacienteservice';
+
 
 export default function ListaEspera() {
   const { 
@@ -24,11 +26,38 @@ export default function ListaEspera() {
     }
   }, [loading]);
 
-  // ahora recibe el objeto paciente, marca como atendido y navega a /consultas pasando datos por state
-  const handleAtender = (p: { id: number; nombre: string; numero_afiliacion: string }) => {
-    atenderPaciente(p.id);
-    navigate('/consultas', { state: { nombre: p.nombre, numero_afiliacion: p.numero_afiliacion } });
-  };
+  // boton para atender paciente 
+const handleAtender = async (p: { id: number; nombre: string; numero_afiliacion: string }) => {
+  try {
+    const respuesta = await existePaciente(p.numero_afiliacion);
+
+    await atenderPaciente(p.id);
+
+    if (respuesta.existe) {
+      navigate('/consultas', {
+        state: {
+          nombre: p.nombre,
+          numero_afiliacion: p.numero_afiliacion,
+          pacienteRegistrado: true
+        }
+      });
+    } else {
+      navigate('/pacientes', {
+        state: {
+          nombre: p.nombre,
+          numero_afiliacion: p.numero_afiliacion
+        }
+      });
+    }
+
+  } catch (error: any) {
+    console.error("Error al verificar paciente:", error);
+    alert("Error al verificar paciente: " + JSON.stringify(error));
+  }
+};
+
+
+
   
   // Se eliminó el window.confirm para una eliminación directa
   const handleQuitar = (id: number) => {

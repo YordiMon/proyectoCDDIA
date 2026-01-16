@@ -1,0 +1,21 @@
+/* pacientesReg.css */
+.consulta-container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+textarea {
+  resize: vertical;
+}
