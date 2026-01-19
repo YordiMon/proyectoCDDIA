@@ -140,49 +140,61 @@ export default function Pacientes() {
       ) : (
         <div className="lista-grid">
           {pacientesFiltrados.map((paciente) => (
-            <div key={paciente.id} className="tarjeta-paciente-pro">
-              <div className="tarjeta-header">
-                <div className="avatar-circle">
-                  <User size={22} />
-                </div>
-                <div className="id-afiliacion">
-                  <span className="nro-seguro">{paciente.numero_afiliacion}</span>
-                </div>
-              </div>
+  <div key={paciente.id} className="tarjeta-paciente-pro">
+    <div className="tarjeta-header">
+      <div className="avatar-circle">
+        <User size={22} />
+      </div>
+      <div className="id-afiliacion">
+        <span className="nro-seguro">{paciente.numero_afiliacion}</span>
+      </div>
+    </div>
 
-              <h3 className="paciente-nombre">{paciente.nombre}</h3>
+    <h3 className="paciente-nombre">{paciente.nombre}</h3>
 
-              {/* Información Contacto y Edad */}
-              <div className="info-secundaria">
-                <span>
-                  <Phone size={14} /> {paciente.celular}
-                </span>
-                <span>
-                  <Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}
-                </span>
-                <span>({calcularEdad(paciente.fecha_nacimiento)} años)</span>
-              </div>
+    <div className="info-secundaria">
+      <span>
+        <Phone size={14} /> {paciente.celular}
+      </span>
+      <span>
+        <Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}
+      </span>
+      <span>({calcularEdad(paciente.fecha_nacimiento)} años)</span>
+    </div>
 
-              {/* Dirección */}
-              <div className="info-secundaria">
-                <span>
-                  <MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}
-                </span>
-              </div>
+    <div className="info-secundaria">
+      <span>
+        <MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}
+      </span>
+    </div>
 
-              <hr className="divisor" />
+    <hr className="divisor" />
 
-              {/* Párrafo de Resumen Clínico (Sin Iconos) */}
-              <div className="info-secundaria">
-                <p className="texto-clinico" style={{ margin: 0, lineHeight: '1.5' }}>
-                  {generarResumenClinico(paciente)}
-                </p>
-              </div>
-
-              {/* Botón Badge */}
+    <div className="info-secundaria">
+      <p className="texto-clinico" style={{ margin: 0, lineHeight: '1.5' }}>
+        {generarResumenClinico(paciente)}
+      </p>
+    </div>
+    {/* Botón Badge */}
               <span className="conteo-badge"> Abrir tarjeta para más información </span>
-            </div>
-          ))}
+            
+    {/* boton consulta */}
+    <div className="acciones-tarjeta">
+      <Link
+        to="/consultas"
+        state={{
+          id: paciente.id,
+          nombre: paciente.nombre,
+          numero_afiliacion: paciente.numero_afiliacion
+        }}
+        className="btn-ir-consulta"
+      >
+        <ClipboardList size={18} />
+        Nueva consulta
+      </Link>
+    </div>
+  </div>
+))}
         </div>
       )}
        {/* BOTONES FLOTANTES (Siempre visibles) */}
@@ -194,16 +206,10 @@ export default function Pacientes() {
           disabled={isRefreshing}
         >
           <RefreshCw size={24} />
-        </button>
-
-        <Link 
-          to="/consultas" 
-          className="btn-flotante-consulta"
-          title="Ir a consulta"
-        >
+       
           <ClipboardList size={24} />
-          <span>Nueva consulta</span>
-        </Link>
+          
+        </button>
 
         <Link 
           to="/registro-paciente" 

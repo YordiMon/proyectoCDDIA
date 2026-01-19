@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, AlertCircle, CheckCircle } from 'lucide-react'
 import '../styles/consulta.css'
-import { crearConsulta } from '../services/consultaservice'
+import { crearConsulta, buscarPacientePorAfiliacion } from '../services/consultaservice'
 
 interface FormData {
+  id_paciente: number
   nombre: string
   numero_afiliacion: string
   fecha_consulta: string
@@ -25,10 +26,21 @@ interface FormData {
 }
 
 export default function Consultas() {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const state = (location.state ?? {}) as { 
+    id?: number
+    nombre?: string
+    numero_afiliacion?: string 
+  }
+
   const [fechaEvaluacion, setFechaEvaluacion] = useState('')
   const [loading, setLoading] = useState(false)
   const [mensaje, setMensaje] = useState<{ tipo: 'error' | 'exito'; texto: string } | null>(null)
+
   const [formData, setFormData] = useState<FormData>({
+    id_paciente: 0,
     nombre: '',
     numero_afiliacion: '',
     fecha_consulta: '',
@@ -48,40 +60,75 @@ export default function Consultas() {
     observaciones: ''
   })
 
-  const location = useLocation()
-  const navigate = useNavigate()
-  const state = (location.state ?? {}) as { nombre?: string; numero_afiliacion?: string }
+  const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
+    setMensaje({ tipo, texto })
+    setTimeout(() => setMensaje(null), 4000)
+  }
 
-  useEffect(() => {
+  function formatToTimeZone(date: Date, timeZone: string) {
+    const dtf = new Intl.DateTimeFormat('en-GB', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
+
+    const parts = dtf.formatToParts(date).reduce((acc, p) => {
+      acc[p.type] = p.value
+      return acc
+    }, {} as Record<string, string>)
+
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`
+  }
+
+      useEffect(() => {
     const now = new Date()
-    function formatToTimeZone(date: Date, timeZone: string) {
-      const dtf = new Intl.DateTimeFormat('en-GB', {
-        timeZone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      })
-      const parts = dtf.formatToParts(date).reduce((acc, p) => {
-        acc[p.type] = p.value
-        return acc
-      }, {} as Record<string, string>)
-      return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`
-    }
-
     const hermosillo = formatToTimeZone(now, 'America/Hermosillo')
+
     setFechaEvaluacion(hermosillo)
-    
-    // Inicializar formData con datos del estado
+
     setFormData(prev => ({
       ...prev,
-      nombre: state.nombre ?? '',
-      numero_afiliacion: state.numero_afiliacion ?? '',
       fecha_consulta: hermosillo
     }))
+
+    // CASO 1: Viene desde registro o lista de espera
+    if (state && typeof state === 'object' && 'id' in state) {
+      setFormData(prev => ({
+        ...prev,
+        id_paciente: state.id ?? 0,
+        nombre: state.nombre ?? '',
+        numero_afiliacion: state.numero_afiliacion ?? ''
+      }))
+      return
+    }
+
+    // CASO 2: Viene desde expedientes con otro formato
+    if (state && typeof state === 'object' && 'paciente' in state) {
+      const p = (state as any).paciente
+      setFormData(prev => ({
+        ...prev,
+        id_paciente: p.id ?? 0,
+        nombre: p.nombre ?? '',
+        numero_afiliacion: p.numero_afiliacion ?? ''
+      }))
+      return
+    }
+
+    // CASO 3: No viene nada (expedientes simple)
+    setFormData(prev => ({
+      ...prev,
+      id_paciente: 0,
+      nombre: '',
+      numero_afiliacion: ''
+    }))
+
   }, [state])
+
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -91,13 +138,7 @@ export default function Consultas() {
     }))
   }
 
-  const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
-    setMensaje({ tipo, texto })
-    setTimeout(() => setMensaje(null), 4000)
-  }
-
   const handleGuardar = async () => {
-    // Validar campos obligatorios
     if (!formData.nombre.trim() || !formData.numero_afiliacion.trim()) {
       mostrarMensaje('error', 'Nombre y número de afiliación son obligatorios')
       return
@@ -106,7 +147,7 @@ export default function Consultas() {
     setLoading(true)
     try {
       const consultaData = {
-        pacienteId: parseInt(formData.numero_afiliacion.replace(/\D/g, '')) || 0,
+        paciente_id: formData.id_paciente,
         fecha_consulta: formData.fecha_consulta,
         motivo: formData.motivo || undefined,
         sintomas: formData.sintomas || undefined,
@@ -127,10 +168,10 @@ export default function Consultas() {
       await crearConsulta(consultaData)
       mostrarMensaje('exito', 'Consulta guardada exitosamente')
       
-      // Redirigir después de 2 segundos
       setTimeout(() => {
         navigate('/expedientes')
       }, 2000)
+
     } catch (error) {
       console.error('Error al guardar consulta:', error)
       mostrarMensaje('error', 'Error al guardar la consulta. Intenta nuevamente.')
@@ -147,15 +188,21 @@ export default function Consultas() {
     await handleGuardar()
   }
 
+  console.log("STATE RECIBIDO:", state)
+  console.log("FORMDATA:", formData)
+
   return (
     <div className="consulta-container">
       <header>
         <button
-          onClick={() => navigate('/expedientes')}
+          onClick={(e) => {
+            e.preventDefault()
+            navigate('/expedientes')
+          }}
           className="btn-volver-minimal"
-          title="Volver a expedientes"
           type="button"
         >
+
           <ChevronLeft size={32} strokeWidth={2.5} />
         </button>
         <h1>Consulta</h1>

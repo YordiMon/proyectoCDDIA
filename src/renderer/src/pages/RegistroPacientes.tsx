@@ -16,6 +16,7 @@ export default function RegistroPacientes() {
        
     // Estado para el formulario de paciente
   const [paciente, setPaciente] = useState<Paciente>({
+    
   nombre: state.nombre ?? '',
   numero_afiliacion: state.numero_afiliacion ?? '',
   fecha_nacimiento: '',
@@ -56,13 +57,14 @@ const handleDonaciones = (e: React.ChangeEvent<HTMLSelectElement>) => {
 // Guardar paciente
 const guardar = async (irAConsultas = false) => {
   try {
-    await crearPaciente(paciente);
-
+    
+     const resultado = await crearPaciente(paciente)
     alert('Paciente registrado correctamente');
 
     if (irAConsultas) {
       navigate('/consultas', {
         state: {
+          id: resultado.id,
           nombre: paciente.nombre,
           numero_afiliacion: paciente.numero_afiliacion
         }
