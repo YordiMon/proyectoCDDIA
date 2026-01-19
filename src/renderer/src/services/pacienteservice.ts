@@ -95,4 +95,5 @@ export const obtenerPacientePorId = async (id: number): Promise<Paciente> => {
   }
 
   return data;
-};
+}
+

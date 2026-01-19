@@ -1,95 +1,108 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Search, User, RefreshCw, Phone, AlertTriangle, MapPin, Calendar1 } from 'lucide-react';
-import { API_BASE_URL } from '../config';
-import '../styles/Expedientes.css';
+import { useState, useEffect, useMemo } from 'react'
+import { Search, User, RefreshCw, Phone, AlertTriangle, MapPin, Calendar1, UserPlus, ClipboardList } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { API_BASE_URL } from '../config'
+import '../styles/Expedientes.css'
 
 interface Paciente {
-  id: number;
-  nombre: string;
-  numero_afiliacion: string;
-  celular: string;
-  tipo_sangre: string;
-  enfermedades: string;
-  alergias: string;
-  cirugias_previas: string;
-  medicamentos_actuales: string;
-  sexo: string;
-  fecha_nacimiento: string;
-  direccion: string;
+  id: number
+  nombre: string
+  numero_afiliacion: string
+  celular: string
+  tipo_sangre: string
+  enfermedades: string
+  alergias: string
+  cirugias_previas: string
+  medicamentos_actuales: string
+  sexo: string
+  fecha_nacimiento: string
+  direccion: string
 }
 
 export default function Pacientes() {
-  const [pacientes, setPacientes] = useState<Paciente[]>([]);
-  const [busqueda, setBusqueda] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [pacientes, setPacientes] = useState<Paciente[]>([])
+  const [busqueda, setBusqueda] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   // Calcular edad
   const calcularEdad = (fecha: string) => {
-    if (!fecha) return 'N/A';
-    const hoy = new Date();
-    const nacimiento = new Date(fecha);
-    let edad = hoy.getFullYear() - nacimiento.getFullYear();
-    const m = hoy.getMonth() - nacimiento.getMonth();
+    if (!fecha) return 'N/A'
+    const hoy = new Date()
+    const nacimiento = new Date(fecha)
+    let edad = hoy.getFullYear() - nacimiento.getFullYear()
+    const m = hoy.getMonth() - nacimiento.getMonth()
     if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
-      edad--;
+      edad--
     }
-    return edad;
-  };
+    return edad
+  }
 
   // Formatear fecha a DD/MM/AAAA
   const formatearFecha = (fecha: string) => {
-    if (!fecha) return 'N/A';
-    const partes = fecha.split('-');
-    if (partes.length !== 3) return fecha;
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
-  };
+    if (!fecha) return 'N/A'
+    const partes = fecha.split('-')
+    if (partes.length !== 3) return fecha
+    return `${partes[2]}/${partes[1]}/${partes[0]}`
+  }
 
   // Helper para determinar si tiene algo (Enfermedad, Cirugía, etc.)
   const tieneDatos = (texto: string) => {
-    return texto && texto.trim().toLowerCase() !== 'ninguna' && texto.trim().toLowerCase() !== 'ninguno';
-  };
+    return (
+      texto && texto.trim().toLowerCase() !== 'ninguna' && texto.trim().toLowerCase() !== 'ninguno'
+    )
+  }
 
   // Generador del párrafo resumen
   const generarResumenClinico = (p: Paciente) => {
-    const estadoEnfermedades = tieneDatos(p.enfermedades) ? 'con enfermedades' : 'sin enfermedades';
-    const estadoMedicacion = tieneDatos(p.medicamentos_actuales) ? 'con medicación actual' : 'sin medicación actual';
-    const estadoCirugias = tieneDatos(p.cirugias_previas) ? 'con cirugías previas' : 'sin cirugías previas';
-    
-    return `Resumen clínico: ${estadoEnfermedades}, ${estadoMedicacion}, ${estadoCirugias}, tipo de sangre ${p.tipo_sangre}.`;
-  };
+    const estadoEnfermedades = tieneDatos(p.enfermedades) ? 'con enfermedades' : 'sin enfermedades'
+    const estadoMedicacion = tieneDatos(p.medicamentos_actuales)
+      ? 'con medicación actual'
+      : 'sin medicación actual'
+    const estadoCirugias = tieneDatos(p.cirugias_previas)
+      ? 'con cirugías previas'
+      : 'sin cirugías previas'
+    return `Resumen clínico: ${estadoEnfermedades}, ${estadoMedicacion}, ${estadoCirugias}, tipo de sangre ${p.tipo_sangre}.`
+  }
 
   const obtenerPacientes = async () => {
-    setLoading(true);
-    setError(false);
+    setLoading(true)
+    setError(false)
     try {
-      const response = await fetch(`${API_BASE_URL}/lista_pacientes`);
+      const response = await fetch(`${API_BASE_URL}/lista_pacientes`)
       if (response.ok) {
-        const data = await response.json();
-        setPacientes(data);
+        const data = await response.json()
+        setPacientes(data)
       } else {
-        setError(true);
+        setError(true)
       }
     } catch (err) {
-      setError(true);
+      setError(true)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    obtenerPacientes();
-  }, []);
+    obtenerPacientes()
+  }, [])
+
+  const recargarLista = async () => {
+    setIsRefreshing(true)
+    await obtenerPacientes()
+    setIsRefreshing(false)
+  }
 
   const pacientesFiltrados = useMemo(() => {
     return pacientes.filter((p) => {
-      const termino = busqueda.toLowerCase();
+      const termino = busqueda.toLowerCase()
       return (
         p.nombre.toLowerCase().includes(termino) ||
         p.numero_afiliacion.toLowerCase().includes(termino)
-      );
-    });
-  }, [busqueda, pacientes]);
+      )
+    })
+  }, [busqueda, pacientes])
 
   return (
     <div className="contenedor-pacientes">
@@ -98,7 +111,6 @@ export default function Pacientes() {
           <h1>Expedientes clínicos</h1>
           <span className="conteo-badge">{pacientesFiltrados.length} Registros</span>
         </div>
-        
         <div className="buscador-wrapper">
           <Search className="icon-search" size={18} />
           <input
@@ -139,17 +151,23 @@ export default function Pacientes() {
               </div>
 
               <h3 className="paciente-nombre">{paciente.nombre}</h3>
-              
+
               {/* Información Contacto y Edad */}
               <div className="info-secundaria">
-                <span><Phone size={14} /> {paciente.celular}</span>
-                <span><Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}</span>
+                <span>
+                  <Phone size={14} /> {paciente.celular}
+                </span>
+                <span>
+                  <Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}
+                </span>
                 <span>({calcularEdad(paciente.fecha_nacimiento)} años)</span>
               </div>
 
               {/* Dirección */}
               <div className="info-secundaria">
-                <span><MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}</span>
+                <span>
+                  <MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}
+                </span>
               </div>
 
               <hr className="divisor" />
@@ -162,13 +180,40 @@ export default function Pacientes() {
               </div>
 
               {/* Botón Badge */}
-                <span className="conteo-badge">
-                  Abrir tarjeta para más información
-                </span>
+              <span className="conteo-badge"> Abrir tarjeta para más información </span>
             </div>
           ))}
         </div>
       )}
+       {/* BOTONES FLOTANTES (Siempre visibles) */}
+      <div className="contenedor-botones-flotantes">
+        <button 
+          className={`btn-flotante-secundario ${isRefreshing ? 'girando' : ''}`} 
+          onClick={() => recargarLista()} 
+          title="Actualizar lista"
+          disabled={isRefreshing}
+        >
+          <RefreshCw size={24} />
+        </button>
+
+        <Link 
+          to="/consultas" 
+          className="btn-flotante-consulta"
+          title="Ir a consulta"
+        >
+          <ClipboardList size={24} />
+          <span>Nueva consulta</span>
+        </Link>
+
+        <Link 
+          to="/registro-paciente" 
+          className="btn-flotante-registro"
+          title="Registrar nuevo paciente"
+        >
+          <UserPlus size={24} />
+          <span>Nuevo paciente</span>
+        </Link>
+      </div>
     </div>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'; 
-import { API_BASE_URL } from '../config';
-import '../styles/AñadirPaciente.css';
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'
+import { API_BASE_URL } from '../config'
+import '../styles/AñadirPaciente.css'
 
 export default function AnadirPaciente() {
   const navigate = useNavigate();
