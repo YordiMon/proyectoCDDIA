@@ -7,6 +7,8 @@ import Perfil from './pages/Perfil';
 import Estadisticas from './pages/Estadisticas';
 import Ajustes from './pages/Ajustes';
 import AñadirPaciente from './pages/AñadirPaciente';
+import DetallePaciente from './pages/DetallePaciente';
+import HistorialConsultas from './pages/HistorialConsultas';
 import Usuarios from './pages/Usuarios';
 
 function App() {
@@ -38,6 +40,8 @@ function App() {
               <Route path="/perfil" element={<Perfil />} />
               <Route path="/estadisticas" element={<Estadisticas />} />
               <Route path="/usuarios" element={<Usuarios />} />
+              <Route path="/paciente/:id" element={<DetallePaciente />} />
+              <Route path="/historial/:id" element={<HistorialConsultas />} />
               <Route path="/ajustes" element={<Ajustes />} />
               <Route path="/añadirpaciente" element={<AñadirPaciente />} />
             </Routes>

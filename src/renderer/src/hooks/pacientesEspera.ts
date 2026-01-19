@@ -18,8 +18,12 @@ export function usePacientes() {
 
   const fetchPacientes = useCallback(async (isUpdate = false) => {
     try {
-      if (isUpdate) setIsRefreshing(true);
-      else setLoading(true);
+      // Si NO es update (es decir, es carga inicial o REINTENTO), activamos loading total
+      if (isUpdate) {
+        setIsRefreshing(true);
+      } else {
+        setLoading(true);
+      }
       
       setError(null); 
 
@@ -58,19 +62,14 @@ export function usePacientes() {
     try {
       const response = await fetch(`${API_BASE_URL}/quitar_paciente/${id}`, { method: 'PUT' });
       if (response.ok) {
-        const pacienteEliminado = pacientes.find(p => p.id === id);
         setPacientes(prev => prev.filter(p => p.id !== id));
-        
-        if (pacienteEliminado?.estado === '1') {
-          setTotalEspera(prev => typeof prev === 'number' ? Math.max(0, prev - 1) : prev);
-        }
         return true;
       }
     } catch (e) { console.error(e); }
     return false;
   };
 
-useEffect(() => {
+  useEffect(() => {
     fetchPacientes();
   }, [fetchPacientes]);
 
@@ -82,6 +81,7 @@ useEffect(() => {
     error, 
     atenderPaciente, 
     quitarPaciente,
-    recargarLista: () => fetchPacientes(true)
+    // CLAVE: pasamos el parámetro al fetch original
+    recargarLista: (isUpdate: boolean = true) => fetchPacientes(isUpdate)
   };
 }

@@ -1,6 +1,4 @@
-// src/renderer/src/pages/ListaEspera.tsx
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { usePacientes } from '../hooks/pacientesEspera';
 import { 
   CheckCircle, 
@@ -24,19 +22,17 @@ export default function ListaEspera() {
     atenderPaciente, 
     quitarPaciente, 
     recargarLista 
-  } = usePacientes();
-  const navigate = useNavigate(); 
+  } = usePacientes(); 
   const botonAnadirRef = useRef<HTMLAnchorElement>(null);
 
-  // Foco automático al botón de añadir cuando termina la carga inicial
   useEffect(() => {
     if (!loading && botonAnadirRef.current) {
       botonAnadirRef.current.focus();
     }
   }, [loading]);
 
-<<<<<<< HEAD
-  // 1. ESTADO DE CARGA INICIAL (Pantalla completa)
+  // 1. ESTADO DE CARGA (Pantalla completa)
+  // Al darle a Reintentar, loading vuelve a ser true y entra aquí inmediatamente
   if (loading) {
     return (
       <div className="contenedor-espera centro-total">
@@ -45,20 +41,6 @@ export default function ListaEspera() {
       </div>
     );
   }
-=======
-  // ahora recibe el objeto paciente, marca como atendido y navega a /consultas pasando datos por state
-  const handleAtender = (p: { id: number; nombre: string; numero_afiliacion: string }) => {
-    atenderPaciente(p.id);
-    navigate('/consultas', { state: { nombre: p.nombre, numero_afiliacion: p.numero_afiliacion } });
-  };
-  
-  // Se eliminó el window.confirm para una eliminación directa
-  const handleQuitar = (id: number) => {
-    quitarPaciente(id);
-  };
-  
-  if (loading) return <div className="contenedor-espera"><p>Cargando datos...</p></div>;
->>>>>>> 19b075cb01c30794a48a15425e17059f0529a5cf
 
   return (
     <div className="contenedor-espera">
@@ -68,22 +50,20 @@ export default function ListaEspera() {
         En este momento hay un total de <span className="contador-azul">{totalEspera}</span> persona(s) esperando su turno para entrar a consulta.
       </p>
 
-<<<<<<< HEAD
       <div className="zona-contenido">
         
-        {/* 2. ESTADO DE ERROR (Servidor apagado o error de red) */}
         {error ? (
           <div className="mensaje-estado error-box">
             <AlertCircle size={38} color="#4c4c4c" />
             <h4>Error de conexión</h4>
             <p>{error}</p>
-            <p className="btn-reintentar" onClick={() => recargarLista()}>
+            {/* AQUÍ: Al pasar false, forzamos el loading total */}
+            <p className="btn-reintentar" onClick={() => recargarLista(false)}>
               Reintentar conexión
             </p>
           </div>
         ) : pacientes.length === 0 ? (
           
-          /* 3. ESTADO DE LISTA VACÍA (Servidor funciona, pero no hay datos) */
           <div className="mensaje-estado vacio-box">
             <Info size={38} color="#4c4c4c" />
             <h4>No hay pacientes</h4>
@@ -91,51 +71,12 @@ export default function ListaEspera() {
           </div>
         ) : (
           
-          /* 4. TABLA DE PACIENTES (Solo se muestra si hay datos y no hay error) */
           <div className="tabla-wrapper">
-            {/* Spinner sutil solo sobre la tabla durante recargas */}
             {isRefreshing && (
               <div className="overlay-carga">
                 <Loader2 className="spinner-animado" size={40} />
               </div>
             )}
-=======
-      <table className="tabla-pacientes">
-        <thead>
-          <tr>
-            <th className="col-afiliacion">Afiliación</th>
-            <th className="col-nombre">Nombre</th>
-            <th className="col-creado">Creado</th>
-            <th className="col-estado">Estado</th>
-            <th className="col-acciones">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pacientes.map((p) => (
-            <tr key={p.id}>
-              <td className="col-afiliacion">{p.numero_afiliacion}</td>
-              <td className="col-nombre">{p.nombre}</td>
-              <td className="col-creado">{p.creado}</td>
-              <td className="col-estado">
-                <span className={`status-badge ${p.estado === '2' ? 'estado-consulta' : ''}`}>
-                  {p.estado === '1' ? 'En espera' : 'En consulta'}
-                </span>
-              </td>
-              <td className="col-acciones">
-                <div className="contenedor-acciones">
-                  <div className="grupo-acciones grupo-principal">
-                    <button
-                      className={`btn-accion btn-atender ${p.estado === '2' ? 'btn-atendido-deshabilitado' : ''}`}
-                      onClick={() => p.estado === '1' && handleAtender(p)}
-                      disabled={p.estado === '2'}
-                      title={p.estado === '1' ? "Atender paciente" : "Paciente ya en consulta"}
-                      tabIndex={0}
-                
-                    >
-                      <CheckCircle size={20} strokeWidth={2.5} />
-                      <span className="texto-boton">Atender</span>
-                    </button>
->>>>>>> 19b075cb01c30794a48a15425e17059f0529a5cf
 
             <table className={`tabla-pacientes ${isRefreshing ? 'tabla-opaca' : ''}`}>
               <thead>
@@ -165,20 +106,16 @@ export default function ListaEspera() {
                             className={`btn-accion btn-atender ${p.estado === '2' ? 'btn-atendido-deshabilitado' : ''}`}
                             onClick={() => p.estado === '1' && atenderPaciente(p.id)}
                             disabled={p.estado === '2'}
-                            title={p.estado === '1' ? "Atender paciente" : "Paciente ya en consulta"}
                             tabIndex={0}
                           >
                             <CheckCircle size={20} strokeWidth={2.5} />
                             <span className="texto-boton">Atender</span>
                           </button>
-
                           <button className="btn-accion btn-info" tabIndex={0}>
                             <Info size={20} strokeWidth={2.5} />
                           </button>
                         </div>
-
                         <div className="divisor-interno"></div>
-
                         <div className="grupo-acciones">
                           <button 
                             className="btn-accion btn-eliminar" 
@@ -198,23 +135,17 @@ export default function ListaEspera() {
         )}
       </div>
 
-      {/* BOTONES FLOTANTES (Siempre visibles) */}
       <div className="contenedor-botones-flotantes">
+        {/* El botón de actualización sutil sigue pasando true por defecto */}
         <button 
           className={`btn-flotante-secundario ${isRefreshing ? 'girando' : ''}`} 
-          onClick={() => recargarLista()} 
-          title="Actualizar lista"
+          onClick={() => recargarLista(true)} 
           disabled={isRefreshing}
         >
           <RefreshCcw size={24} />
         </button>
 
-        <Link 
-          to="/añadirpaciente" 
-          className="btn-flotante-añadir"
-          ref={botonAnadirRef}
-          tabIndex={0} 
-        >
+        <Link to="/añadirpaciente" className="btn-flotante-añadir" ref={botonAnadirRef}>
           <UserPlus size={24} />
           <span>Añadir paciente</span>
         </Link>

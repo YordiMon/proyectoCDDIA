@@ -1,0 +1,149 @@
+/* Reutilizamos variables si las tienes, si no, usa estos colores */
+.historial-intro {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.historial-intro h2 {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+  color: #1e293b;
+}
+
+.historial-intro p {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.lista-consultas {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.tarjeta-consulta {
+  width: 100%;
+  padding: 25px; 
+  border: 2px solid #eee; 
+  border-radius: 5px;   
+  background-color: #ffffff;
+  font-size: 1.05rem;
+  color: #2c3e50;
+  transition: all 0.3s ease;
+  outline: none;
+  box-sizing: border-box; 
+}
+
+.tarjeta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.fecha-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.diagnostico-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  background: #e3f2fd;
+  color: #1976d2;
+
+}
+
+.seccion-principal {
+  margin-bottom: 20px;
+}
+
+.seccion-principal h4 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.seccion-principal p {
+  font-size: 1rem;
+  color: #334155;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.grid-vitales {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  background-color: #f8fafc;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.vital-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icono-vital { stroke-width: 2.5px; }
+.icono-vital.fc { color: #ef4444; }
+.icono-vital.fr { color: #3b82f6; }
+.icono-vital.temp { color: #f97316; }
+.icono-vital.pres { color: #8b5cf6; }
+
+.vital-item span {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.vital-item strong {
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.receta-box {
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 15px;
+  border-radius: 10px;
+  color: #064e3b;
+}
+
+.receta-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #059669;
+}
+
+.observaciones-box {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px dashed #e2e8f0;
+  font-size: 0.9rem;
+  color: #ef4444; /* Rojo para alertas */
+}
+
+.estado-carga, .estado-error, .estado-vacio {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  font-size: 1.1rem;
+}
