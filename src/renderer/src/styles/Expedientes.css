@@ -216,3 +216,16 @@
 .btn-ir-consulta:hover {
   background-color: #1d4ed8;
 }
+
+.btn-paciente-nuevo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #2563eb;
+  color: rgb(255, 255, 255);
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.2s;
+}

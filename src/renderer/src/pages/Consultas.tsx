@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, AlertCircle, CheckCircle } from 'lucide-react'
 import '../styles/consulta.css'
-import { crearConsulta, buscarPacientePorAfiliacion } from '../services/consultaservice'
+import { crearConsulta } from '../services/consultaservice'
 
 interface FormData {
-  id_paciente: number
+  paciente_id: number
   nombre: string
   numero_afiliacion: string
   fecha_consulta: string
@@ -40,7 +40,7 @@ export default function Consultas() {
   const [mensaje, setMensaje] = useState<{ tipo: 'error' | 'exito'; texto: string } | null>(null)
 
   const [formData, setFormData] = useState<FormData>({
-    id_paciente: 0,
+    paciente_id: 0,
     nombre: '',
     numero_afiliacion: '',
     fecha_consulta: '',
@@ -84,7 +84,13 @@ export default function Consultas() {
     return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`
   }
 
-      useEffect(() => {
+  //  useEffect(() => {
+    //if (!state.id) {
+    //  mostrarMensaje('error', 'Acceso inválido a consulta')
+    //  navigate('/expedientes')
+    //  return
+   // }
+
     const now = new Date()
     const hermosillo = formatToTimeZone(now, 'America/Hermosillo')
 
@@ -92,41 +98,15 @@ export default function Consultas() {
 
     setFormData(prev => ({
       ...prev,
+      paciente_id: state.id!,
+      nombre: state.nombre ?? '',
+      numero_afiliacion: state.numero_afiliacion ?? '',
       fecha_consulta: hermosillo
     }))
-
-    // CASO 1: Viene desde registro o lista de espera
-    if (state && typeof state === 'object' && 'id' in state) {
-      setFormData(prev => ({
-        ...prev,
-        id_paciente: state.id ?? 0,
-        nombre: state.nombre ?? '',
-        numero_afiliacion: state.numero_afiliacion ?? ''
-      }))
-      return
-    }
-
-    // CASO 2: Viene desde expedientes con otro formato
-    if (state && typeof state === 'object' && 'paciente' in state) {
-      const p = (state as any).paciente
-      setFormData(prev => ({
-        ...prev,
-        id_paciente: p.id ?? 0,
-        nombre: p.nombre ?? '',
-        numero_afiliacion: p.numero_afiliacion ?? ''
-      }))
-      return
-    }
-
-    // CASO 3: No viene nada (expedientes simple)
-    setFormData(prev => ({
-      ...prev,
-      id_paciente: 0,
-      nombre: '',
-      numero_afiliacion: ''
-    }))
-
   }, [state])
+
+
+
 
 
 
@@ -138,16 +118,23 @@ export default function Consultas() {
     }))
   }
 
-  const handleGuardar = async () => {
+    const handleGuardar = async () => {
+    if (!formData.paciente_id) {
+      mostrarMensaje('error', 'No se ha seleccionado un paciente válido')
+      return
+    }
+
     if (!formData.nombre.trim() || !formData.numero_afiliacion.trim()) {
       mostrarMensaje('error', 'Nombre y número de afiliación son obligatorios')
       return
     }
 
+
+
     setLoading(true)
     try {
       const consultaData = {
-        paciente_id: formData.id_paciente,
+        paciente_id: formData.paciente_id,
         fecha_consulta: formData.fecha_consulta,
         motivo: formData.motivo || undefined,
         sintomas: formData.sintomas || undefined,
@@ -188,8 +175,7 @@ export default function Consultas() {
     await handleGuardar()
   }
 
-  console.log("STATE RECIBIDO:", state)
-  console.log("FORMDATA:", formData)
+  
 
   return (
     <div className="consulta-container">

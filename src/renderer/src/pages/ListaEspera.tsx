@@ -31,33 +31,34 @@ export default function ListaEspera() {
 
   //boton para atender paciente
   const handleAtender = async (p: { id: number; nombre: string; numero_afiliacion: string }) => {
-    try {
-      const respuesta = await existePaciente(p.numero_afiliacion);
+  try {
+    const respuesta = await existePaciente(p.numero_afiliacion);
 
-      await atenderPaciente(p.id);
+    await atenderPaciente(p.id);
 
-      if (respuesta.existe) {
-        navigate('/consultas', {
-          state: {
-            nombre: p.nombre,
-            numero_afiliacion: p.numero_afiliacion,
-            pacienteRegistrado: true
-          }
-        });
-      } else {
-        navigate('/registro-paciente', {
-          state: {
-            nombre: p.nombre,
-            numero_afiliacion: p.numero_afiliacion
-          }
-        });
-      }
-
-    } catch (error: any) {
-      console.error("Error al verificar paciente:", error);
-      alert("Error al verificar paciente: " + JSON.stringify(error));
+    if (respuesta.existe) {
+      navigate('/consultas', {
+        state: {
+          id: respuesta.paciente_id,   
+          nombre: p.nombre,
+          numero_afiliacion: p.numero_afiliacion,
+          pacienteRegistrado: true
+        }
+      });
+    } else {
+      navigate('/registro-paciente', {
+        state: {
+          nombre: p.nombre,
+          numero_afiliacion: p.numero_afiliacion
+        }
+      });
     }
-  };
+
+  } catch (error: any) {
+    console.error("Error al verificar paciente:", error);
+    alert("Error al verificar paciente: " + JSON.stringify(error));
+  }
+};
 
   
   // Se eliminó el window.confirm para una eliminación directa

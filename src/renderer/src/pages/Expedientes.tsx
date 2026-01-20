@@ -140,61 +140,61 @@ export default function Pacientes() {
       ) : (
         <div className="lista-grid">
           {pacientesFiltrados.map((paciente) => (
-  <div key={paciente.id} className="tarjeta-paciente-pro">
-    <div className="tarjeta-header">
-      <div className="avatar-circle">
-        <User size={22} />
+      <div key={paciente.id} className="tarjeta-paciente-pro">
+        <div className="tarjeta-header">
+          <div className="avatar-circle">
+            <User size={22} />
+          </div>
+          <div className="id-afiliacion">
+            <span className="nro-seguro">{paciente.numero_afiliacion}</span>
+          </div>
+        </div>
+
+        <h3 className="paciente-nombre">{paciente.nombre}</h3>
+
+        <div className="info-secundaria">
+          <span>
+            <Phone size={14} /> {paciente.celular}
+          </span>
+          <span>
+            <Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}
+          </span>
+          <span>({calcularEdad(paciente.fecha_nacimiento)} años)</span>
+        </div>
+
+        <div className="info-secundaria">
+          <span>
+            <MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}
+          </span>
+        </div>
+
+        <hr className="divisor" />
+
+        <div className="info-secundaria">
+          <p className="texto-clinico" style={{ margin: 0, lineHeight: '1.5' }}>
+            {generarResumenClinico(paciente)}
+          </p>
+        </div>
+        {/* Botón Badge */}
+                  <span className="conteo-badge"> Abrir tarjeta para más información </span>
+                
+        {/* boton consulta */}
+        <div className="acciones-tarjeta">
+          <Link
+            to="/consultas"
+            state={{
+              id: paciente.id,
+              nombre: paciente.nombre,
+              numero_afiliacion: paciente.numero_afiliacion
+            }}
+            className="btn-ir-consulta"
+          >
+            <ClipboardList size={18} />
+            Nueva consulta
+          </Link>
+        </div>
       </div>
-      <div className="id-afiliacion">
-        <span className="nro-seguro">{paciente.numero_afiliacion}</span>
-      </div>
-    </div>
-
-    <h3 className="paciente-nombre">{paciente.nombre}</h3>
-
-    <div className="info-secundaria">
-      <span>
-        <Phone size={14} /> {paciente.celular}
-      </span>
-      <span>
-        <Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}
-      </span>
-      <span>({calcularEdad(paciente.fecha_nacimiento)} años)</span>
-    </div>
-
-    <div className="info-secundaria">
-      <span>
-        <MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}
-      </span>
-    </div>
-
-    <hr className="divisor" />
-
-    <div className="info-secundaria">
-      <p className="texto-clinico" style={{ margin: 0, lineHeight: '1.5' }}>
-        {generarResumenClinico(paciente)}
-      </p>
-    </div>
-    {/* Botón Badge */}
-              <span className="conteo-badge"> Abrir tarjeta para más información </span>
-            
-    {/* boton consulta */}
-    <div className="acciones-tarjeta">
-      <Link
-        to="/consultas"
-        state={{
-          id: paciente.id,
-          nombre: paciente.nombre,
-          numero_afiliacion: paciente.numero_afiliacion
-        }}
-        className="btn-ir-consulta"
-      >
-        <ClipboardList size={18} />
-        Nueva consulta
-      </Link>
-    </div>
-  </div>
-))}
+    ))}
         </div>
       )}
        {/* BOTONES FLOTANTES (Siempre visibles) */}
@@ -210,15 +210,16 @@ export default function Pacientes() {
           <ClipboardList size={24} />
           
         </button>
-
+        <button className="btn-paciente-nuevo" >  
         <Link 
           to="/registro-paciente" 
-          className="btn-flotante-registro"
+          
           title="Registrar nuevo paciente"
         >
           <UserPlus size={24} />
           <span>Nuevo paciente</span>
         </Link>
+        </button>
       </div>
     </div>
   )

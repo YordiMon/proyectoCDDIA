@@ -34,6 +34,8 @@ export const buscarPacientePorAfiliacion = async (numero_afiliacion: string): Pr
   return res.json();
 };
 
+
+
 /* Crear consulta */
 export const crearConsulta = async (consulta: Consulta): Promise<{ message: string; consulta_id: number }> => {
   const res = await fetch(`${API_URL}/consultas`, {
