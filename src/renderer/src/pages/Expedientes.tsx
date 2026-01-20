@@ -210,16 +210,18 @@ export default function Pacientes() {
           <ClipboardList size={24} />
           
         </button>
-        <button className="btn-paciente-nuevo" >  
+
+         
         <Link 
           to="/registro-paciente" 
-          
+          className="btn-paciente-nuevo"
           title="Registrar nuevo paciente"
         >
           <UserPlus size={24} />
           <span>Nuevo paciente</span>
         </Link>
-        </button>
+      
+
       </div>
     </div>
   )

@@ -31,21 +31,27 @@ export default function ListaEspera() {
 
   //boton para atender paciente
   const handleAtender = async (p: { id: number; nombre: string; numero_afiliacion: string }) => {
-  try {
-    const respuesta = await existePaciente(p.numero_afiliacion);
+    try {
+      // Consultar datos reales del paciente en la base
+      const respuesta = await existePaciente(p.numero_afiliacion);
 
-    await atenderPaciente(p.id);
+      // Cambiar estado en lista de espera
+      await atenderPaciente(p.id);
 
-    if (respuesta.existe) {
+      // Si llegó hasta aquí, el paciente existe en BD
       navigate('/consultas', {
         state: {
-          id: respuesta.paciente_id,   
-          nombre: p.nombre,
-          numero_afiliacion: p.numero_afiliacion,
+          id: respuesta.paciente_id,
+          nombre: respuesta.nombre,
+          numero_afiliacion: respuesta.numero_afiliacion,
           pacienteRegistrado: true
         }
       });
-    } else {
+
+    } catch (error: any) {
+      console.error("Error al verificar paciente:", error);
+
+      // Si la API devolvió 404 → el paciente no existe aún
       navigate('/registro-paciente', {
         state: {
           nombre: p.nombre,
@@ -53,18 +59,15 @@ export default function ListaEspera() {
         }
       });
     }
+  };
 
-  } catch (error: any) {
-    console.error("Error al verificar paciente:", error);
-    alert("Error al verificar paciente: " + JSON.stringify(error));
-  }
-};
+
 
   
   // Se eliminó el window.confirm para una eliminación directa
-  const handleQuitar = (id: number) => {
-    quitarPaciente(id);
-  };
+//  const handleQuitar = (id: number) => {
+   // quitarPaciente(id);
+  //};
   
   if (loading) return <div className="contenedor-espera"><p>Cargando datos...</p></div>;
 

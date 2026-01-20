@@ -19,15 +19,16 @@ export interface Paciente {
 }
 
 export interface RespuestaCrearPaciente {
-  mensaje: string;
-  id: number;
+  mensaje: string
+  id: number
 }
 
 export interface RespuestaExistePaciente {
-  existe: boolean;
-  paciente_id?: number;
-  nombre?: string;
+  paciente_id: number
+  nombre: string
+  numero_afiliacion: string
 }
+
 
 // ======== Funciones del servicio ========
 
@@ -62,7 +63,7 @@ export const existePaciente = async (numero_afiliacion: string):
 Promise<RespuestaExistePaciente> => {
 
   const res = await fetch(
-    `${API_URL}/paciente_existe/${numero_afiliacion}`
+    `${API_URL}/paciente/${numero_afiliacion}`
   );
 
   const data = await res.json();

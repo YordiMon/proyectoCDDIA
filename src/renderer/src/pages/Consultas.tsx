@@ -4,6 +4,9 @@ import { ChevronLeft, AlertCircle, CheckCircle } from 'lucide-react'
 import '../styles/consulta.css'
 import { crearConsulta } from '../services/consultaservice'
 
+//const location = useLocation();
+
+
 interface FormData {
   paciente_id: number
   nombre: string
@@ -24,6 +27,7 @@ interface FormData {
   medicamentos_recetados: string
   observaciones: string
 }
+console.log("State recibido en consultas:", location.state);
 
 export default function Consultas() {
   const location = useLocation()
@@ -84,12 +88,12 @@ export default function Consultas() {
     return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`
   }
 
-  //  useEffect(() => {
-    //if (!state.id) {
-    //  mostrarMensaje('error', 'Acceso inválido a consulta')
-    //  navigate('/expedientes')
-    //  return
-   // }
+  useEffect(() => {
+    if (!state.id) {
+      mostrarMensaje('error', 'Acceso inválido a consulta')
+      navigate('/expedientes')
+      return
+    }
 
     const now = new Date()
     const hermosillo = formatToTimeZone(now, 'America/Hermosillo')
