@@ -1,3 +1,12 @@
+// src/renderer/src/pages/ListaEspera.tsx
+import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { usePacientes } from '../hooks/pacientesEspera'
+import { CheckCircle, Info, Trash2, UserPlus, RefreshCcw, Loader2, AlertCircle } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import '../styles/ListaEspera.css'
+import { existePaciente } from '../services/pacienteservice'
+
 import { useEffect, useRef } from 'react';
 import { usePacientes } from '../hooks/pacientesEspera';
 import { 
@@ -13,23 +22,66 @@ import { Link } from 'react-router-dom';
 import '../styles/ListaEspera.css';
 
 export default function ListaEspera() {
-  const { 
-    pacientes, 
-    totalEspera, 
-    loading, 
-    isRefreshing, 
+  const {
+    pacientes,
+    totalEspera,
+    loading,
+    isRefreshing,
     error,
-    atenderPaciente, 
-    quitarPaciente, 
-    recargarLista 
-  } = usePacientes(); 
-  const botonAnadirRef = useRef<HTMLAnchorElement>(null);
+    atenderPaciente,
+    quitarPaciente,
+    recargarLista
+  } = usePacientes()
+  const navigate = useNavigate()
+  const botonAnadirRef = useRef<HTMLAnchorElement>(null)
 
   useEffect(() => {
     if (!loading && botonAnadirRef.current) {
       botonAnadirRef.current.focus();
     }
   }, [loading]);
+
+  //boton para atender paciente
+  const handleAtender = async (p: { id: number; nombre: string; numero_afiliacion: string }) => {
+    try {
+      // Consultar datos reales del paciente en la base
+      const respuesta = await existePaciente(p.numero_afiliacion);
+
+      // Cambiar estado en lista de espera
+      await atenderPaciente(p.id);
+
+      // Si llegó hasta aquí, el paciente existe en BD
+      navigate('/consultas', {
+        state: {
+          id: respuesta.paciente_id,
+          nombre: respuesta.nombre,
+          numero_afiliacion: respuesta.numero_afiliacion,
+          pacienteRegistrado: true
+        }
+      });
+
+    } catch (error: any) {
+      console.error("Error al verificar paciente:", error);
+
+      // Si la API devolvió 404 → el paciente no existe aún
+      navigate('/registro-paciente', {
+        state: {
+          nombre: p.nombre,
+          numero_afiliacion: p.numero_afiliacion
+        }
+      });
+    }
+  };
+
+
+
+  
+  // Se eliminó el window.confirm para una eliminación directa
+//  const handleQuitar = (id: number) => {
+   // quitarPaciente(id);
+  //};
+  
+ 
 
   // 1. ESTADO DE CARGA (Pantalla completa)
   // Al darle a Reintentar, loading vuelve a ser true y entra aquí inmediatamente
@@ -102,9 +154,9 @@ export default function ListaEspera() {
                     <td className="col-acciones">
                       <div className="contenedor-acciones">
                         <div className="grupo-acciones grupo-principal">
-                          <button 
+                          <button
                             className={`btn-accion btn-atender ${p.estado === '2' ? 'btn-atendido-deshabilitado' : ''}`}
-                            onClick={() => p.estado === '1' && atenderPaciente(p.id)}
+                            onClick={() => p.estado === '1' && handleAtender(p)}
                             disabled={p.estado === '2'}
                             tabIndex={0}
                           >
