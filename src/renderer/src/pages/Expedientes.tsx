@@ -1,22 +1,36 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Search, User, RefreshCw, Phone, AlertTriangle, MapPin, Calendar1, UserPlus, ClipboardList } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { API_BASE_URL } from '../config'
-import '../styles/Expedientes.css'
+import { useNavigate } from 'react-router-dom';
+import { 
+  Search, 
+  User, 
+  Phone, 
+  MapPin, 
+  Calendar1, 
+  Loader2, 
+  Info, 
+  AlertCircle 
+} from 'lucide-react';
+import { API_BASE_URL } from '../config';
+import '../styles/Expedientes.css';
 
-interface Paciente {
-  id: number
-  nombre: string
-  numero_afiliacion: string
-  celular: string
-  tipo_sangre: string
-  enfermedades: string
-  alergias: string
-  cirugias_previas: string
-  medicamentos_actuales: string
-  sexo: string
-  fecha_nacimiento: string
-  direccion: string
+// ... (Interface Paciente se mantiene igual que la tuya)
+interface Paciente { 
+  id: number;
+  nombre: string;
+  numero_afiliacion: string;
+  fecha_nacimiento: string;
+  sexo: string;
+  tipo_sangre: string;
+  recibe_donaciones: boolean;
+  direccion: string;
+  celular: string;
+  contacto_emergencia: string;
+  enfermedades: string;
+  alergias: string;
+  cirugias_previas: string;
+  medicamentos_actuales: string;
 }
 
 export default function Pacientes() {
@@ -25,8 +39,9 @@ export default function Pacientes() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  // Calcular edad
   const calcularEdad = (fecha: string) => {
     if (!fecha) return 'N/A'
     const hoy = new Date()
@@ -39,7 +54,6 @@ export default function Pacientes() {
     return edad
   }
 
-  // Formatear fecha a DD/MM/AAAA
   const formatearFecha = (fecha: string) => {
     if (!fecha) return 'N/A'
     const partes = fecha.split('-')
@@ -47,14 +61,12 @@ export default function Pacientes() {
     return `${partes[2]}/${partes[1]}/${partes[0]}`
   }
 
-  // Helper para determinar si tiene algo (Enfermedad, Cirugía, etc.)
   const tieneDatos = (texto: string) => {
     return (
       texto && texto.trim().toLowerCase() !== 'ninguna' && texto.trim().toLowerCase() !== 'ninguno'
     )
   }
 
-  // Generador del párrafo resumen
   const generarResumenClinico = (p: Paciente) => {
     const estadoEnfermedades = tieneDatos(p.enfermedades) ? 'con enfermedades' : 'sin enfermedades'
     const estadoMedicacion = tieneDatos(p.medicamentos_actuales)
@@ -75,10 +87,10 @@ export default function Pacientes() {
         const data = await response.json()
         setPacientes(data)
       } else {
-        setError(true)
+        throw new Error('Servidor no disponible');
       }
     } catch (err) {
-      setError(true)
+      setError("No se pudo conectar con el servidor. Verifica tu conexión a internet.");
     } finally {
       setLoading(false)
     }
@@ -104,12 +116,23 @@ export default function Pacientes() {
     })
   }, [busqueda, pacientes])
 
+  if (loading) {
+    return (
+      <div className="contenedor-pacientes centro-total">
+        <Loader2 className="spinner-animado" size={50} />
+        <p>Conectando con el servidor...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="contenedor-pacientes">
+      <h1>Expedientes clínicos</h1>
       <header className="cabecera-pacientes">
         <div className="titulo-fila">
-          <h1>Expedientes clínicos</h1>
-          <span className="conteo-badge">{pacientesFiltrados.length} Registros</span>
+          {!error && pacientes.length > 0 && (
+            <span className="conteo-badge">{pacientesFiltrados.length} Registros</span>
+          )}
         </div>
         <div className="buscador-wrapper">
           <Search className="icon-search" size={18} />
@@ -124,104 +147,70 @@ export default function Pacientes() {
         </div>
       </header>
 
-      {loading ? (
-        <div className="estado-mensaje">
-          <div className="spinner"></div>
-          <p>Cargando base de datos...</p>
-        </div>
-      ) : error ? (
-        <div className="estado-mensaje error">
-          <AlertTriangle size={40} />
-          <p>No se pudo establecer conexión con el servidor</p>
-          <button onClick={obtenerPacientes} className="btn-reintentar">
-            <RefreshCw size={16} /> Reintentar
-          </button>
-        </div>
-      ) : (
-        <div className="lista-grid">
-          {pacientesFiltrados.map((paciente) => (
-      <div key={paciente.id} className="tarjeta-paciente-pro">
-        <div className="tarjeta-header">
-          <div className="avatar-circle">
-            <User size={22} />
+      <div className="zona-contenido">
+        {error ? (
+          <div className="mensaje-estado error-box">
+            <AlertCircle size={38} color="#4c4c4c" />
+            <h4>Error de conexión</h4>
+            <p>{error}</p>
+            <p className="btn-reintentar" onClick={obtenerPacientes}>
+              Reintentar conexión
+            </p>
           </div>
-          <div className="id-afiliacion">
-            <span className="nro-seguro">{paciente.numero_afiliacion}</span>
+        ) : pacientes.length === 0 ? (
+          <div className="mensaje-estado vacio-box">
+            <Info size={38} color="#4c4c4c" />
+            <h4>No hay pacientes</h4>
+            <p>La base de datos de expedientes se encuentra vacía actualmente. Actualice constantemente.</p>
           </div>
-        </div>
+        ) : (
+          <div className="lista-grid">
+            {pacientesFiltrados.map((paciente) => (
+              /* PASO DE DATOS: Usamos el state del navigate */
+              <div 
+                key={paciente.id} 
+                className="tarjeta-paciente-pro"
+                onClick={() => navigate(`/paciente/${paciente.id}`, { state: { paciente } })}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="tarjeta-header">
+                  <div className="avatar-circle">
+                    <User size={22} />
+                  </div>
+                  <div className="id-afiliacion">
+                    <span className="nro-seguro">{paciente.numero_afiliacion}</span>
+                  </div>
+                </div>
 
-        <h3 className="paciente-nombre">{paciente.nombre}</h3>
-
-        <div className="info-secundaria">
-          <span>
-            <Phone size={14} /> {paciente.celular}
-          </span>
-          <span>
-            <Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}
-          </span>
-          <span>({calcularEdad(paciente.fecha_nacimiento)} años)</span>
-        </div>
-
-        <div className="info-secundaria">
-          <span>
-            <MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}
-          </span>
-        </div>
-
-        <hr className="divisor" />
-
-        <div className="info-secundaria">
-          <p className="texto-clinico" style={{ margin: 0, lineHeight: '1.5' }}>
-            {generarResumenClinico(paciente)}
-          </p>
-        </div>
-        {/* Botón Badge */}
-                  <span className="conteo-badge"> Abrir tarjeta para más información </span>
+                <h3 className="paciente-nombre">{paciente.nombre}</h3>
                 
-        {/* boton consulta */}
-        <div className="acciones-tarjeta">
-          <Link
-            to="/consultas"
-            state={{
-              id: paciente.id,
-              nombre: paciente.nombre,
-              numero_afiliacion: paciente.numero_afiliacion
-            }}
-            className="btn-ir-consulta"
-          >
-            <ClipboardList size={18} />
-            Nueva consulta
-          </Link>
-        </div>
-      </div>
-    ))}
-        </div>
-      )}
-       {/* BOTONES FLOTANTES (Siempre visibles) */}
-      <div className="contenedor-botones-flotantes">
-        <button 
-          className={`btn-flotante-secundario ${isRefreshing ? 'girando' : ''}`} 
-          onClick={() => recargarLista()} 
-          title="Actualizar lista"
-          disabled={isRefreshing}
-        >
-          <RefreshCw size={24} />
-       
-          <ClipboardList size={24} />
-          
-        </button>
+                <div className="info-secundaria">
+                  <span><Phone size={14} /> {paciente.celular}</span>
+                  <span><Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}</span>
+                  <span>({calcularEdad(paciente.fecha_nacimiento)} años)</span>
+                </div>
 
-         
-        <Link 
-          to="/registro-paciente" 
-          className="btn-paciente-nuevo"
-          title="Registrar nuevo paciente"
-        >
-          <UserPlus size={24} />
-          <span>Nuevo paciente</span>
-        </Link>
-      
+                <div className="info-secundaria">
+                  <span><MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}</span>
+                </div>
 
+                <hr className="divisor" />
+
+                <div className="info-secundaria">
+                  <p className="texto-clinico" style={{ margin: 0, lineHeight: '1.5' }}>
+                    {generarResumenClinico(paciente)}
+                  </p>
+                </div>
+
+                <div className="seccion-clinica" style={{ marginTop: '15px' }}>
+                  <span className="conteo-badge">
+                    Abrir tarjeta para más información
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

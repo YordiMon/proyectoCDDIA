@@ -1,0 +1,137 @@
+.contenedor-pacientes {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 50px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.btn-volver {
+  background: none;
+  border: none;
+  color: #2c3e50;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.btn-volver:hover {
+  color: #1976d2;
+}
+
+/* Info Superior */
+.perfil-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.nombre-afiliacion h2, 
+.nombre-afiliacion p {
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Línea separadora */
+.divisor-detalle {
+  border: 0;
+  border-top: 1px solid #eaeaea;
+  margin: 15px 0;
+}
+
+/* Contenedor de los renglones de datos */
+.bloque-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  padding: 10px 0;
+}
+
+/* Cada dato en formato columna: Etiqueta arriba, Valor negrita abajo */
+.dato-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dato-columna span {
+  font-size: 1rem;
+  color: #555;
+  letter-spacing: 0.5px;
+}
+
+.dato-columna strong {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #000;
+    letter-spacing: 0.5px;
+}
+
+.no-aplica {
+  font-style: italic;
+  font-weight: bold;
+  color: #666 !important; /* Un gris un poco más tenue para diferenciar */
+}
+
+/* CONTENEDOR FLOTANTE */
+.contenedor-botones-flotantes {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espacio exacto entre ambos */
+  z-index: 100;
+}
+
+/* ESTILO BASE (Copiado de tu ListaEspera.css) */
+.btn-flotante-añadir {
+  background-color: #1976d2;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 15px; /* Tu borde original de 15px */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-flotante-añadir:hover {
+  background-color: #1266ba;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Opcional: Si quieres que el de historial sea sutilmente distinto 
+   puedes usar un borde o un color diferente, pero aquí los dejo iguales 
+   para cumplir con "idénticos" */
+.btn-historial {
+  background-color: #1976d2; /* Mismo azul que el de Nueva consulta */
+}
+
+/* Estilo para los iconos dentro de los botones */
+.btn-flotante-añadir svg {
+  flex-shrink: 0;
+}
+
+/* Estilo para el texto dentro de los botones */
+.btn-flotante-añadir span {
+  font-family: inherit;
+  font-size: 1rem;
+}

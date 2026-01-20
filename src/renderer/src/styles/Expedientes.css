@@ -1,19 +1,15 @@
 /* RESET DE CAJA PARA EVITAR SCROLL LATERAL */
 .contenedor-pacientes {
-  width: 100%;
-  min-height: 100vh;
   padding: 10px;
-  background-color: #fcfcfc;
-  /* El box-sizing asegura que el padding no sume al ancho total */
-  box-sizing: border-box;
-  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
 }
 
 .cabecera-pacientes {
   display: flex;
   flex-direction: column;
   gap: 25px;
-  margin-bottom: 50px; /* Margen añadido entre buscador y tarjetas */
+  margin-bottom: 50px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -31,11 +27,10 @@
   color: #1976d2;
 }
 
-/* BUSCADOR: ESTILO HEREDADO DE ANADIR PACIENTE */
+/* BUSCADOR */
 .buscador-wrapper {
   position: relative;
   width: 100%;
-  /* Eliminado max-width para que ocupe todo el ancho */
   box-sizing: border-box;
 }
 
@@ -58,7 +53,6 @@
   color: #2c3e50;
   transition: all 0.3s ease;
   outline: none;
-  /* Vital para que el padding no desborde el input */
   box-sizing: border-box; 
 }
 
@@ -79,10 +73,9 @@
 
 .tarjeta-paciente-pro {
   background: white;
-  border-radius: 12px;
+  border-radius: 7px;
   padding: 20px;
   border: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
@@ -134,8 +127,6 @@
   margin-bottom: 15px;
 }
 
-.icon-sangre { color: #e74c3c; }
-
 .divisor {
   border: 0;
   border-top: 1px solid #f5f5f5;
@@ -148,46 +139,66 @@
   gap: 12px;
 }
 
-.clinica-item label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #95a5a6;
-  margin-bottom: 4px;
-}
-
 .texto-clinico {
   font-size: 0.9rem;
   color: #34495e;
   margin: 0;
 }
 
-.texto-clinico.alerta {
-  color: #e74c3c;
-  font-weight: 600;
-}
+/* --- ESTADOS UNIFICADOS (NUEVO) --- */
 
-/* MENSAJES DE ESTADO */
-.estado-mensaje {
+.centro-total {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 50px;
-  color: #94a3b8;
-  gap: 15px;
+  height: 80vh;
 }
 
-.spinner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #1976d2;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+.spinner-animado {
+  color: #1976d2;
+  animation: rotate 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.mensaje-estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  text-align: center;
+}
+
+.mensaje-estado h4 {
+  margin: 20px 0 10px 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.mensaje-estado p {
+  color: #666;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.btn-reintentar { 
+  margin-top: 15px;
+  font-style: italic;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+  text-decoration: underline;
+  color: #1976d2;
+}
+
+.btn-reintentar:hover {
+  font-size: 15.9px;
 }
 
 @keyframes spin {
@@ -228,4 +239,7 @@
   text-decoration: none;
   font-size: 14px;
   transition: background 0.2s;
+.zona-contenido {
+  width: 100%;
+  min-height: 400px;
 }
