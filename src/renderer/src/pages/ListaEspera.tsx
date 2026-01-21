@@ -2,13 +2,8 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePacientes } from '../hooks/pacientesEspera'
-import { CheckCircle, Info, Trash2, UserPlus, RefreshCcw, Loader2, AlertCircle } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import '../styles/ListaEspera.css'
 import { existePaciente } from '../services/pacienteservice'
-
-import { useEffect, useRef } from 'react';
-import { usePacientes } from '../hooks/pacientesEspera';
 import { 
   CheckCircle, 
   Info, 
@@ -16,7 +11,8 @@ import {
   UserPlus, 
   RefreshCcw, 
   Loader2, 
-  AlertCircle 
+  AlertCircle
+ 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import '../styles/ListaEspera.css';

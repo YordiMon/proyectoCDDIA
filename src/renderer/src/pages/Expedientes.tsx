@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Search, User, RefreshCw, Phone, AlertTriangle, MapPin, Calendar1, UserPlus, ClipboardList } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import { 
   Search, 
   User, 
@@ -10,34 +9,38 @@ import {
   Calendar1, 
   Loader2, 
   Info, 
-  AlertCircle 
+  AlertCircle,
+  RefreshCw, 
+  AlertTriangle, 
+  UserPlus, 
+  ClipboardList
 } from 'lucide-react';
-import { API_BASE_URL } from '../config';
-import '../styles/Expedientes.css';
+import { API_BASE_URL } from '../config'
+import '../styles/Expedientes.css'
 
 // ... (Interface Paciente se mantiene igual que la tuya)
 interface Paciente { 
-  id: number;
-  nombre: string;
-  numero_afiliacion: string;
-  fecha_nacimiento: string;
-  sexo: string;
-  tipo_sangre: string;
-  recibe_donaciones: boolean;
-  direccion: string;
-  celular: string;
-  contacto_emergencia: string;
-  enfermedades: string;
-  alergias: string;
-  cirugias_previas: string;
-  medicamentos_actuales: string;
+  id: number
+  nombre: string
+  numero_afiliacion: string
+  fecha_nacimiento: string
+  sexo: string
+  tipo_sangre: string
+  recibe_donaciones: boolean
+  direccion: string
+  celular: string
+  contacto_emergencia: string
+  enfermedades: string
+  alergias: string
+  cirugias_previas: string
+  medicamentos_actuales: string
 }
 
 export default function Pacientes() {
   const [pacientes, setPacientes] = useState<Paciente[]>([])
   const [busqueda, setBusqueda] = useState('')
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  //const [error, setError] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -90,7 +93,7 @@ export default function Pacientes() {
         throw new Error('Servidor no disponible');
       }
     } catch (err) {
-      setError("No se pudo conectar con el servidor. Verifica tu conexión a internet.");
+      setError("No se pudo conectar con el servidor. Verifica tu conexión a internet.")
     } finally {
       setLoading(false)
     }
@@ -126,92 +129,140 @@ export default function Pacientes() {
   }
 
   return (
-    <div className="contenedor-pacientes">
-      <h1>Expedientes clínicos</h1>
-      <header className="cabecera-pacientes">
-        <div className="titulo-fila">
-          {!error && pacientes.length > 0 && (
-            <span className="conteo-badge">{pacientesFiltrados.length} Registros</span>
-          )}
+  <div className="contenedor-pacientes">
+    <h1>Expedientes clínicos</h1>
+
+    <header className="cabecera-pacientes">
+      <div className="titulo-fila">
+        {!error && pacientes.length > 0 && (
+          <span className="conteo-badge">
+            {pacientesFiltrados.length} Registros
+          </span>
+        )}
+      </div>
+
+      <div className="buscador-wrapper">
+        <Search className="icon-search" size={18} />
+        <input
+          type="text"
+          placeholder="Buscar por nombre o número de afiliación..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          className="input-busqueda-moderno"
+          autoComplete="off"
+        />
+      </div>
+    </header>
+
+    <div className="zona-contenido">
+      {error ? (
+        <div className="mensaje-estado error-box">
+          <AlertCircle size={38} color="#4c4c4c" />
+          <h4>Error de conexión</h4>
+          <p>{error}</p>
+          <p className="btn-reintentar" onClick={obtenerPacientes}>
+            Reintentar conexión
+          </p>
         </div>
-        <div className="buscador-wrapper">
-          <Search className="icon-search" size={18} />
-          <input
-            type="text"
-            placeholder="Buscar por nombre o número de afiliación..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            className="input-busqueda-moderno"
-            autoComplete="off"
-          />
+      ) : pacientes.length === 0 ? (
+        <div className="mensaje-estado vacio-box">
+          <Info size={38} color="#4c4c4c" />
+          <h4>No hay pacientes</h4>
+          <p>
+            La base de datos de expedientes se encuentra vacía actualmente.
+            Actualice constantemente.
+          </p>
         </div>
-      </header>
-
-      <div className="zona-contenido">
-        {error ? (
-          <div className="mensaje-estado error-box">
-            <AlertCircle size={38} color="#4c4c4c" />
-            <h4>Error de conexión</h4>
-            <p>{error}</p>
-            <p className="btn-reintentar" onClick={obtenerPacientes}>
-              Reintentar conexión
-            </p>
-          </div>
-        ) : pacientes.length === 0 ? (
-          <div className="mensaje-estado vacio-box">
-            <Info size={38} color="#4c4c4c" />
-            <h4>No hay pacientes</h4>
-            <p>La base de datos de expedientes se encuentra vacía actualmente. Actualice constantemente.</p>
-          </div>
-        ) : (
-          <div className="lista-grid">
-            {pacientesFiltrados.map((paciente) => (
-              /* PASO DE DATOS: Usamos el state del navigate */
-              <div 
-                key={paciente.id} 
-                className="tarjeta-paciente-pro"
-                onClick={() => navigate(`/paciente/${paciente.id}`, { state: { paciente } })}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className="tarjeta-header">
-                  <div className="avatar-circle">
-                    <User size={22} />
-                  </div>
-                  <div className="id-afiliacion">
-                    <span className="nro-seguro">{paciente.numero_afiliacion}</span>
-                  </div>
+      ) : (
+        <div className="lista-grid">
+          {pacientesFiltrados.map((paciente) => (
+            <div
+              key={paciente.id}
+              className="tarjeta-paciente-pro"
+              onClick={() =>
+                navigate(`/paciente/${paciente.id}`, {
+                  state: { paciente }
+                })
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="tarjeta-header">
+                <div className="avatar-circle">
+                  <User size={22} />
                 </div>
-
-                <h3 className="paciente-nombre">{paciente.nombre}</h3>
-                
-                <div className="info-secundaria">
-                  <span><Phone size={14} /> {paciente.celular}</span>
-                  <span><Calendar1 size={14} /> {formatearFecha(paciente.fecha_nacimiento)}</span>
-                  <span>({calcularEdad(paciente.fecha_nacimiento)} años)</span>
-                </div>
-
-                <div className="info-secundaria">
-                  <span><MapPin size={14} /> {paciente.direccion || 'Sin dirección registrada'}</span>
-                </div>
-
-                <hr className="divisor" />
-
-                <div className="info-secundaria">
-                  <p className="texto-clinico" style={{ margin: 0, lineHeight: '1.5' }}>
-                    {generarResumenClinico(paciente)}
-                  </p>
-                </div>
-
-                <div className="seccion-clinica" style={{ marginTop: '15px' }}>
-                  <span className="conteo-badge">
-                    Abrir tarjeta para más información
+                <div className="id-afiliacion">
+                  <span className="nro-seguro">
+                    {paciente.numero_afiliacion}
                   </span>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+
+              <h3 className="paciente-nombre">{paciente.nombre}</h3>
+
+              <div className="info-secundaria">
+                <span>
+                  <Phone size={14} /> {paciente.celular}
+                </span>
+                <span>
+                  <Calendar1 size={14} />{" "}
+                  {formatearFecha(paciente.fecha_nacimiento)}
+                </span>
+                <span>
+                  ({calcularEdad(paciente.fecha_nacimiento)} años)
+                </span>
+              </div>
+
+              <div className="info-secundaria">
+                <span>
+                  <MapPin size={14} />{" "}
+                  {paciente.direccion || "Sin dirección registrada"}
+                </span>
+              </div>
+
+              <hr className="divisor" />
+
+              <div className="info-secundaria">
+                <p
+                  className="texto-clinico"
+                  style={{ margin: 0, lineHeight: "1.5" }}
+                >
+                  {generarResumenClinico(paciente)}
+                </p>
+              </div>
+
+              {/* Badge informativo */}
+              <div className="seccion-clinica" style={{ marginTop: "15px" }}>
+                <span className="conteo-badge">
+                  Abrir tarjeta para más información
+                </span>
+              </div>
+
+              {/* BOTÓN EXPLÍCITO DE CONSULTA */}
+              <div className="acciones-tarjeta">
+                <button
+                  className="btn-ir-consulta"
+                  onClick={(e) => {
+                    e.stopPropagation(); // 🔑 evita abrir expediente
+                    navigate("/consultas", {
+                      state: {
+                        id: paciente.id,
+                        nombre: paciente.nombre,
+                        numero_afiliacion: paciente.numero_afiliacion,
+                        pacienteRegistrado: true
+                      }
+                    });
+                  }}
+                >
+                  <ClipboardList size={18} />
+                  Nueva consulta
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-  )
+  </div>
+);
+
 }
