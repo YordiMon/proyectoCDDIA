@@ -73,9 +73,9 @@ export default function ListaEspera() {
 
   
   // Se eliminó el window.confirm para una eliminación directa
-//  const handleQuitar = (id: number) => {
-   // quitarPaciente(id);
-  //};
+  const handleQuitar = (id: number) => {
+    quitarPaciente(id);
+  };
   
  
 
