@@ -10,6 +10,7 @@ import AñadirPaciente from './pages/AñadirPaciente';
 import DetallePaciente from './pages/DetallePaciente';
 import HistorialConsultas from './pages/HistorialConsultas';
 import Usuarios from './pages/Usuarios';
+import DetalleConsulta from './pages/DetalleConsulta';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
               <Route path="/historial/:id" element={<HistorialConsultas />} />
               <Route path="/ajustes" element={<Ajustes />} />
               <Route path="/añadirpaciente" element={<AñadirPaciente />} />
+              <Route path="/detalle-consulta/:id" element={<DetalleConsulta />} />
             </Routes>
           </main>
         </div>
