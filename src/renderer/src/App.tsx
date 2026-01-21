@@ -1,15 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Titlebar from './components/Titlebar'; // Asegúrate de que la ruta sea correcta
-import Sidebar from './components/Sidebar';
-import ListaEspera from './pages/ListaEspera';
-import Expedientes from './pages/Expedientes';
-import Perfil from './pages/Perfil';
-import Estadisticas from './pages/Estadisticas';
-import Ajustes from './pages/Ajustes';
-import AñadirPaciente from './pages/AñadirPaciente';
-import DetallePaciente from './pages/DetallePaciente';
-import HistorialConsultas from './pages/HistorialConsultas';
-import Usuarios from './pages/Usuarios';
+import Titlebar from './components/Titlebar' // Asegúrate de que la ruta sea correcta
+import Sidebar from './components/Sidebar'
+import ListaEspera from './pages/ListaEspera'
+import Expedientes from './pages/Expedientes'
+import Perfil from './pages/Perfil'
+import Estadisticas from './pages/Estadisticas'
+import Ajustes from './pages/Ajustes'
+import AñadirPaciente from './pages/AñadirPaciente'
+import Usuarios from './pages/Usuarios'
+import Consultas from './pages/Consultas'
+import RegistoP from './pages/RegistroPacientes'
+import DetallePaciente from './pages/DetallePaciente'
+import HistorialConsultas from './pages/HistorialConsultas'
 import DetalleConsulta from './pages/DetalleConsulta';
 
 function App() {
@@ -46,6 +48,8 @@ function App() {
               <Route path="/ajustes" element={<Ajustes />} />
               <Route path="/añadirpaciente" element={<AñadirPaciente />} />
               <Route path="/detalle-consulta/:id" element={<DetalleConsulta />} />
+              <Route path="/registro-paciente" element={<RegistoP />} />
+              <Route path="/consultas" element={<Consultas />} />
             </Routes>
           </main>
         </div>

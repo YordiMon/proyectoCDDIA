@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'; 
-import { API_BASE_URL } from '../config';
-import '../styles/AñadirPaciente.css';
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'
+import { API_BASE_URL } from '../config'
+import '../styles/AñadirPaciente.css'
 
 export default function AnadirPaciente() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function AnadirPaciente() {
   const [formData, setFormData] = useState({
     nombre: '',
     numero_afiliacion: ''
-  });
+  })
 
   useEffect(() => {
     setLoading(false);
@@ -27,23 +27,21 @@ export default function AnadirPaciente() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+    e.preventDefault()
     if (!formData.nombre.trim() || !formData.numero_afiliacion.trim()) {
       mostrarError('Todos los campos son obligatorios');
       return;
     }
 
-    setLoading(true);
+    setLoading(true)
     try {
       const response = await fetch(`${API_BASE_URL}/crear_paciente_en_espera`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
+        body: JSON.stringify(formData)
+      })
       if (response.ok) {
-        navigate('/');
+        navigate('/')
       } else {
         // En lugar de alert, usamos nuestra función
         mostrarError('Error en el servidor al crear el paciente');
@@ -53,19 +51,19 @@ export default function AnadirPaciente() {
       // En lugar de alert, usamos nuestra función
       mostrarError('No se pudo conectar al servidor. Verifica tu conexión.');
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="contenedor-anadir">
       <div className="cabecera-anadir">
-        <button 
-          onClick={() => navigate(-1)} 
-          className="btn-volver-minimal" 
+        <button
+          onClick={() => navigate(-1)}
+          className="btn-volver-minimal"
           title="Volver"
           type="button"
-          tabIndex={-1} 
+          tabIndex={-1}
         >
           <ChevronLeft size={32} strokeWidth={2.5} />
         </button>
@@ -77,7 +75,8 @@ export default function AnadirPaciente() {
         <div className="campo-form">
           <div className="label-container">
             <label htmlFor="afiliacion">Número de afiliación</label>
-            <span className={`contador ${formData.numero_afiliacion.length === 8 ? 'limite-alcanzado' : ''}`}>
+            <span
+              className={`contador ${formData.numero_afiliacion.length === 8 ? 'limite-alcanzado' : ''}`}>
               {formData.numero_afiliacion.length}/8
             </span>
           </div>
@@ -133,5 +132,5 @@ export default function AnadirPaciente() {
         </button>
       </form>
     </div>
-  );
+  )
 }
