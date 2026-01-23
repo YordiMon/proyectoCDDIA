@@ -141,7 +141,6 @@
   bottom: 100px; /* Arriba del botón flotante */
   right: 30px;
   background-color: rgba(231, 72, 60, 0.15); /* Rojo con transparencia */
-  color: #e7483c; /* Texto rojo sólido */
   padding: 12px 20px;
   border-radius: 10px;
   display: flex;

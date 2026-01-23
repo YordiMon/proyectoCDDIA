@@ -28,8 +28,8 @@ function createWindow(): void {
     show: false,
     frame: false,
     autoHideMenuBar: true,
-    minHeight: 670,
-    minWidth: 900,
+    minHeight: 700,
+    minWidth: 1100,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

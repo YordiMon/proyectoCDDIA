@@ -48,6 +48,7 @@ function App() {
               <Route path="/añadirpaciente" element={<AñadirPaciente />} />
               <Route path="/registro-paciente" element={<RegistoP />} />
               <Route path="/consultas" element={<Consultas />} />
+              <Route path="/lista-espera" element={<ListaEspera />} />
             </Routes>
           </main>
         </div>

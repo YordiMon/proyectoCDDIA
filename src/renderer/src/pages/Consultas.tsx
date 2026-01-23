@@ -3,6 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, AlertCircle, CheckCircle } from 'lucide-react'
 import '../styles/consulta.css'
 import { crearConsulta } from '../services/consultaservice'
+import { quitarPacienteDeEspera } from '../services/listaEsperaService'
+
+
+
 
 //const location = useLocation();
 
@@ -30,6 +34,7 @@ interface FormData {
 console.log("State recibido en consultas:", location.state);
 
 export default function Consultas() {
+  
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -109,8 +114,7 @@ export default function Consultas() {
     }))
   }, [state])
 
-
-
+      
 
 
 
@@ -160,7 +164,7 @@ export default function Consultas() {
       mostrarMensaje('exito', 'Consulta guardada exitosamente')
       
       setTimeout(() => {
-        navigate('/expedientes')
+        navigate('/lista-espera')
       }, 2000)
 
     } catch (error) {
@@ -171,13 +175,7 @@ export default function Consultas() {
     }
   }
 
-  const handleFinalizar = async () => {
-    if (!formData.diagnostico.trim()) {
-      mostrarMensaje('error', 'El diagnóstico es obligatorio para finalizar')
-      return
-    }
-    await handleGuardar()
-  }
+
 
   
 
@@ -435,18 +433,12 @@ export default function Consultas() {
       <div className="contenedor-botones-consulta">
         <button 
           className="btn-consulta btn-guardar" 
-          onClick={handleGuardar}
+          onClick={handleGuardar          }
           disabled={loading}
         >
           {loading ? 'Guardando...' : 'Guardar cambios'}
         </button>
-        <button 
-          className="btn-consulta btn-finalizar" 
-          onClick={handleFinalizar}
-          disabled={loading}
-        >
-          {loading ? 'Finalizando...' : 'Finalizar consulta'}
-        </button>
+        
       </div>
     </div>
   )
