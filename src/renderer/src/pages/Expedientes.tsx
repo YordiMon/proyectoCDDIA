@@ -255,11 +255,24 @@ export default function Pacientes() {
                   Nueva consulta
                 </button>
               </div>
+              
             </div>
           ))}
         </div>
       )}
+
+
     </div>
+    <div className="contenedor-botones-flotantes">
+       <button className="btn-flotante-secundario" onClick={() => recargarLista()} title="Actualizar lista" > 
+        <RefreshCw size={24} /> 
+        </button> 
+      <Link to="/registro-paciente" className="btn-flotante-añadir">
+        <UserPlus size={24} />
+        <span>Añadir paciente</span>
+      </Link>
+
+          </div>
   </div>
 );
 
