@@ -1,9 +1,8 @@
-/* src/renderer/src/styles/ListaEspera.css */
-
 .contenedor-espera {
   padding: 10px;
   position: relative;
   min-height: 100vh;
+  margin-bottom: 100px;
 }
 
 /* --- NUEVO: Resumen Superior --- */
@@ -169,21 +168,19 @@
 
 /* Botón Añadir (Tu diseño original, pero sin la posición fixed directa) */
 .btn-flotante-añadir {
-  /* position: fixed;  <-- Quitamos esto porque ahora el padre lo controla */
-  /* bottom: 30px; */
-  /* right: 30px; */
   background-color: #1976d2;
+  font-size: 1rem;
   color: white;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 12px 24px;
-  border-radius: 15px; /* Tu borde original */
+  border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-weight: 500;
   transition: all 0.3s ease;
-  border: none; /* Asegura que no tenga borde por ser <Link> o <button> */
+  border: none; 
 }
 
 .btn-flotante-añadir:hover {

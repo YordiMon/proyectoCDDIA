@@ -56,7 +56,7 @@ export default function AnadirPaciente() {
   }
 
   return (
-    <div className="contenedor-anadir">
+    <div className="contenedor-espera">
       <div className="cabecera-anadir">
         <button
           onClick={() => navigate(-1)}

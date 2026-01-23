@@ -61,7 +61,7 @@ export default function DetalleConsulta() {
   };
 
   return (
-    <div className="contenedor-pacientes">
+    <div className="contenedor-espera">
       <div className="header">
         <button className="btn-volver" onClick={() => navigate(-1)}>
           <ChevronLeft size={32} strokeWidth={2.5} />
@@ -111,6 +111,10 @@ export default function DetalleConsulta() {
           <div className="dato-columna">
             <span>Frec. Cardíaca</span>
             <strong>{consulta.frecuencia_cardiaca || 'N/A'} lpm</strong>
+          </div>
+          <div className="dato-columna">
+            <span>Frec. Respiratoria</span>
+            <strong>{consulta.frecuencia_respiratoria || 'N/A'} lpm</strong>
           </div>
           <div className="dato-columna">
             <span>Temperatura</span>

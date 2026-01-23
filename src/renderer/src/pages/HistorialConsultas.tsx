@@ -92,7 +92,7 @@ export default function HistorialConsultas() {
   }
 
   return (
-    <div className="contenedor-pacientes">
+    <div className="contenedor-espera">
       <div className="header">
         <button className="btn-volver" onClick={() => navigate(-1)}>
           <ChevronLeft size={32} strokeWidth={2.5} />

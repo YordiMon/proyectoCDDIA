@@ -129,17 +129,15 @@ export default function Pacientes() {
   }
 
   return (
-  <div className="contenedor-pacientes">
+  <div className="contenedor-espera">
     <h1>Expedientes clínicos</h1>
 
     <header className="cabecera-pacientes">
-      <div className="titulo-fila">
         {!error && pacientes.length > 0 && (
           <span className="conteo-badge">
-            {pacientesFiltrados.length} Registros
+            Hay un total de {pacientesFiltrados.length} registros
           </span>
         )}
-      </div>
 
       <div className="buscador-wrapper">
         <Search className="icon-search" size={18} />
