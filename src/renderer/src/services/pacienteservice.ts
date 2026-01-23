@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+import { API_BASE_URL } from '../config';
 
 // ======== Interfaces ========
 
@@ -39,7 +39,7 @@ export const crearPaciente = async (
   paciente: Paciente
 ): Promise<RespuestaCrearPaciente> => {
 
-  const res = await fetch(`${API_URL}/crear_paciente`, {
+  const res = await fetch(`${API_BASE_URL}/crear_paciente`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export const existePaciente = async (numero_afiliacion: string):
 Promise<RespuestaExistePaciente> => {
 
   const res = await fetch(
-    `${API_URL}/paciente/${numero_afiliacion}`
+    `${API_BASE_URL}/paciente/${numero_afiliacion}`
   );
 
   const data = await res.json();
@@ -87,7 +87,7 @@ Promise<RespuestaExistePaciente> => {
  */
 export const obtenerPacientePorId = async (id: number): Promise<Paciente> => {
 
-  const res = await fetch(`${API_URL}/pacientes/${id}`);
+  const res = await fetch(`${API_BASE_URL}/pacientes/${id}`);
 
   const data = await res.json();
 

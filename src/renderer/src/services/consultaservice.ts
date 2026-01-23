@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+import { API_BASE_URL } from '../config';
 
 interface Consulta {
   paciente_id: number
@@ -25,7 +25,7 @@ interface Paciente {
 
 /* Buscar paciente por número de afiliación */
 export const buscarPacientePorAfiliacion = async (numero_afiliacion: string): Promise<Paciente> => {
-  const res = await fetch(`${API_URL}/paciente/${numero_afiliacion}`);
+  const res = await fetch(`${API_BASE_URL}/paciente/${numero_afiliacion}`);
   
   if (!res.ok) {
     throw new Error("Paciente no encontrado");
@@ -38,7 +38,7 @@ export const buscarPacientePorAfiliacion = async (numero_afiliacion: string): Pr
 
 /* Crear consulta */
 export const crearConsulta = async (consulta: Consulta): Promise<{ message: string; consulta_id: number }> => {
-  const res = await fetch(`${API_URL}/consultas`, {
+  const res = await fetch(`${API_BASE_URL}/consultas`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(consulta),
@@ -54,19 +54,19 @@ export const crearConsulta = async (consulta: Consulta): Promise<{ message: stri
 
 /* Consultas por paciente */
 export const obtenerConsultasPorPaciente = async (pacienteId: number): Promise<Consulta[]> => {
-  const res = await fetch(`${API_URL}/consultas/paciente/${pacienteId}`);
+  const res = await fetch(`${API_BASE_URL}/consultas/paciente/${pacienteId}`);
   return res.json();
 };
 
 /* Detalle de consulta */
 export const obtenerConsulta = async (consultaId: number): Promise<Consulta> => {
-  const res = await fetch(`${API_URL}/consultas/${consultaId}`);
+  const res = await fetch(`${API_BASE_URL}/consultas/${consultaId}`);
   return res.json();
 };
 
 /* Actualizar consulta */
 export const actualizarConsulta = async (consultaId: number, data: Partial<Consulta>): Promise<Consulta> => {
-  const res = await fetch(`${API_URL}/consultas/${consultaId}`, {
+  const res = await fetch(`${API_BASE_URL}/consultas/${consultaId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -78,7 +78,7 @@ export const actualizarConsulta = async (consultaId: number, data: Partial<Consu
 
 /* Eliminar consulta */
 export const eliminarConsulta = async (consultaId: number): Promise<{ message: string }> => {
-  const res = await fetch(`${API_URL}/consultas/${consultaId}`, {
+  const res = await fetch(`${API_BASE_URL}/consultas/${consultaId}`, {
     method: "DELETE",
   });
 

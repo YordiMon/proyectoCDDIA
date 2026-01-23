@@ -1,20 +1,105 @@
-/* Reutilizamos variables si las tienes, si no, usa estos colores */
+.contenedor-pacientes {
+  padding: 10px;
+  position: relative;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.btn-volver {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
 .historial-intro {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   color: #333;
 }
 
 .historial-intro h2 {
   font-size: 1.5rem;
-  margin-bottom: 5px;
   color: #1e293b;
+  margin-top: -15px;
 }
 
 .historial-intro p {
+  margin-top: -15px;
+  font-size: 1rem;
   color: #64748b;
-  font-size: 0.95rem;
 }
 
+/* --- ESTADOS UNIFICADOS (IDÉNTICO A EXPEDIENTES) --- */
+.centro-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.spinner-animado {
+  color: #1976d2;
+  animation: rotate 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.mensaje-estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  text-align: center;
+}
+
+.mensaje-estado h4 {
+  margin: 20px 0 10px 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.mensaje-estado p {
+  color: #666;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.btn-reintentar { 
+  margin-top: 15px;
+  font-style: italic;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+  text-decoration: underline;
+  color: #1976d2;
+}
+
+.btn-reintentar:hover {
+  font-size: 15.9px;
+}
+
+.zona-contenido {
+  width: 100%;
+  min-height: 400px;
+}
+
+/* --- ESTILOS DE TARJETAS --- */
 .lista-consultas {
   display: flex;
   flex-direction: column;
@@ -24,8 +109,8 @@
 
 .tarjeta-consulta {
   width: 100%;
-  padding: 25px; 
-  border: 2px solid #eee; 
+  padding: 25px 25px 35px 25px;
+  border: 1px solid #eee; 
   border-radius: 5px;   
   background-color: #ffffff;
   font-size: 1.05rem;
@@ -33,6 +118,12 @@
   transition: all 0.3s ease;
   outline: none;
   box-sizing: border-box; 
+}
+
+.tarjeta-consulta:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+  border-color: #1976d2;
 }
 
 .tarjeta-header {
@@ -61,89 +152,23 @@
   font-size: 0.85rem;
   background: #e3f2fd;
   color: #1976d2;
-
-}
-
-.seccion-principal {
-  margin-bottom: 20px;
 }
 
 .seccion-principal h4 {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  color: #94a3b8;
-  margin-bottom: 4px;
+  font-size: 1rem;
+  color: #000000;
   letter-spacing: 0.5px;
+  margin-bottom: -8px;
 }
 
 .seccion-principal p {
   font-size: 1rem;
-  color: #334155;
-  margin-bottom: 12px;
   line-height: 1.5;
+  margin-bottom: -14px;
 }
 
-.grid-vitales {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  background-color: #f8fafc;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.vital-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.icono-vital { stroke-width: 2.5px; }
-.icono-vital.fc { color: #ef4444; }
-.icono-vital.fr { color: #3b82f6; }
-.icono-vital.temp { color: #f97316; }
-.icono-vital.pres { color: #8b5cf6; }
-
-.vital-item span {
-  display: block;
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
-.vital-item strong {
-  font-size: 1rem;
-  color: #0f172a;
-}
-
-.receta-box {
-  background-color: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  padding: 15px;
-  border-radius: 10px;
-  color: #064e3b;
-}
-
-.receta-titulo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  margin-bottom: 5px;
-  color: #059669;
-}
-
-.observaciones-box {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px dashed #e2e8f0;
-  font-size: 0.9rem;
-  color: #ef4444; /* Rojo para alertas */
-}
-
-.estado-carga, .estado-error, .estado-vacio {
-  text-align: center;
-  padding: 40px;
-  color: #64748b;
-  font-size: 1.1rem;
+.divisor-detalle {
+  border: 0;
+  border-top: 1px solid #eaeaea;
+  margin-top: 33px;
 }

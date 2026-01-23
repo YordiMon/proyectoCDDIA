@@ -1,0 +1,120 @@
+.contenedor-pacientes {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 50px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.btn-volver {
+  background: none;
+  border: none;
+  color: #2c3e50;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.btn-volver:hover {
+  color: #1976d2;
+}
+
+/* Info Superior */
+.perfil-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.avatar-circle {
+  width: 60px;
+  height: 60px;
+  background: #f0f7ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nombre-afiliacion h2, 
+.nombre-afiliacion p {
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.nombre-afiliacion h2 {
+  font-size: 1.4rem;
+  color: #1e293b;
+}
+
+.nombre-afiliacion p {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* Línea separadora */
+.divisor-detalle {
+  border: 0;
+  border-top: 1px solid #eaeaea;
+  margin: 15px 0;
+}
+
+/* Contenedor de los renglones de datos */
+.bloque-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  padding: 10px 0;
+}
+
+/* Cada dato en formato columna */
+.dato-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 120px;
+}
+
+.dato-columna span {
+  font-size: 0.9rem; /* Un poco más pequeño para etiquetas */
+  color: #64748b;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dato-columna strong {
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #000;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+.no-aplica {
+  font-style: italic;
+  font-weight: bold;
+  color: #94a3b8 !important;
+}
+
+/* Estado de carga/vacío */
+.centro-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+  gap: 20px;
+}

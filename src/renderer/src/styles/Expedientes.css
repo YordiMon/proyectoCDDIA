@@ -1,22 +1,11 @@
-/* RESET DE CAJA PARA EVITAR SCROLL LATERAL */
-.contenedor-pacientes {
-  padding: 10px;
-  position: relative;
-  min-height: 100vh;
-}
-
 .cabecera-pacientes {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  margin-bottom: 50px;
+  align-items: start;
+  gap: 15px;
+  margin-bottom: 25px;
   width: 100%;
   box-sizing: border-box;
-}
-
-.titulo-fila {
-  align-items: center;
-  gap: 15px;
 }
 
 .conteo-badge {
@@ -212,20 +201,26 @@
 }
 
 .btn-ir-consulta {
+  background-color: #1976d2;
+  margin-top: 10px;
+  color: white;
+  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 6px;
-  background-color: #2563eb;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 14px;
-  transition: background 0.2s;
+  gap: 10px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  border: none; 
 }
 
 .btn-ir-consulta:hover {
-  background-color: #1d4ed8;
+  background-color: #1266ba;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .btn-paciente-nuevo {
@@ -239,6 +234,8 @@
   text-decoration: none;
   font-size: 14px;
   transition: background 0.2s;
+}
+
 .zona-contenido {
   width: 100%;
   min-height: 400px;

@@ -12,6 +12,7 @@ import Consultas from './pages/Consultas'
 import RegistoP from './pages/RegistroPacientes'
 import DetallePaciente from './pages/DetallePaciente'
 import HistorialConsultas from './pages/HistorialConsultas'
+import DetalleConsulta from './pages/DetalleConsulta';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
               <Route path="/historial/:id" element={<HistorialConsultas />} />
               <Route path="/ajustes" element={<Ajustes />} />
               <Route path="/añadirpaciente" element={<AñadirPaciente />} />
+              <Route path="/detalle-consulta/:id" element={<DetalleConsulta />} />
               <Route path="/registro-paciente" element={<RegistoP />} />
               <Route path="/consultas" element={<Consultas />} />
               <Route path="/lista-espera" element={<ListaEspera />} />
