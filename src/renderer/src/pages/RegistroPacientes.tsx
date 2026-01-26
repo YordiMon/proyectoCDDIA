@@ -110,24 +110,24 @@ export default function RegistroPacientes() {
 
                     <div className="campo-form">
                         <label>Tipo de sangre</label>
-                       <select
-                                name="tipo_sangre"
-                                value={paciente.tipo_sangre}
-                                onChange={handleChange}
-                                className={paciente.tipo_sangre === "" ? 'placeholder-style' : 'valor-real'}
-                                >
-                                <option value="" disabled hidden>
-                                    Seleccionar
-                                </option>
-                                <option value="A+">A+</option>
-                                <option value="A-">A-</option>
-                                <option value="B+">B+</option>
-                                <option value="B-">B-</option>
-                                <option value="AB+">AB+</option>
-                                <option value="AB-">AB-</option>
-                                <option value="O+">O+</option>
-                                <option value="O-">O-</option>
-                                </select>
+                        <select
+                           name="tipo_sangre"
+                           value={paciente.tipo_sangre}     
+                           onChange={handleChange}     
+                           className={paciente.tipo_sangre === "" ? 'placeholder-style' : 'valor-real'}
+                        >
+                            <option value="" disabled hidden>
+                                Seleccionar
+                            </option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>     
+                        </select>
 
                     </div>
 
