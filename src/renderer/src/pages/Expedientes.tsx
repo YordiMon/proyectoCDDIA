@@ -11,7 +11,6 @@ import {
   Info, 
   AlertCircle,
   RefreshCw, 
-  AlertTriangle, 
   UserPlus, 
   ClipboardList
 } from 'lucide-react';
