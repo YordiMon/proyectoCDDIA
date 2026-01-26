@@ -4,6 +4,17 @@ import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'
 import { API_BASE_URL } from '../config'
 import '../styles/AñadirPaciente.css'
 
+// Opciones para el select (Puedes agregar o quitar las que necesites)
+const AREAS_DISPONIBLES = [
+  "Urgencias",
+  "Consulta General",
+  "Pediatría",
+  "Ginecología",
+  "Traumatología",
+  "Cirugía",
+  "Medicina Interna"
+];
+
 export default function AnadirPaciente() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -29,8 +40,10 @@ export default function AnadirPaciente() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.nombre.trim() || !formData.numero_afiliacion.trim()) {
-      mostrarError('Todos los campos son obligatorios');
+    
+    // Validación básica: verificar que los campos no estén vacíos
+    if (!formData.nombre.trim() || !formData.numero_afiliacion.trim() || !formData.area) {
+      mostrarError('Todos los campos son obligatorios, incluyendo el área.');
       return;
     }
 
@@ -44,12 +57,10 @@ export default function AnadirPaciente() {
       if (response.ok) {
         navigate('/')
       } else {
-        // En lugar de alert, usamos nuestra función
         mostrarError('Error en el servidor al crear el paciente');
       }
     } catch (error) {
       console.error('Error:', error);
-      // En lugar de alert, usamos nuestra función
       mostrarError('No se pudo conectar al servidor. Verifica tu conexión.');
     } finally {
       setLoading(false)
@@ -73,6 +84,7 @@ export default function AnadirPaciente() {
 
       <form className="formulario-limpio" id="form-paciente" onSubmit={handleSubmit} noValidate>
         
+        {/* INPUT: NÚMERO DE AFILIACIÓN */}
         <div className="campo-form">
           <div className="label-container">
             <label htmlFor="afiliacion">Número de afiliación</label>
@@ -94,6 +106,7 @@ export default function AnadirPaciente() {
           />
         </div>
 
+        {/* INPUT: NOMBRE COMPLETO */}
         <div className="campo-form">
           <div className="label-container">
             <label htmlFor="nombre">Nombre completo</label>
@@ -113,23 +126,29 @@ export default function AnadirPaciente() {
           />
         </div>
 
-      <div className="campo-form">
+        {/* SELECT: ÁREA DE INGRESO (MODIFICADO) */}
+        <div className="campo-form">
           <div className="label-container">
-            <label htmlFor="nombre">Área de ingreso</label>
-            <span className={`contador ${formData.nombre.length === 15 ? 'limite-alcanzado' : ''}`}>
-              {formData.nombre.length}/60
-            </span>
+            <label htmlFor="area">Área de ingreso</label>
           </div>
-          <input
-            type="text"
+          
+          <select
+            name="area"
             id="area"
-            placeholder="Ej. Pediatría"
-            maxLength={15}
             value={formData.area}
             onChange={(e) => setFormData({ ...formData, area: e.target.value })}
-            tabIndex={2}
-            autoComplete="off"
-          />
+            className={formData.area === "" ? 'placeholder-style' : 'valor-real'}
+            tabIndex={3}
+          >
+            <option value="" disabled hidden>
+              Seleccionar área
+            </option>
+            {AREAS_DISPONIBLES.map((area) => (
+              <option key={area} value={area}>
+                {area}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Mensaje de error unificado y dinámico */}
@@ -145,7 +164,7 @@ export default function AnadirPaciente() {
           className="btn-flotante-registrar" 
           disabled={loading}
           title="Registrar en lista"
-          tabIndex={3}
+          tabIndex={4}
         >
           <UserPlus size={24} />
           <span>{loading ? 'Guardando...' : 'Registrar paciente en lista de espera'}</span>
