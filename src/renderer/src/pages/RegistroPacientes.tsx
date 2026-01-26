@@ -93,24 +93,42 @@ export default function RegistroPacientes() {
                 <div className="fila-form">
                     <div className="campo-form">
                         <label>Sexo</label>
-                        <select name="sexo" value={paciente.sexo} onChange={handleChange}
-                            className={paciente.sexo === "" ? 'placeholder-style' : 'valor-real'}>
-                            <option value="">Seleccionar</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="femenino">Femenino</option>
-                        </select>
+                      <select
+                                name="sexo"
+                                value={paciente.sexo}
+                                onChange={handleChange}
+                                className={paciente.sexo === "" ? 'placeholder-style' : 'valor-real'}
+                                >
+                                <option value="" disabled hidden>
+                                    Seleccionar
+                                </option>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                                </select>
+
                     </div>
 
                     <div className="campo-form">
                         <label>Tipo de sangre</label>
-                        <select name="tipo_sangre" value={paciente.tipo_sangre} onChange={handleChange}
-                            className={paciente.tipo_sangre === "" ? 'placeholder-style' : 'valor-real'}>
-                            <option value="">Seleccionar</option>
-                            <option>A+</option><option>A-</option>
-                            <option>B+</option><option>B-</option>
-                            <option>AB+</option><option>AB-</option>
-                            <option>O+</option><option>O-</option>
-                        </select>
+                       <select
+                                name="tipo_sangre"
+                                value={paciente.tipo_sangre}
+                                onChange={handleChange}
+                                className={paciente.tipo_sangre === "" ? 'placeholder-style' : 'valor-real'}
+                                >
+                                <option value="" disabled hidden>
+                                    Seleccionar
+                                </option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                </select>
+
                     </div>
 
                     <div className="campo-form">
