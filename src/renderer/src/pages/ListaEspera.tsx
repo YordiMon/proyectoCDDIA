@@ -72,7 +72,7 @@ export default function ListaEspera() {
         }
       });
     } catch (error: any) {
-      setMensaje("Error al verificar paciente:", error);
+      setMensaje("Error al verificar paciente.");
 
       // Si la API devolvió 404 → el paciente no existe aún
       await atenderPaciente(p.id);
