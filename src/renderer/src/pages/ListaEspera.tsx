@@ -54,7 +54,7 @@ export default function ListaEspera() {
       });
 
     } catch (error: any) {
-      console.error("Error al verificar paciente:", error);
+      setMensaje("Error al verificar paciente:", error);
 
       // Si la API devolvió 404 → el paciente no existe aún
       await atenderPaciente(p.id);
@@ -179,7 +179,7 @@ export default function ListaEspera() {
                           <button 
                             className="btn-accion btn-eliminar" 
                             onClick={() => handleQuitarPaciente(p.id)}
-                            disabled={p.estado === '2'}
+                            //disabled={p.estado === '2'}
 
                             tabIndex={0}
                           >

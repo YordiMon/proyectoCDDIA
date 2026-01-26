@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ChevronLeft, User, Save, FilePlus } from 'lucide-react'
+import { ChevronLeft, User, Save, AlertCircle, FilePlus } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearPaciente, Paciente } from '../services/pacienteservice'
 
@@ -8,7 +8,9 @@ export default function RegistroPacientes() {
     const location = useLocation()
     const navigate = useNavigate()
     const state = (location.state ?? {}) as { nombre?: string; numero_afiliacion?: string }
-    
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [mensaje, setMensaje] = useState<string | null>(null);
+
     const [enfermedades, setEnfermedades] = useState(false)
     const [alergias, setAlergias] = useState(false)
     const [cirugias, setCirugias] = useState(false)
@@ -30,6 +32,12 @@ export default function RegistroPacientes() {
         medicamentos_actuales: ''
     })
 
+       // Función para mostrar el error por unos segundos y luego ocultarlo
+  const mostrarError = (mensaje: string) => {
+    setErrorMessage(mensaje);
+    setTimeout(() => setErrorMessage(null), 3000);
+  };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target
         setPaciente(prev => ({ ...prev, [name]: value }))
@@ -38,7 +46,7 @@ export default function RegistroPacientes() {
     const guardar = async (irAConsultas = false) => {
         try {
             const resultado = await crearPaciente(paciente)
-            alert('Paciente registrado correctamente');
+            mostrarError('Paciente registrado correctamente');
             if (irAConsultas) {
                 navigate('/consultas', {
                     state: { id: resultado.id, nombre: paciente.nombre, numero_afiliacion: paciente.numero_afiliacion }
@@ -47,7 +55,7 @@ export default function RegistroPacientes() {
                 navigate('/expedientes');
             }
         } catch (error: any) {
-            alert('Error al registrar: ' + JSON.stringify(error));
+            mostrarError('Error al registrar: ' + JSON.stringify(error));
         }
     };
 
@@ -150,7 +158,13 @@ export default function RegistroPacientes() {
                         {item.state && <textarea name={item.name} placeholder="Especifique..." rows={3} value={(paciente as any)[item.name]} onChange={handleChange} />}
                     </div>
                 ))}
-
+                {/* Mensaje de error unificado y dinámico */}
+                    {errorMessage && (
+                    <div className="mensaje-error-flotante_PR">
+                        <AlertCircle size={18} />
+                        <span>{errorMessage}</span>
+                    </div>
+                )}
                 {/* BOTONES FLOTANTES */}
                 <div className="contenedor-botones-flotantes">
                     <button type="button" className="btn-flotante-añadir" onClick={() => guardar(false)}>

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Calendar, ChevronLeft, Save } from 'lucide-react'
+import { Calendar, AlertCircle, ChevronLeft, Save } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearConsulta } from '../services/consultaservice'
-import { quitarPacienteDeEspera } from '../services/listaEsperaService'
+import '../styles/consulta.css'
+//import { quitarPacienteDeEspera } from '../services/listaEsperaService'
 
 
 
@@ -35,7 +36,9 @@ export default function Consultas() {
     const location = useLocation()
     const navigate = useNavigate()
     const state = (location.state ?? {}) as { id?: number; nombre?: string; numero_afiliacion?: string }
-
+    const [mensaje, setMensaje] = useState<string | null>(null);
+    const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState<FormData>({
         paciente_id: 0,
@@ -72,6 +75,21 @@ export default function Consultas() {
         return raw.replace(' a las ', ', ').replace(' p. m.', ' p.m.').replace(' a. m.', ' a.m.');
     }
 
+    // Función para mostrar el error por unos segundos y luego ocultarlo
+const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
+  setTipoMensaje(tipo);
+  setMensaje(texto);
+
+  setTimeout(() => {
+    setMensaje(null);
+    setTipoMensaje(null);
+  }, 4000);
+};
+
+
+   
+
+
     useEffect(() => {
         if (!state.id) {
             navigate('/expedientes')
@@ -101,7 +119,7 @@ export default function Consultas() {
 
     const handleGuardar = async () => {
         if (!formData.diagnostico.trim()) {
-            alert('El diagnóstico es obligatorio para finalizar');
+            mostrarMensaje('error', 'El diagnóstico es obligatorio para finalizar');
             return
         }
 
@@ -232,6 +250,18 @@ export default function Consultas() {
                     <label>Observaciones</label>
                     <textarea name="observaciones" rows={2} placeholder="Notas adicionales..." value={formData.observaciones} onChange={handleInputChange} />
                 </div>
+                {/* Mensaje de error unificado y dinámico */}
+                        {mensaje && (
+                <div className={`mensaje-flotante_C ${tipoMensaje}`}>
+                    {tipoMensaje === 'error' ? (
+                    <AlertCircle size={18} />
+                    ) : (
+                    <Save size={18} />
+                    )}
+                    <span>{mensaje}</span>
+                </div>
+                )}
+
 
                 {/* Botón Flotante */}
                 <div className="contenedor-botones-flotantes">
@@ -243,29 +273,5 @@ export default function Consultas() {
             </section>
         </div>
     )
-        {/* Mensaje de error o éxito */}
-        {mensaje && (
-          <div className={`mensaje-estado ${mensaje.tipo === 'error' ? 'error-box' : 'exito-box'}`}>
-            {mensaje.tipo === 'error' ? (
-              <AlertCircle size={20} />
-            ) : (
-              <CheckCircle size={20} />
-            )}
-            <span>{mensaje.texto}</span>
-          </div>
-        )}
-      </section>
-
-      <div className="contenedor-botones-consulta">
-        <button 
-          className="btn-consulta btn-guardar" 
-          onClick={handleGuardar          }
-          disabled={loading}
-        >
-          {loading ? 'Guardando...' : 'Guardar cambios'}
-        </button>
-        
-      </div>
-    </div>
-  )
+    
 }
