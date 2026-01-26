@@ -29,8 +29,16 @@ export default function DetallePaciente() {
   const navigate = useNavigate();
   const location = useLocation();
   
+  
+
   // Cast del estado para evitar el error 'never'
-  const state = location.state as { paciente: Paciente } | null;
+  const state = location.state as {
+  paciente: {
+    id: number
+    nombre: string
+    numero_afiliacion: string
+  }
+} | null;
   const paciente = state?.paciente;
 
   if (!paciente) {
@@ -42,6 +50,7 @@ export default function DetallePaciente() {
     );
   }
 
+  
   const formatearFecha = (fecha: string) => {
     if (!fecha) return 'N/A';
     const partes = fecha.split('-');
@@ -169,10 +178,26 @@ export default function DetallePaciente() {
           <span>Historial de consultas</span>
         </button>
 
-        <button className="btn-flotante-añadir">
-          <FilePlus size={24} />
-          <span>Nueva consulta</span>
-        </button>
+          
+        <button
+  className="btn-flotante-añadir"
+  onClick={(e) => {
+    e.stopPropagation();
+    if (!state?.paciente) return;
+
+    navigate("/consultas", {
+      state: {
+        id: state.paciente.id,
+        nombre: state.paciente.nombre,
+        numero_afiliacion: state.paciente.numero_afiliacion,
+        pacienteRegistrado: true
+      }
+    });
+  }}
+>
+  Nueva consulta
+</button>
+
       </div>
     </div>
   );

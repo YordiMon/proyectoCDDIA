@@ -1,21 +1,12 @@
 // src/renderer/src/pages/ListaEspera.tsx
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePacientes } from '../hooks/pacientesEspera'
 import '../styles/ListaEspera.css'
 import { existePaciente } from '../services/pacienteservice'
-import { 
-  CheckCircle, 
-  Info, 
-  Trash2, 
-  UserPlus, 
-  RefreshCcw, 
-  Loader2, 
-  AlertCircle
- 
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import '../styles/ListaEspera.css';
+import { CheckCircle, Info, Trash2, UserPlus, RefreshCcw, Loader2, AlertCircle } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import '../styles/ListaEspera.css'
 
 export default function ListaEspera() {
   const {
@@ -24,6 +15,7 @@ export default function ListaEspera() {
     loading,
     isRefreshing,
     error,
+    
     atenderPaciente,
     quitarPaciente,
     recargarLista
@@ -36,6 +28,11 @@ export default function ListaEspera() {
       botonAnadirRef.current.focus();
     }
   }, [loading]);
+
+  // Mensaje temporal (en caso de error o éxito)
+  const [mensaje, setMensaje] = useState<string | null>(null);
+
+
 
   //boton para atender paciente
   const handleAtender = async (p: { id: number; nombre: string; numero_afiliacion: string }) => {
@@ -57,9 +54,10 @@ export default function ListaEspera() {
       });
 
     } catch (error: any) {
-      console.error("Error al verificar paciente:", error);
+      setMensaje("Error al verificar paciente:", error);
 
       // Si la API devolvió 404 → el paciente no existe aún
+      await atenderPaciente(p.id);
       navigate('/registro-paciente', {
         state: {
           nombre: p.nombre,
@@ -70,13 +68,19 @@ export default function ListaEspera() {
   };
 
 
+  //boton para quitar paciente con messaje de exito
+   const handleQuitarPaciente = async (id: number) => {
+  const ok = await quitarPaciente(id);
 
-  
-  // Se eliminó el window.confirm para una eliminación directa
-  const handleQuitar = (id: number) => {
-    quitarPaciente(id);
-  };
-  
+  if (ok) {
+    setMensaje('Paciente eliminado correctamente');
+
+    //desaparecer después de 3 segundos
+    setTimeout(() => {
+      setMensaje(null);
+    }, 3000);
+  }
+};
  
 
   // 1. ESTADO DE CARGA (Pantalla completa)
@@ -94,6 +98,13 @@ export default function ListaEspera() {
     <div className="contenedor-espera">
       <h1>Lista de espera</h1>
       
+        {mensaje && (
+          <div className="mensaje-flotante exito">
+            {mensaje}
+          </div>
+        )}
+
+
       <p className="texto-resumen">
         En este momento hay un total de <span className="contador-azul">{totalEspera}</span> persona(s) esperando su turno para entrar a consulta.
       </p>
@@ -167,7 +178,9 @@ export default function ListaEspera() {
                         <div className="grupo-acciones">
                           <button 
                             className="btn-accion btn-eliminar" 
-                            onClick={() => quitarPaciente(p.id)}
+                            onClick={() => handleQuitarPaciente(p.id)}
+                            //disabled={p.estado === '2'}
+
                             tabIndex={0}
                           >
                             <Trash2 size={20} strokeWidth={2.5} />

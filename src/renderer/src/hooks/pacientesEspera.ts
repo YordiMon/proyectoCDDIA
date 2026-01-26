@@ -62,12 +62,14 @@ export function usePacientes() {
     try {
       const response = await fetch(`${API_BASE_URL}/quitar_paciente/${id}`, { method: 'PUT' });
       if (response.ok) {
-        setPacientes(prev => prev.filter(p => p.id !== id));
-        return true;
+        setPacientes(prev => prev.filter(p => p.id !== id))
+         return true
       }
     } catch (e) { console.error(e); }
     return false;
   };
+
+
 
   useEffect(() => {
     fetchPacientes();
