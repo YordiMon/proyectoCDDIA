@@ -86,3 +86,47 @@ header {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+
+
+.mensaje-flotante_C {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+
+  padding: 12px 20px;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-weight: 500;
+  font-size: 0.9rem;
+
+  animation: slideIn 0.3s ease-out;
+  backdrop-filter: blur(4px);
+}
+
+.mensaje-flotante_C.error {
+  background-color: rgba(231, 72, 60, 0.15);
+  color: #e7483c;
+}
+
+.mensaje-flotante_C.exito {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

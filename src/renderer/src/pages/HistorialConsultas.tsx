@@ -39,6 +39,8 @@ export default function HistorialConsultas() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+
+  
   // Obtenemos el nombre del paciente desde el estado de la navegación anterior
   const state = location.state as { paciente: { nombre: string } } | null;
   const nombrePaciente = state?.paciente?.nombre || "Paciente";

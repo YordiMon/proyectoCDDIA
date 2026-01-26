@@ -20,6 +20,7 @@ import '../styles/Expedientes.css'
 // ... (Interface Paciente se mantiene igual que la tuya)
 interface Paciente { 
   id: number
+  paciente_id: 0,
   nombre: string
   numero_afiliacion: string
   fecha_nacimiento: string
