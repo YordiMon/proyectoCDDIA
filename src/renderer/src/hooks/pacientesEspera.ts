@@ -6,6 +6,7 @@ export interface Paciente {
   nombre: string;
   numero_afiliacion: string;
   creado: string;
+  area: string;
   estado: string;
 }
 

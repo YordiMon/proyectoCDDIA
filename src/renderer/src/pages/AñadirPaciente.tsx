@@ -13,7 +13,8 @@ export default function AnadirPaciente() {
 
   const [formData, setFormData] = useState({
     nombre: '',
-    numero_afiliacion: ''
+    numero_afiliacion: '',
+    area: ''
   })
 
   useEffect(() => {
@@ -107,6 +108,25 @@ export default function AnadirPaciente() {
             maxLength={60}
             value={formData.nombre}
             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+            tabIndex={2}
+            autoComplete="off"
+          />
+        </div>
+
+      <div className="campo-form">
+          <div className="label-container">
+            <label htmlFor="nombre">Área de ingreso</label>
+            <span className={`contador ${formData.nombre.length === 15 ? 'limite-alcanzado' : ''}`}>
+              {formData.nombre.length}/60
+            </span>
+          </div>
+          <input
+            type="text"
+            id="area"
+            placeholder="Ej. Pediatría"
+            maxLength={15}
+            value={formData.area}
+            onChange={(e) => setFormData({ ...formData, area: e.target.value })}
             tabIndex={2}
             autoComplete="off"
           />
