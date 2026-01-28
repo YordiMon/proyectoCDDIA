@@ -4,9 +4,10 @@ import { Calendar, AlertCircle, ChevronLeft, Save } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearConsulta } from '../services/consultaservice'
 import '../styles/consulta.css'
-//import { quitarPacienteDeEspera } from '../services/listaEsperaService'
-
-
+//import { API_BASE_URL } from '../config'
+//import { verificarPacienteEnEspera } from '../services/listaEsperaService'
+import { eliminarPacientePorAfiliacion } from '../services/pacienteservice'
+import { marcarPacienteEnAtencion } from '../services/consultaservice'
 
 
 //const location = useLocation();
@@ -35,11 +36,12 @@ interface FormData {
 export default function Consultas() {
     const location = useLocation()
     const navigate = useNavigate()
-    const state = (location.state ?? {}) as { id?: number; nombre?: string; numero_afiliacion?: string }
+    const state = (location.state ?? {}) as { id?:  number; nombre?: string; numero_afiliacion?: string }
     const [mensaje, setMensaje] = useState<string | null>(null);
     const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+   // const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
+  
     const [formData, setFormData] = useState<FormData>({
         paciente_id: 0,
         nombre: '',
@@ -90,6 +92,7 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
    
 
 
+// Al cargar la página, verificar que haya datos del paciente
     useEffect(() => {
         if (!state.id) {
             navigate('/expedientes')
@@ -110,13 +113,27 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
             fecha_consulta: isoFecha,
             fecha_display: displayFecha
         }))
+
+
+  if (state.numero_afiliacion) {
+    marcarPacienteEnAtencion(state.numero_afiliacion)
+      .catch(() => {
+       
+      })
+    }
+
     }, [state, navigate])
 
+
+
+    // Manejo de cambios en los inputs
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData(prev => ({ ...prev, [name]: value }))
     }
 
+
+    // Guardar la consulta
     const handleGuardar = async () => {
         if (!formData.diagnostico.trim()) {
             mostrarMensaje('error', 'El diagnóstico es obligatorio para finalizar');
@@ -127,8 +144,7 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
         try {
             const consultaData = {
                 ...formData,
-                // Si tu backend aún espera sistólica/diastólica por separado, 
-                // aquí podrías hacer un .split('/') pero si ya es un string, pásalo directo
+                
                 presionSistolica: formData.presion_arterial ? parseInt(formData.presion_arterial.split('/')[0]) : undefined,
                 presionDiastolica: formData.presion_arterial ? parseInt(formData.presion_arterial.split('/')[1]) : undefined,
                 frecuencia_cardiaca: parseInt(formData.frecuencia_cardiaca) || undefined,
@@ -139,8 +155,20 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
             }
 
       await crearConsulta(consultaData)
-      mostrarMensaje('exito', 'Consulta guardada exitosamente')
-      
+          
+     mostrarMensaje('exito', 'Consulta guardada exitosamente')
+     
+                // Eliminar de lista de espera SOLO si existe
+        if (formData.numero_afiliacion) {
+        try {
+            await eliminarPacientePorAfiliacion(formData.numero_afiliacion)
+        } catch (err) {
+            // No pasa nada: simplemente no estaba en lista de espera
+            console.warn('Paciente no estaba en lista de espera')
+        }
+        }
+
+
       setTimeout(() => {
         navigate('/lista-espera')
       }, 2000)

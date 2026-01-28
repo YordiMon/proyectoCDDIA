@@ -4,6 +4,7 @@ import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'
 import { API_BASE_URL } from '../config'
 import '../styles/AñadirPaciente.css'
 
+
 export default function AnadirPaciente() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

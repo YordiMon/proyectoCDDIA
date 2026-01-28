@@ -7,7 +7,7 @@ import { crearPaciente, Paciente } from '../services/pacienteservice'
 export default function RegistroPacientes() {
     const location = useLocation()
     const navigate = useNavigate()
-    const state = (location.state ?? {}) as { nombre?: string; numero_afiliacion?: string }
+    const state = (location.state ?? {}) as { id?:  number;  idEspera: number; nombre?: string; numero_afiliacion?: string }
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [mensaje, setMensaje] = useState<string | null>(null);
 
@@ -49,7 +49,7 @@ export default function RegistroPacientes() {
             mostrarError('Paciente registrado correctamente');
             if (irAConsultas) {
                 navigate('/consultas', {
-                    state: { id: resultado.id, nombre: paciente.nombre, numero_afiliacion: paciente.numero_afiliacion }
+                    state: { id: resultado.id,   nombre: paciente.nombre, numero_afiliacion: paciente.numero_afiliacion }
                 });
             } else {
                 navigate('/expedientes');

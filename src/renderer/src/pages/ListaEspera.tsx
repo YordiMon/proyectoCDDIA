@@ -65,14 +65,15 @@ export default function ListaEspera() {
       await atenderPaciente(p.id);
       navigate('/consultas', {
         state: {
-          id: respuesta.paciente_id,
-          nombre: respuesta.nombre,
-          numero_afiliacion: respuesta.numero_afiliacion,
-          pacienteRegistrado: true
+            id: respuesta.paciente_id,      
+            idEspera: p.id,               
+            nombre: respuesta.nombre,
+            numero_afiliacion: respuesta.numero_afiliacion
         }
       });
     } catch (error: any) {
-      setMensaje("Error al verificar paciente:", error );
+      setMensaje("Error al verificar paciente:");
+
 
       // Si la API devolvió 404 → el paciente no existe aún
       await atenderPaciente(p.id);
