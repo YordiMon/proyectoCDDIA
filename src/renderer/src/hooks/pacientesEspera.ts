@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '../config';
 
+
 export interface Paciente {
   id: number;
   nombre: string;
