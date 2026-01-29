@@ -36,6 +36,7 @@ export const buscarPacientePorAfiliacion = async (numero_afiliacion: string): Pr
 
 
 
+
 /* Crear consulta */
 export const crearConsulta = async (consulta: Consulta): Promise<{ message: string; consulta_id: number }> => {
   const res = await fetch(`${API_BASE_URL}/consultas`, {
@@ -85,3 +86,16 @@ export const eliminarConsulta = async (consultaId: number): Promise<{ message: s
   if (!res.ok) throw new Error("Error al eliminar consulta");
   return res.json();
 };
+
+export const marcarPacienteEnAtencion = async (numero_afiliacion: string) => {
+  const res = await fetch(
+    `${API_BASE_URL}/marcar_paciente/${numero_afiliacion}`,
+    { method: 'PUT' }
+  )
+
+  if (!res.ok) {
+    throw new Error('No se pudo marcar paciente')
+  }
+
+  return res.json()
+}

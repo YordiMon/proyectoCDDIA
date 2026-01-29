@@ -4,6 +4,14 @@ import { Calendar, AlertCircle, ChevronLeft, Save } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearConsulta } from '../services/consultaservice'
 import '../styles/consulta.css'
+//import { API_BASE_URL } from '../config'
+//import { verificarPacienteEnEspera } from '../services/listaEsperaService'
+import { eliminarPacientePorAfiliacion } from '../services/pacienteservice'
+import { marcarPacienteEnAtencion } from '../services/consultaservice'
+
+
+//const location = useLocation();
+
 
 interface FormData {
     paciente_id: number
@@ -28,12 +36,12 @@ interface FormData {
 export default function Consultas() {
     const location = useLocation()
     const navigate = useNavigate()
-    const state = (location.state ?? {}) as { id?: number; nombre?: string; numero_afiliacion?: string }
-    
+    const state = (location.state ?? {}) as { id?:  number; nombre?: string; numero_afiliacion?: string }
     const [mensaje, setMensaje] = useState<string | null>(null);
     const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
+   // const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
-    
+  
     const [formData, setFormData] = useState<FormData>({
         paciente_id: 0,
         nombre: '',
@@ -70,6 +78,7 @@ export default function Consultas() {
         setTimeout(() => { setMensaje(null); setTipoMensaje(null); }, 5000);
     };
 
+// Al cargar la página, verificar que haya datos del paciente
     useEffect(() => {
         if (!state.id) {
             navigate('/expedientes');
@@ -89,13 +98,27 @@ export default function Consultas() {
             fecha_consulta: localISOTime,
             fecha_display: displayFecha
         }))
+
+
+  if (state.numero_afiliacion) {
+    marcarPacienteEnAtencion(state.numero_afiliacion)
+      .catch(() => {
+       
+      })
+    }
+
     }, [state, navigate])
 
+
+
+    // Manejo de cambios en los inputs
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData(prev => ({ ...prev, [name]: value }))
     }
 
+
+    // Guardar la consulta
     const handleGuardar = async () => {
         // 1. Definición de campos obligatorios para Consulta
         const camposObligatorios = [
@@ -125,9 +148,24 @@ export default function Consultas() {
                 presion: formData.presion_arterial 
             }
 
-            await crearConsulta(consultaData)
-            mostrarMensaje('exito', 'Consulta guardada exitosamente')
-            setTimeout(() => navigate('/lista-espera'), 2000)
+      await crearConsulta(consultaData)
+          
+     mostrarMensaje('exito', 'Consulta guardada exitosamente')
+     
+                // Eliminar de lista de espera SOLO si existe
+        if (formData.numero_afiliacion) {
+        try {
+            await eliminarPacientePorAfiliacion(formData.numero_afiliacion)
+        } catch (err) {
+            // No pasa nada: simplemente no estaba en lista de espera
+            console.warn('Paciente no estaba en lista de espera')
+        }
+        }
+
+
+      setTimeout(() => {
+        navigate('/lista-espera')
+      }, 2000)
 
         } catch (error) {
             console.error(error)

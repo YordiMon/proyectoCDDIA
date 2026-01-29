@@ -23,6 +23,14 @@ export interface RespuestaCrearPaciente {
   id: number
 }
 
+export interface RespuestaQuitarEspera {
+  mensaje: string;
+  id: number;
+  numero_afiliacion: string;
+  estado: string;
+}
+
+
 export interface RespuestaExistePaciente {
   paciente_id: number
   nombre: string
@@ -68,10 +76,7 @@ Promise<RespuestaExistePaciente> => {
 
   const data = await res.json();
 
-  // DEBUG
-  console.log('Status:', res.status);
-  console.log('Respuesta bruta:', JSON.stringify(data, null, 2));
-  console.log('res.ok:', res.ok);
+
 
   if (!res.ok) {
     console.error('Error HTTP detectado. Status:', res.status);
@@ -98,3 +103,18 @@ export const obtenerPacientePorId = async (id: number): Promise<Paciente> => {
   return data;
 }
 
+/* quitar paciente por número de afiliación */
+export const eliminarPacientePorAfiliacion = async (
+  numero_afiliacion: string
+): Promise<RespuestaQuitarEspera> => {
+  const res = await fetch(
+    `${API_BASE_URL}/quitar_paciente_por_afiliacion/${numero_afiliacion}`,
+    { method: 'PUT' }
+  );
+
+  if (!res.ok) {
+    throw new Error('Paciente no encontrado');
+  }
+
+  return res.json();
+};

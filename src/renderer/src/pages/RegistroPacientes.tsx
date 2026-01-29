@@ -7,9 +7,7 @@ import { crearPaciente, Paciente } from '../services/pacienteservice'
 export default function RegistroPacientes() {
     const location = useLocation()
     const navigate = useNavigate()
-    
-    const state = (location.state ?? {}) as { nombre?: string; numero_afiliacion?: string }
-    
+    const state = (location.state ?? {}) as { id?:  number;  idEspera: number; nombre?: string; numero_afiliacion?: string }
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const [enfermedades, setEnfermedades] = useState(false)
@@ -78,7 +76,7 @@ export default function RegistroPacientes() {
             const resultado = await crearPaciente(paciente)
             if (irAConsultas) {
                 navigate('/consultas', {
-                    state: { id: resultado.id, nombre: paciente.nombre, numero_afiliacion: paciente.numero_afiliacion }
+                    state: { id: resultado.id,   nombre: paciente.nombre, numero_afiliacion: paciente.numero_afiliacion }
                 });
             } else {
                 navigate('/expedientes');
@@ -178,12 +176,14 @@ export default function RegistroPacientes() {
                     <div className="campo-form">
                         <label>Tipo de sangre</label>
                         <select
-                            name="tipo_sangre"
-                            value={paciente.tipo_sangre}
-                            onChange={handleChange}
-                            className={paciente.tipo_sangre === "" ? 'placeholder-style' : 'valor-real'}
+                           name="tipo_sangre"
+                           value={paciente.tipo_sangre}     
+                           onChange={handleChange}     
+                           className={paciente.tipo_sangre === "" ? 'placeholder-style' : 'valor-real'}
                         >
-                            <option value="" disabled hidden>Seleccionar</option>
+                            <option value="" disabled hidden>
+                                Seleccionar
+                            </option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
@@ -191,8 +191,9 @@ export default function RegistroPacientes() {
                             <option value="AB+">AB+</option>
                             <option value="AB-">AB-</option>
                             <option value="O+">O+</option>
-                            <option value="O-">O-</option>
+                            <option value="O-">O-</option>     
                         </select>
+
                     </div>
 
                     <div className="campo-form">
