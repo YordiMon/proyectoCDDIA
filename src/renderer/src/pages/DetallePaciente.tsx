@@ -31,7 +31,7 @@ export default function DetallePaciente() {
   
   
 
-  // Cast del estado para evitar el error 'never'
+
   const state = location.state as {
   paciente: {
     id: number

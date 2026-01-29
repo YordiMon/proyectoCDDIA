@@ -4,8 +4,6 @@ import { Calendar, AlertCircle, ChevronLeft, Save } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearConsulta } from '../services/consultaservice'
 import '../styles/consulta.css'
-//import { API_BASE_URL } from '../config'
-//import { verificarPacienteEnEspera } from '../services/listaEsperaService'
 import { eliminarPacientePorAfiliacion } from '../services/pacienteservice'
 import { marcarPacienteEnAtencion } from '../services/consultaservice'
 
@@ -18,11 +16,11 @@ interface FormData {
     nombre: string
     numero_afiliacion: string
     fecha_consulta: string
-    fecha_display: string // Para mostrar en el header (formato humano)
+    fecha_display: string 
     motivo: string
     sintomas: string
     tiempo_enfermedad: string
-    presion_arterial: string // Unificado
+    presion_arterial: string 
     frecuencia_cardiaca: string
     frecuencia_respiratoria: string
     temperatura: string
@@ -39,7 +37,7 @@ export default function Consultas() {
     const state = (location.state ?? {}) as { id?:  number; nombre?: string; numero_afiliacion?: string }
     const [mensaje, setMensaje] = useState<string | null>(null);
     const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
-   // const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  //const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
   
     const [formData, setFormData] = useState<FormData>({
@@ -62,8 +60,8 @@ export default function Consultas() {
         observaciones: ''
     })
 
-    // Función para el formato de fecha: "22 de enero de 2026, 11:30 a.m."
-    const formatFechaHumana = (date: Date) => {
+    // Función para el formato de fecha: 
+    const formatFecha = (date: Date) => {
         const opciones: Intl.DateTimeFormatOptions = {
             day: 'numeric',
             month: 'long',
@@ -103,7 +101,7 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
         // Formato ISO para el backend
         const isoFecha = now.toISOString();
         // Formato para mostrar al usuario
-        const displayFecha = formatFechaHumana(now);
+        const displayFecha = formatFecha(now);
 
         setFormData(prev => ({
             ...prev,
