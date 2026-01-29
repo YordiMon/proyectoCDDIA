@@ -3,41 +3,32 @@ import {
   User,
   ChevronLeft,
   FilePlus,
-  ClipboardList
+  ClipboardList,
+  Stethoscope
 } from 'lucide-react';
 import '../styles/DetallePaciente.css';
-
-// Definimos la estructura del paciente para TypeScript
-interface Paciente {
-  id: number;
-  nombre: string;
-  numero_afiliacion: string;
-  fecha_nacimiento: string;
-  sexo: string;
-  celular: string;
-  contacto_emergencia: string;
-  direccion: string;
-  tipo_sangre: string;
-  recibe_donaciones: boolean;
-  alergias: string;
-  enfermedades: string;
-  cirugias_previas: string;
-  medicamentos_actuales: string;
-}
 
 export default function DetallePaciente() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  
-
-
   const state = location.state as {
   paciente: {
     id: number
     nombre: string
     numero_afiliacion: string
-  }
+      fecha_nacimiento: string;
+      sexo: string;
+      celular: string;
+      contacto_emergencia: string;
+      direccion: string;
+      tipo_sangre: string;
+      recibe_donaciones: boolean;
+      alergias: string;
+      enfermedades: string;
+      cirugias_previas: string;
+      medicamentos_actuales: string;
+      }
 } | null;
   const paciente = state?.paciente;
 
@@ -194,8 +185,10 @@ export default function DetallePaciente() {
       }
     });
   }}
+  
 >
-  Nueva consulta
+  <Stethoscope size={24} />
+  <span>Nueva consulta</span>
 </button>
 
       </div>

@@ -4,7 +4,6 @@ import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'
 import { API_BASE_URL } from '../config'
 import '../styles/AñadirPaciente.css'
 
-// Opciones para el select (Puedes agregar o quitar las que necesites)
 const AREAS_DISPONIBLES = [
   "Urgencias",
   "Consulta General",
@@ -18,44 +17,65 @@ const AREAS_DISPONIBLES = [
 export default function AnadirPaciente() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  
-  // Nuevo estado para manejar el mensaje de error dinámicamente
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     nombre: '',
     numero_afiliacion: '',
     area: ''
-  })
+  });
+
+  // 🔹 Estados para autocompletado
+  const [sugerencias, setSugerencias] = useState<any[]>([]);
+  const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
 
   useEffect(() => {
     setLoading(false);
   }, []);
 
-  // Función para mostrar el error por unos segundos y luego ocultarlo
   const mostrarError = (mensaje: string) => {
     setErrorMessage(mensaje);
     setTimeout(() => setErrorMessage(null), 4000);
   };
 
+  // 🔹 Buscar pacientes en API
+  const buscarPacientes = async (texto: string) => {
+    if (texto.length < 2) {
+      setSugerencias([]);
+      setMostrarSugerencias(false);
+      return;
+    }
+
+    try {
+      const resp = await fetch(
+        `${API_BASE_URL}/api/pacientes/buscar-historial?q=${texto}`
+      );
+      const data = await resp.json();
+      setSugerencias(data);
+      setMostrarSugerencias(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    // Validación básica: verificar que los campos no estén vacíos
+    e.preventDefault();
+
     if (!formData.nombre.trim() || !formData.numero_afiliacion.trim() || !formData.area) {
       mostrarError('Todos los campos son obligatorios, incluyendo el área.');
       return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/crear_paciente_en_espera`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
-      })
+      });
+
       if (response.ok) {
-        navigate('/')
+        navigate('/');
       } else {
         mostrarError('Error en el servidor al crear el paciente');
       }
@@ -63,9 +83,9 @@ export default function AnadirPaciente() {
       console.error('Error:', error);
       mostrarError('No se pudo conectar al servidor. Verifica tu conexión.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="contenedor-espera">
@@ -82,31 +102,58 @@ export default function AnadirPaciente() {
         <h1>Añadir paciente a la lista</h1>
       </div>
 
-      <form className="formulario-limpio" id="form-paciente" onSubmit={handleSubmit} noValidate>
-        
-        {/* INPUT: NÚMERO DE AFILIACIÓN */}
-        <div className="campo-form">
+      <form className="formulario-limpio" onSubmit={handleSubmit} noValidate>
+
+        {/* NÚMERO DE AFILIACIÓN */}
+        <div className="campo-form" style={{ position: 'relative' }}>
           <div className="label-container">
             <label htmlFor="afiliacion">Número de afiliación</label>
-            <span
-              className={`contador ${formData.numero_afiliacion.length === 8 ? 'limite-alcanzado' : ''}`}>
+            <span className={`contador ${formData.numero_afiliacion.length === 8 ? 'limite-alcanzado' : ''}`}>
               {formData.numero_afiliacion.length}/8
             </span>
           </div>
+          <p className='ola'>En este campo puede buscar pacientes que ya existen por afiliación o nombre, de no ser así debe agregarlo manualmente.</p>
           <input
             type="text"
             id="afiliacion"
-            placeholder="Ej. SS-98065"
+            placeholder="Ej. 9812096578"
             maxLength={8}
             value={formData.numero_afiliacion}
-            onChange={(e) => setFormData({ ...formData, numero_afiliacion: e.target.value })}
-            autoFocus 
-            tabIndex={1}
+            onChange={(e) => {
+              const value = e.target.value;
+              setFormData({ ...formData, numero_afiliacion: value });
+              buscarPacientes(value);
+            }}
+            autoFocus
             autoComplete="off"
           />
+
+          {/* 🔹 SUGERENCIAS */}
+            {mostrarSugerencias && sugerencias.length > 0 && (
+              <ul className="lista-sugerencias">
+                {sugerencias.map((p) => (
+                  <li
+                    key={p.id}
+                    onClick={() => {
+                      setFormData({
+                        ...formData,
+                        numero_afiliacion: p.numero_afiliacion,
+                        nombre: p.nombre
+                      });
+                      setSugerencias([]);
+                      setMostrarSugerencias(false);
+                    }}
+                  >
+                    {/* Primero el nombre, luego el número */}
+                    <span className="sugerencia-nombre">{p.nombre}</span>
+                    <span className="sugerencia-numero">Número de afiliación: {p.numero_afiliacion}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
         </div>
 
-        {/* INPUT: NOMBRE COMPLETO */}
+        {/* NOMBRE */}
         <div className="campo-form">
           <div className="label-container">
             <label htmlFor="nombre">Nombre completo</label>
@@ -114,6 +161,7 @@ export default function AnadirPaciente() {
               {formData.nombre.length}/60
             </span>
           </div>
+
           <input
             type="text"
             id="nombre"
@@ -121,37 +169,25 @@ export default function AnadirPaciente() {
             maxLength={60}
             value={formData.nombre}
             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-            tabIndex={2}
             autoComplete="off"
           />
         </div>
 
-        {/* SELECT: ÁREA DE INGRESO (MODIFICADO) */}
+        {/* ÁREA */}
         <div className="campo-form">
-          <div className="label-container">
-            <label htmlFor="area">Área de ingreso</label>
-          </div>
-          
+          <label htmlFor="area">Área de ingreso</label>
           <select
-            name="area"
             id="area"
             value={formData.area}
             onChange={(e) => setFormData({ ...formData, area: e.target.value })}
-            className={formData.area === "" ? 'placeholder-style' : 'valor-real'}
-            tabIndex={3}
           >
-            <option value="" disabled hidden>
-              Seleccionar área
-            </option>
-            {AREAS_DISPONIBLES.map((area) => (
-              <option key={area} value={area}>
-                {area}
-              </option>
+            <option value="" disabled hidden color='gray'>Seleccionar área</option>
+            {AREAS_DISPONIBLES.map(area => (
+              <option key={area} value={area}>{area}</option>
             ))}
           </select>
         </div>
 
-        {/* Mensaje de error unificado y dinámico */}
         {errorMessage && (
           <div className="mensaje-error-flotante">
             <AlertCircle size={18} />
@@ -159,17 +195,12 @@ export default function AnadirPaciente() {
           </div>
         )}
 
-        <button 
-          type="submit" 
-          className="btn-flotante-registrar" 
-          disabled={loading}
-          title="Registrar en lista"
-          tabIndex={4}
-        >
+        <button type="submit" className="btn-flotante-registrar" disabled={loading}>
           <UserPlus size={24} />
           <span>{loading ? 'Guardando...' : 'Registrar paciente en lista de espera'}</span>
         </button>
       </form>
     </div>
-  )
+  );
 }
+

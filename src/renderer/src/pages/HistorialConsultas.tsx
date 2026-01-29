@@ -67,7 +67,7 @@ export default function HistorialConsultas() {
   }, [id, fetchConsultas]);
 
 // --- FUNCIÓN ACTUALIZADA Y CORREGIDA ---
-  const formatearFechaHora = (fechaString: string) => {
+const formatearFechaHora = (fechaString: string) => {
     try {
       const fecha = new Date(fechaString);
 
@@ -75,7 +75,7 @@ export default function HistorialConsultas() {
       // CORRECCIÓN: Sumar 5 horas manualmente
       // Esto compensa el desfase con el que vienen los datos del backend
       // ---------------------------------------------------------
-      fecha.setHours(fecha.getHours() + 5); 
+      fecha.setHours(fecha.getHours() - 7); 
 
       return new Intl.DateTimeFormat('es-MX', {
         day: '2-digit',
@@ -106,7 +106,7 @@ export default function HistorialConsultas() {
         <button className="btn-volver" onClick={() => navigate(-1)}>
           <ChevronLeft size={32} strokeWidth={2.5} />
         </button>
-        <h1>Historial Médico</h1>
+        <h1>Historial médico</h1>
       </div>
 
       <div className="detalle-contenido">
@@ -144,18 +144,18 @@ export default function HistorialConsultas() {
                       <Calendar size={16} />
                       <span>{formatearFechaHora(consulta.fecha_consulta)}</span>
                     </div>
-                    <div className="diagnostico-badge">Ver detalle completo</div>
+                    <div className="diagnostico-badge">Abrir tarjeta para mas información</div>
                   </div>
 
                   <div className="seccion-principal">
-                    <h4>Motivo</h4>
-                    <p>{consulta.motivo}</p>
+                    <h4>Motivo y síntomas</h4>
+                    <p>{consulta.motivo}   /   {consulta.sintomas}</p>
                     <hr className="divisor-detalle" />
                   </div>
 
                   <div className="seccion-principal">
                     <h4>Diagnóstico</h4>
-                    <p><strong>{consulta.diagnostico}</strong></p>
+                    <p>{consulta.diagnostico}</p>
                   </div>
                 </div>
               ))}

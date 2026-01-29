@@ -32,6 +32,7 @@
 }
 
 .campo-form {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -160,4 +161,58 @@
 
 .campo-form input:invalid {
   border-color: rgba(231, 72, 60, 0.5);
+}
+
+.lista-sugerencias {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 200px; /* Un poco más de espacio */
+  overflow-y: auto;
+  z-index: 10;
+  list-style: none; /* Quita los puntos de la lista */
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.lista-sugerencias li {
+  padding: 10px 15px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column; /* Esto pone el nombre arriba y el número abajo */
+  gap: 2px; /* Espacio mínimo entre los dos textos */
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.1s ease;
+}
+
+.lista-sugerencias li:last-child {
+  border-bottom: none;
+}
+
+/* Efecto Hover */
+.lista-sugerencias li:hover {
+  background-color: #f0f7ff; /* Un azul muy claro */
+}
+
+/* Estilos para los textos internos */
+.sugerencia-nombre {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.sugerencia-numero {
+  font-size: 12px;
+  color: #666;
+}
+
+.ola {
+  margin-top: -1px;
+  margin-bottom: 3px;
+  font-size: 0.8rem;
 }

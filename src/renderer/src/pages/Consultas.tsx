@@ -73,7 +73,8 @@ export default function Consultas() {
     const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
         setTipoMensaje(tipo);
         setMensaje(texto);
-        setTimeout(() => { setMensaje(null); setTipoMensaje(null); }, 4000);
+        // Damos 5 segundos para que puedan leer la lista de faltantes
+        setTimeout(() => { setMensaje(null); setTipoMensaje(null); }, 5000);
     };
 
 // Al cargar la página, verificar que haya datos del paciente
@@ -84,9 +85,6 @@ export default function Consultas() {
         }
 
         const now = new Date();
-        
-        // --- SOLUCIÓN HORA LOCAL ---
-        // Obtenemos la fecha local en formato ISO pero sin convertir a UTC (Z)
         const tzOffset = now.getTimezoneOffset() * 60000;
         const localISOTime = new Date(now.getTime() - tzOffset).toISOString().slice(0, -1);
         
@@ -122,23 +120,32 @@ export default function Consultas() {
 
     // Guardar la consulta
     const handleGuardar = async () => {
-        if (!formData.diagnostico.trim()) {
-            mostrarMensaje('error', 'El diagnóstico es obligatorio');
+        // 1. Definición de campos obligatorios para Consulta
+        const camposObligatorios = [
+            { id: 'motivo', label: 'Motivo de consulta' },
+            { id: 'sintomas', label: 'Síntomas' },
+            { id: 'tiempo_enfermedad', label: 'Tiempo de evolución' }
+        ];
+
+        // 2. Filtrar faltantes
+        const faltantes = camposObligatorios.filter(campo => !formData[campo.id as keyof FormData]?.toString().trim());
+
+        if (faltantes.length > 0) {
+            const listaFaltantes = faltantes.map(f => `• ${f.label}`).join('\n');
+            mostrarMensaje('error', `Los siguientes campos son obligatorios:\n${listaFaltantes}`);
             return;
         }
 
         setLoading(true)
         try {
-            // Adaptamos los datos para el backend
             const consultaData = {
                 ...formData,
-                // Mapeo de campos numéricos
                 frecuencia_cardiaca: parseInt(formData.frecuencia_cardiaca) || undefined,
                 frecuencia_respiratoria: parseInt(formData.frecuencia_respiratoria) || undefined,
                 temperatura: parseFloat(formData.temperatura) || undefined,
                 peso: parseFloat(formData.peso) || undefined,
                 talla: parseFloat(formData.talla) || undefined,
-                presion: formData.presion_arterial // Enviamos como 'presion' para el backend
+                presion: formData.presion_arterial 
             }
 
       await crearConsulta(consultaData)
@@ -174,7 +181,7 @@ export default function Consultas() {
                 <button onClick={() => navigate(-1)} className="btn-volver-minimal" type="button">
                     <ChevronLeft size={32} strokeWidth={2.5} />
                 </button>
-                <h1 style={{ margin: 0 }}>Nueva Consulta</h1>
+                <h1 style={{ margin: 0 }}>Nueva consulta</h1>
             </header>
 
             <section>
@@ -190,71 +197,133 @@ export default function Consultas() {
 
                 <div className='fila-form'>
                     <div className="campo-form">
-                        <label>Motivo de consulta</label>
-                        <textarea name="motivo" rows={2} value={formData.motivo} onChange={handleInputChange} />
+                        <div className="label-container">
+                            <label>Motivo de consulta</label>
+                            <span className={`contador ${(formData.motivo || '').length === 299 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.motivo || '').length}/299
+                            </span>
+                        </div>
+                        <textarea name="motivo" maxLength={299} placeholder='Ingrese el motivo de la consulta...' rows={2} value={formData.motivo} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
-                        <label>Síntomas</label>
-                        <textarea name="sintomas" rows={2} value={formData.sintomas} onChange={handleInputChange} />
+                        <div className="label-container">
+                            <label>Síntomas</label>
+                            <span className={`contador ${(formData.sintomas || '').length === 299 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.sintomas || '').length}/299
+                            </span>
+                        </div>
+                        <textarea name="sintomas" maxLength={299} placeholder='Ingrese los sintomas del paciente...' rows={2} value={formData.sintomas} onChange={handleInputChange} />
                     </div>
                 </div>
 
                 <div className="campo-form">
-                    <label>Tiempo de evolución</label>
-                    <input type="text" name="tiempo_enfermedad" value={formData.tiempo_enfermedad} onChange={handleInputChange} />
+                    <div className="label-container">
+                        <label>Tiempo de evolución</label>
+                        <span className={`contador ${(formData.tiempo_enfermedad || '').length === 15 ? 'limite-alcanzado' : ''}`}>
+                            {(formData.tiempo_enfermedad || '').length}/15
+                        </span>
+                    </div>
+                    <input type="text" name="tiempo_enfermedad" maxLength={15} placeholder='¿Desde cuando? Ej. 7 días' value={formData.tiempo_enfermedad} onChange={handleInputChange} />
                 </div>
 
                 <hr className="divisor-detalle" />
 
                 <div className="fila-form">
                     <div className="campo-form">
-                        <label>Presión Arterial</label>
-                        <input type="text" name="presion_arterial" placeholder="120/80" value={formData.presion_arterial} onChange={handleInputChange} />
+                        <div className="label-container">
+                            <label>Presión Arterial</label>
+                            <span className={`contador ${(formData.presion_arterial || '').length === 10 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.presion_arterial || '').length}/10
+                            </span>
+                        </div>
+                        <input type="text" name="presion_arterial" maxLength={10} placeholder="Ej. 120/80" value={formData.presion_arterial} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
-                        <label>Frec. Cardiaca</label>
-                        <input type="number" name="frecuencia_cardiaca" value={formData.frecuencia_cardiaca} onChange={handleInputChange} />
+                        <div className="label-container">
+                            <label>Frec. Cardiaca</label>
+                            <span className={`contador ${(formData.frecuencia_cardiaca || '').length === 5 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.frecuencia_cardiaca || '').length}/5
+                            </span>
+                        </div>
+                        <input type="text" inputMode="numeric" name="frecuencia_cardiaca" maxLength={5} placeholder="Ej. 75" value={formData.frecuencia_cardiaca} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
-                        <label>Frec. Respiratoria</label>
-                        <input type="number" name="frecuencia_respiratoria" value={formData.frecuencia_respiratoria} onChange={handleInputChange} />
+                        <div className="label-container">
+                            <label>Frec. Respiratoria</label>
+                            <span className={`contador ${(formData.frecuencia_respiratoria || '').length === 5 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.frecuencia_respiratoria || '').length}/5
+                            </span>
+                        </div>
+                        <input type="text" inputMode="numeric" name="frecuencia_respiratoria" maxLength={5} placeholder="Ej. 15" value={formData.frecuencia_respiratoria} onChange={handleInputChange} />
                     </div>
                 </div>
 
                 <div className="fila-form">
                     <div className="campo-form">
-                        <label>Temp (°C)</label>
-                        <input type="number" step="0.1" name="temperatura" value={formData.temperatura} onChange={handleInputChange} />
+                        <div className="label-container">
+                            <label>Temp (°C)</label>
+                            <span className={`contador ${(formData.temperatura || '').length === 5 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.temperatura || '').length}/5
+                            </span>
+                        </div>
+                        <input type="text" inputMode="decimal" name="temperatura" maxLength={5} placeholder="Ej. 36.5" value={formData.temperatura} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
-                        <label>Peso (kg)</label>
-                        <input type="number" step="0.1" name="peso" value={formData.peso} onChange={handleInputChange} />
+                        <div className="label-container">
+                            <label>Peso (kg)</label>
+                            <span className={`contador ${(formData.peso || '').length === 5 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.peso || '').length}/5
+                            </span>
+                        </div>
+                        <input type="text" inputMode="decimal" name="peso" maxLength={5} placeholder="Ej. 75.5" value={formData.peso} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
-                        <label>Talla (cm)</label>
-                        <input type="number" name="talla" value={formData.talla} onChange={handleInputChange} />
+                        <div className="label-container">
+                            <label>Talla (cm)</label>
+                            <span className={`contador ${(formData.talla || '').length === 3 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.talla || '').length}/3
+                            </span>
+                        </div>
+                        <input type="text" inputMode="decimal" name="talla" maxLength={3} placeholder="Ej. 180" value={formData.talla} onChange={handleInputChange} />
                     </div>
                 </div>
 
                 <hr className="divisor-detalle" />
+                
+                <div className="fila-form">
+                    <div className="campo-form">
+                        <div className="label-container">
+                            <label>Diagnóstico</label>
+                            <span className={`contador ${(formData.diagnostico || '').length === 299 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.diagnostico || '').length}/299
+                            </span>
+                        </div>
+                        <textarea name="diagnostico" maxLength={299} rows={2} placeholder="Ingrese el diagnostico final de la consulta..." value={formData.diagnostico} onChange={handleInputChange} />
+                    </div>
 
-                <div className="campo-form">
-                    <label>Diagnóstico</label>
-                    <textarea name="diagnostico" rows={2} value={formData.diagnostico} onChange={handleInputChange} />
+                    <div className="campo-form">
+                        <div className="label-container">
+                            <label>Medicamentos</label>
+                            <span className={`contador ${(formData.medicamentos_recetados || '').length === 299 ? 'limite-alcanzado' : ''}`}>
+                                {(formData.medicamentos_recetados || '').length}/299
+                            </span>
+                        </div>
+                        <textarea name="medicamentos_recetados" maxLength={299} placeholder="Medicamentos, cantidad y frecuencia..." rows={2} value={formData.medicamentos_recetados} onChange={handleInputChange} />
+                    </div>
                 </div>
 
                 <div className="campo-form">
-                    <label>Medicamentos</label>
-                    <textarea name="medicamentos_recetados" rows={2} value={formData.medicamentos_recetados} onChange={handleInputChange} />
-                </div>
-
-                <div className="campo-form">
-                    <label>Observaciones</label>
-                    <textarea name="observaciones" rows={2} value={formData.observaciones} onChange={handleInputChange} />
+                    <div className="label-container">
+                        <label>Observaciones</label>
+                        <span className={`contador ${(formData.observaciones || '').length === 299 ? 'limite-alcanzado' : ''}`}>
+                            {(formData.observaciones || '').length}/299
+                        </span>
+                    </div>
+                    <textarea name="observaciones" maxLength={299} placeholder="¿Alguna observación adicional?" rows={1} value={formData.observaciones} onChange={handleInputChange} />
                 </div>
 
                 {mensaje && (
-                    <div className={`mensaje-flotante_C ${tipoMensaje}`}>
+                    <div className={`mensaje-error-flotante_PR ${tipoMensaje}`} style={{ whiteSpace: 'pre-line' }}>
                         <AlertCircle size={18} />
                         <span>{mensaje}</span>
                     </div>
