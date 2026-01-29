@@ -63,44 +63,33 @@ export default function Consultas() {
     // Función para el formato de fecha: 
     const formatFecha = (date: Date) => {
         const opciones: Intl.DateTimeFormatOptions = {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
+            day: 'numeric', month: 'long', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', hour12: true,
+            timeZone: 'America/Hermosillo'
         };
-        const raw = new Intl.DateTimeFormat('es-MX', opciones).format(date);
-        // Ajustamos minúsculas y el formato de p.m./a.m.
-        return raw.replace(' a las ', ', ').replace(' p. m.', ' p.m.').replace(' a. m.', ' a.m.');
+        return new Intl.DateTimeFormat('es-MX', opciones).format(date);
     }
 
-    // Función para mostrar el error por unos segundos y luego ocultarlo
-const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
-  setTipoMensaje(tipo);
-  setMensaje(texto);
-
-  setTimeout(() => {
-    setMensaje(null);
-    setTipoMensaje(null);
-  }, 4000);
-};
-
-
-   
-
+    const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
+        setTipoMensaje(tipo);
+        setMensaje(texto);
+        setTimeout(() => { setMensaje(null); setTipoMensaje(null); }, 4000);
+    };
 
 // Al cargar la página, verificar que haya datos del paciente
     useEffect(() => {
         if (!state.id) {
-            navigate('/expedientes')
-            return
+            navigate('/expedientes');
+            return;
         }
 
-        const now = new Date()
-        // Formato ISO para el backend
-        const isoFecha = now.toISOString();
-        // Formato para mostrar al usuario
+        const now = new Date();
+        
+        // --- SOLUCIÓN HORA LOCAL ---
+        // Obtenemos la fecha local en formato ISO pero sin convertir a UTC (Z)
+        const tzOffset = now.getTimezoneOffset() * 60000;
+        const localISOTime = new Date(now.getTime() - tzOffset).toISOString().slice(0, -1);
+        
         const displayFecha = formatFecha(now);
 
         setFormData(prev => ({
@@ -108,7 +97,7 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
             paciente_id: state.id!,
             nombre: state.nombre ?? '',
             numero_afiliacion: state.numero_afiliacion ?? '',
-            fecha_consulta: isoFecha,
+            fecha_consulta: localISOTime,
             fecha_display: displayFecha
         }))
 
@@ -134,22 +123,22 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
     // Guardar la consulta
     const handleGuardar = async () => {
         if (!formData.diagnostico.trim()) {
-            mostrarMensaje('error', 'El diagnóstico es obligatorio para finalizar');
-            return
+            mostrarMensaje('error', 'El diagnóstico es obligatorio');
+            return;
         }
 
         setLoading(true)
         try {
+            // Adaptamos los datos para el backend
             const consultaData = {
                 ...formData,
-                
-                presionSistolica: formData.presion_arterial ? parseInt(formData.presion_arterial.split('/')[0]) : undefined,
-                presionDiastolica: formData.presion_arterial ? parseInt(formData.presion_arterial.split('/')[1]) : undefined,
+                // Mapeo de campos numéricos
                 frecuencia_cardiaca: parseInt(formData.frecuencia_cardiaca) || undefined,
                 frecuencia_respiratoria: parseInt(formData.frecuencia_respiratoria) || undefined,
                 temperatura: parseFloat(formData.temperatura) || undefined,
                 peso: parseFloat(formData.peso) || undefined,
                 talla: parseFloat(formData.talla) || undefined,
+                presion: formData.presion_arterial // Enviamos como 'presion' para el backend
             }
 
       await crearConsulta(consultaData)
@@ -171,34 +160,26 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
         navigate('/lista-espera')
       }, 2000)
 
-    } catch (error) {
-      console.error('Error al guardar consulta:', error)
-      mostrarMensaje('error', 'Error al guardar la consulta. Intenta nuevamente.')
-    } finally {
-      setLoading(false)
+        } catch (error) {
+            console.error(error)
+            mostrarMensaje('error', 'Error al guardar la consulta')
+        } finally {
+            setLoading(false)
+        }
     }
-  }
-
-
-
-  
 
     return (
         <div className="contenedor-espera">
-            {/* Header principal alineado */}
             <header className='header'>
-                <button onClick={() => navigate('/expedientes')} className="btn-volver-minimal" type="button">
+                <button onClick={() => navigate(-1)} className="btn-volver-minimal" type="button">
                     <ChevronLeft size={32} strokeWidth={2.5} />
                 </button>
-                <h1 style={{ margin: 0 }}>Consulta</h1>
+                <h1 style={{ margin: 0 }}>Nueva Consulta</h1>
             </header>
 
             <section>
-                {/* Header de Info del Paciente con orden solicitado */}
                 <header className="perfil-info">
-                    <div className="avatar-circle">
-                        <Calendar size={32} />
-                    </div>
+                    <div className="avatar-circle"><Calendar size={32} /></div>
                     <div className="nombre-afiliacion">
                         <h2>{formData.fecha_display}</h2>
                         <p>{formData.nombre} • {formData.numero_afiliacion}</p>
@@ -208,88 +189,77 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
                 <hr className="divisor-detalle" />
 
                 <div className='fila-form'>
-                  <div className="campo-form">
-                    <label>Motivo de consulta</label>
-                    <textarea name="motivo" rows={2} placeholder="Motivo..." value={formData.motivo} onChange={handleInputChange} />
-                </div>
-
-                <div className="campo-form">
+                    <div className="campo-form">
+                        <label>Motivo de consulta</label>
+                        <textarea name="motivo" rows={2} value={formData.motivo} onChange={handleInputChange} />
+                    </div>
+                    <div className="campo-form">
                         <label>Síntomas</label>
-                        <textarea name="sintomas" rows={2} placeholder="Síntomas..." value={formData.sintomas} onChange={handleInputChange} />
+                        <textarea name="sintomas" rows={2} value={formData.sintomas} onChange={handleInputChange} />
                     </div>
-
                 </div>
-                
+
                 <div className="campo-form">
-                        <label>Tiempo de evolución</label>
-                        <textarea name="tiempo_enfermedad" rows={1} placeholder="¿Desde cuándo?" value={formData.tiempo_enfermedad} onChange={handleInputChange} />
-                    </div>
+                    <label>Tiempo de evolución</label>
+                    <input type="text" name="tiempo_enfermedad" value={formData.tiempo_enfermedad} onChange={handleInputChange} />
+                </div>
 
                 <hr className="divisor-detalle" />
 
                 <div className="fila-form">
                     <div className="campo-form">
                         <label>Presión Arterial</label>
-                        <input type="text" name="presion_arterial" placeholder="Ej: 120/80" value={formData.presion_arterial} onChange={handleInputChange} />
+                        <input type="text" name="presion_arterial" placeholder="120/80" value={formData.presion_arterial} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
-                        <label>Frec. Cardiaca (LPM)</label>
-                        <input type="number" name="frecuencia_cardiaca" placeholder="72" value={formData.frecuencia_cardiaca} onChange={handleInputChange} />
+                        <label>Frec. Cardiaca</label>
+                        <input type="number" name="frecuencia_cardiaca" value={formData.frecuencia_cardiaca} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
-                        <label>Frec. Respiratoria (RPM)</label>
-                        <input type="number" name="frecuencia_respiratoria" placeholder="18" value={formData.frecuencia_respiratoria} onChange={handleInputChange} />
+                        <label>Frec. Respiratoria</label>
+                        <input type="number" name="frecuencia_respiratoria" value={formData.frecuencia_respiratoria} onChange={handleInputChange} />
                     </div>
                 </div>
 
                 <div className="fila-form">
                     <div className="campo-form">
-                        <label>Temperatura (°C)</label>
-                        <input type="number" step="0.1" name="temperatura" placeholder="36.5" value={formData.temperatura} onChange={handleInputChange} />
+                        <label>Temp (°C)</label>
+                        <input type="number" step="0.1" name="temperatura" value={formData.temperatura} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
                         <label>Peso (kg)</label>
-                        <input type="number" step="0.1" name="peso" placeholder="70" value={formData.peso} onChange={handleInputChange} />
+                        <input type="number" step="0.1" name="peso" value={formData.peso} onChange={handleInputChange} />
                     </div>
                     <div className="campo-form">
                         <label>Talla (cm)</label>
-                        <input type="number" name="talla" placeholder="170" value={formData.talla} onChange={handleInputChange} />
+                        <input type="number" name="talla" value={formData.talla} onChange={handleInputChange} />
                     </div>
                 </div>
 
                 <hr className="divisor-detalle" />
 
-                <div className='fila-form'>
-                  <div className="campo-form">
+                <div className="campo-form">
                     <label>Diagnóstico</label>
-                    <textarea name="diagnostico" rows={2} placeholder="Diagnóstico definitivo..." value={formData.diagnostico} onChange={handleInputChange} />
+                    <textarea name="diagnostico" rows={2} value={formData.diagnostico} onChange={handleInputChange} />
                 </div>
 
                 <div className="campo-form">
-                    <label>Medicamentos recetados</label>
-                    <textarea name="medicamentos_recetados" rows={2} placeholder="Lista de medicamentos..." value={formData.medicamentos_recetados} onChange={handleInputChange} />
-                </div>
-
+                    <label>Medicamentos</label>
+                    <textarea name="medicamentos_recetados" rows={2} value={formData.medicamentos_recetados} onChange={handleInputChange} />
                 </div>
 
                 <div className="campo-form">
                     <label>Observaciones</label>
-                    <textarea name="observaciones" rows={2} placeholder="Notas adicionales..." value={formData.observaciones} onChange={handleInputChange} />
+                    <textarea name="observaciones" rows={2} value={formData.observaciones} onChange={handleInputChange} />
                 </div>
-                {/* Mensaje de error unificado y dinámico */}
-                        {mensaje && (
-                <div className={`mensaje-flotante_C ${tipoMensaje}`}>
-                    {tipoMensaje === 'error' ? (
-                    <AlertCircle size={18} />
-                    ) : (
-                    <Save size={18} />
-                    )}
-                    <span>{mensaje}</span>
-                </div>
+
+                {mensaje && (
+                    <div className={`mensaje-flotante_C ${tipoMensaje}`}>
+                        <AlertCircle size={18} />
+                        <span>{mensaje}</span>
+                    </div>
                 )}
 
-
-                {/* Botón Flotante */}
                 <div className="contenedor-botones-flotantes">
                     <button type="button" className="btn-flotante-registrar" onClick={handleGuardar} disabled={loading}>
                         <Save size={20} />
@@ -299,5 +269,4 @@ const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
             </section>
         </div>
     )
-    
 }

@@ -83,7 +83,6 @@ export default function Pacientes() {
 
   const obtenerPacientes = async () => {
     setLoading(true)
-    setError(false)
     try {
       const response = await fetch(`${API_BASE_URL}/lista_pacientes`)
       if (response.ok) {
