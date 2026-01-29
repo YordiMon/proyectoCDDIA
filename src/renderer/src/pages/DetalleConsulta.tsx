@@ -46,11 +46,24 @@ export default function DetalleConsulta() {
     );
   }
 
-  const formatearFechaHora = (fechaString: string) => {
-    return new Intl.DateTimeFormat('es-MX', {
-      day: '2-digit', month: 'long', year: 'numeric',
-      hour: '2-digit', minute: '2-digit', hour12: true
-    }).format(new Date(fechaString));
+   const formatearFechaHora = (fechaString: string) => {
+    try {
+      const fecha = new Date(fechaString);
+
+      fecha.setHours(fecha.getHours() - 7); 
+
+      return new Intl.DateTimeFormat('es-MX', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/Hermosillo' 
+      }).format(fecha);
+    } catch (e) {
+      return fechaString; 
+    }
   };
 
   const renderDato = (valor: string) => {
@@ -122,7 +135,7 @@ export default function DetalleConsulta() {
           </div>
           <div className="dato-columna">
             <span>Peso / Talla</span>
-            <strong>{consulta.peso || 'N/A'} kg / {consulta.talla || 'N/A'} m</strong>
+            <strong>{consulta.peso || 'N/A'} kg / {consulta.talla || 'N/A'} cm</strong>
           </div>
         </div>
 
