@@ -40,7 +40,6 @@ export default function Pacientes() {
   const [pacientes, setPacientes] = useState<Paciente[]>([])
   const [busqueda, setBusqueda] = useState('')
   const [loading, setLoading] = useState(true)
-  //const [error, setError] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -173,7 +172,7 @@ export default function Pacientes() {
       ) : (
         <div className="lista-grid">
           {pacientesFiltrados.map((paciente) => (
-            <div
+            <div 
               key={paciente.id}
               className="tarjeta-paciente-pro"
               onClick={() =>
@@ -181,8 +180,8 @@ export default function Pacientes() {
                   state: { paciente }
                 })
               }
-              style={{ cursor: 'pointer' }}
-            >
+              
+           >
               <div className="tarjeta-header">
                 <div className="avatar-circle">
                   <User size={22} />
@@ -219,16 +218,13 @@ export default function Pacientes() {
               <hr className="divisor" />
 
               <div className="info-secundaria">
-                <p
-                  className="texto-clinico"
-                  style={{ margin: 0, lineHeight: "1.5" }}
-                >
-                  {generarResumenClinico(paciente)}
+                <p className="texto-clinico" >
+                 {generarResumenClinico(paciente)}          
                 </p>
               </div>
 
               {/* Badge informativo */}
-              <div className="seccion-clinica" style={{ marginTop: "15px" }}>
+              <div className="seccion-clinica" >
                 <span className="conteo-badge">
                   Abrir tarjeta para más información
                 </span>
@@ -239,7 +235,7 @@ export default function Pacientes() {
                 <button
                   className="btn-ir-consulta"
                   onClick={(e) => {
-                    e.stopPropagation(); // 🔑 evita abrir expediente
+                    e.stopPropagation(); 
                     navigate("/consultas", {
                       state: {
                         id: paciente.id,

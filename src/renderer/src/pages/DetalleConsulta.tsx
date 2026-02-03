@@ -76,7 +76,7 @@ export default function DetalleConsulta() {
   return (
     <div className="contenedor-espera">
       <div className="header">
-        <button className="btn-volver" onClick={() => navigate(-1)}>
+        <button className="btn-volver" onClick={() => navigate(-1)} title="Volver al historial de consultas">
           <ChevronLeft size={32} strokeWidth={2.5} />
         </button>
         <h1>Detalle de la consulta</h1>
@@ -98,7 +98,7 @@ export default function DetalleConsulta() {
 
         {/* BLOQUE 1: MOTIVO Y TIEMPO */}
         <div className="bloque-datos">
-          <div className="dato-columna" style={{ flex: '1 1 100%' }}>
+          <div className="dato-columna" >
             <span><Clipboard size={14} inline-block /> Motivo y síntomas</span>
             {renderDato(`${consulta.motivo} - ${consulta.sintomas}`)}
           </div>
@@ -112,10 +112,13 @@ export default function DetalleConsulta() {
 
         {/* BLOQUE 2: SIGNOS VITALES */}
         <div className="bloque-datos">
-          <div className="dato-columna" style={{ flex: '1 1 100%', marginBottom: '-10px' }}>
-            <span style={{ color: '#1976d2', fontWeight: 'bold' }}>
-              <Activity size={14} /> SIGNOS VITALES
+          <div className="dato-columna2" >
+
+            <span className='signos_vitles' >
+              <Activity size={14} /> Signos Vitales
             </span>
+          
+            
           </div>
           <div className="dato-columna">
             <span>Presión Arterial</span>
@@ -143,7 +146,7 @@ export default function DetalleConsulta() {
 
         {/* BLOQUE 3: DIAGNÓSTICO */}
         <div className="bloque-datos">
-          <div className="dato-columna" style={{ flex: '1 1 100%' }}>
+          <div className="dato-columna">
             <span><Stethoscope size={14} /> Diagnóstico principal</span>
             {renderDato(consulta.diagnostico)}
           </div>
@@ -153,9 +156,9 @@ export default function DetalleConsulta() {
 
         {/* BLOQUE 4: MEDICAMENTOS */}
         <div className="bloque-datos">
-          <div className="dato-columna" style={{ flex: '1 1 100%' }}>
+          <div className="dato-columna" >
             <span><Pill size={14} /> Medicamentos recetados</span>
-            <div style={{ whiteSpace: 'pre-line', marginTop: '5px' }}>
+            <div >
                 {renderDato(consulta.medicamentos_recetados)}
             </div>
           </div>
@@ -165,9 +168,9 @@ export default function DetalleConsulta() {
           <>
             <hr className="divisor-detalle" />
             <div className="bloque-datos">
-              <div className="dato-columna" style={{ flex: '1 1 100%' }}>
+              <div className="dato-columna" >
                 <span>Observaciones adicionales</span>
-                <p style={{ margin: '5px 0', lineHeight: '1.5', color: '#333' }}>
+                <p className="observaciones-texto">
                   {consulta.observaciones}
                 </p>
               </div>

@@ -122,3 +122,28 @@
     transform: translateY(0);
   }
 }
+
+.label-container {
+  margin-top: 10px;
+}
+
+.detalles{
+  font-size: 0.85rem;
+  color: #666;
+}
+.fila-form {
+  margin-top: 10px;
+}
+
+.tarjeta-paciente-pro{
+  cursor: pointer;
+}
+
+.texto-clinico{
+ margin: 0;
+line-height: 1.5;
+}
+
+.seccion-clinica{
+  margin-top: 15px;
+}

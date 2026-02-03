@@ -6,10 +6,11 @@ import {
   Info, 
   Trash2, 
   UserPlus, 
-  RefreshCcw, 
+  
   Loader2, 
   AlertCircle,
-  Users
+  Users,
+  RefreshCw
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import '../styles/ListaEspera.css';
@@ -18,7 +19,7 @@ import { existePaciente } from '../services/pacienteservice';
 export default function ListaEspera() {
   const {
     pacientes,
-    totalEspera,
+    //totalEspera,
     loading,
     isRefreshing,
     error,
@@ -65,8 +66,7 @@ export default function ListaEspera() {
       await atenderPaciente(p.id);
       navigate('/consultas', {
         state: {
-            id: respuesta.paciente_id,      
-            idEspera: p.id,               
+            id: respuesta.paciente_id,                  
             nombre: respuesta.nombre,
             numero_afiliacion: respuesta.numero_afiliacion
         }
@@ -203,6 +203,7 @@ export default function ListaEspera() {
                         <div className="divisor-interno"></div>
                         <div className="grupo-acciones">
                           <button 
+                           title="Quitar paciente de la lista de espera"
                             className="btn-accion btn-eliminar" 
                             onClick={() => handleQuitarPaciente(p.id)}
                             //disabled={p.estado === '2'}
@@ -224,11 +225,12 @@ export default function ListaEspera() {
 
       <div className="contenedor-botones-flotantes">
         <button 
+         title="Refrescar lista"
           className={`btn-flotante-secundario ${isRefreshing ? 'girando' : ''}`} 
           onClick={() => recargarLista(true)} 
           disabled={isRefreshing}
         >
-          <RefreshCcw size={24} />
+          <RefreshCw size={24} />
         </button>
 
         <Link to="/añadirpaciente" className="btn-flotante-añadir" ref={botonAnadirRef}>

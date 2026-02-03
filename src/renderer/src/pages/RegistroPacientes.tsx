@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, User, Save, AlertCircle, FilePlus } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearPaciente, Paciente } from '../services/pacienteservice'
+//import { marcarPacienteEnAtencion } from '../services/consultaservice'
+
 
 export default function RegistroPacientes() {
     const location = useLocation()
@@ -30,7 +32,7 @@ export default function RegistroPacientes() {
         cirugias_previas: '',
         medicamentos_actuales: ''
     })
-
+            
     // Estado adicional para validar si el usuario seleccionó una opción en donaciones
     const [donacionSeleccionada, setDonacionSeleccionada] = useState(false);
 
@@ -39,6 +41,8 @@ export default function RegistroPacientes() {
         // Aumentamos un poco el tiempo a 5s porque la lista es más larga de leer
         setTimeout(() => setErrorMessage(null), 5000);
     };
+
+    
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -91,7 +95,9 @@ export default function RegistroPacientes() {
     return (
         <div className="contenedor-espera">
             <header className='header'>
-                <button onClick={() => navigate('/expedientes')} className="btn-volver-minimal" type="button">
+                <button 
+                 title="Volver a expedientes"
+                onClick={() => navigate('/expedientes')} className="btn-volver-minimal" type="button">
                     <ChevronLeft size={32} strokeWidth={2.5} />
                 </button>
                 <h1>Registrar paciente</h1>
@@ -99,7 +105,8 @@ export default function RegistroPacientes() {
 
             <section>
                 {mostrarInputsPrincipales ? (
-                    <div className="fila-form" style={{ marginTop: '10px' }}>
+                    <div                  
+                    className="fila-form" >
                         <div className="campo-form">
                             <div className="label-container">
                                 <label>Nombre completo</label>
@@ -150,6 +157,7 @@ export default function RegistroPacientes() {
                 <div className="campo-form">
                     <label>Fecha de nacimiento</label>
                     <input
+                     title="Fecha de nacimiento"
                         type="date"
                         name='fecha_nacimiento'
                         className={paciente.fecha_nacimiento ? 'valor-real' : 'placeholder-style'}
@@ -162,6 +170,7 @@ export default function RegistroPacientes() {
                     <div className="campo-form">
                         <label>Sexo</label>
                         <select
+                        title="Sexo del paciente"
                             name="sexo"
                             value={paciente.sexo}
                             onChange={handleChange}
@@ -176,6 +185,7 @@ export default function RegistroPacientes() {
                     <div className="campo-form">
                         <label>Tipo de sangre</label>
                         <select
+                            title="Tipo de sangre del paciente"
                            name="tipo_sangre"
                            value={paciente.tipo_sangre}     
                            onChange={handleChange}     
@@ -199,6 +209,7 @@ export default function RegistroPacientes() {
                     <div className="campo-form">
                         <label>¿Recibe donaciones?</label>
                         <select 
+                            title="¿El paciente recibe donaciones?"
                             name="recibe_donaciones" 
                             value={!donacionSeleccionada ? "" : (paciente.recibe_donaciones ? 'si' : 'no')}
                             onChange={(e) => {
@@ -284,8 +295,8 @@ export default function RegistroPacientes() {
                         </div>
                         {item.state && (
                             <>
-                                <div className="label-container" style={{ marginTop: '10px' }}>
-                                    <label style={{ fontSize: '0.85rem', color: '#666' }}>Detalles de {item.label.replace(/[¿?]/g, '').toLowerCase()}</label>
+                                <div className="label-container" >
+                                    <label className='detalles'>Detalles de {item.label.replace(/[¿?]/g, '').toLowerCase()}</label>
                                     <span className={`contador ${((paciente as any)[item.name] || '').length === item.max ? 'limite-alcanzado' : ''}`}>
                                         {((paciente as any)[item.name] || '').length}/{item.max}
                                     </span>

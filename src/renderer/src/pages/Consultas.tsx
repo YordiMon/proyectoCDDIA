@@ -37,9 +37,9 @@ export default function Consultas() {
     const state = (location.state ?? {}) as { id?:  number; nombre?: string; numero_afiliacion?: string }
     const [mensaje, setMensaje] = useState<string | null>(null);
     const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
-  //const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
   
+    // Estado del formulario
     const [formData, setFormData] = useState<FormData>({
         paciente_id: 0,
         nombre: '',
@@ -69,7 +69,7 @@ export default function Consultas() {
         };
         return new Intl.DateTimeFormat('es-MX', opciones).format(date);
     }
-
+    // Función para mostrar mensajes temporales
     const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
         setTipoMensaje(tipo);
         setMensaje(texto);
@@ -77,7 +77,7 @@ export default function Consultas() {
         setTimeout(() => { setMensaje(null); setTipoMensaje(null); }, 5000);
     };
 
-// Al cargar la página, verificar que haya datos del paciente
+    // Al cargar la página, verificar que haya datos del paciente
     useEffect(() => {
         if (!state.id) {
             navigate('/expedientes');
@@ -90,6 +90,7 @@ export default function Consultas() {
         
         const displayFecha = formatFecha(now);
 
+        // Rellenar datos iniciales del formulario
         setFormData(prev => ({
             ...prev,
             paciente_id: state.id!,
@@ -99,7 +100,7 @@ export default function Consultas() {
             fecha_display: displayFecha
         }))
 
-
+  // Marcar paciente como "En atención"
   if (state.numero_afiliacion) {
     marcarPacienteEnAtencion(state.numero_afiliacion)
       .catch(() => {
@@ -120,7 +121,7 @@ export default function Consultas() {
 
     // Guardar la consulta
     const handleGuardar = async () => {
-        // 1. Definición de campos obligatorios para Consulta
+        //campos obligatorios para Consulta
         const camposObligatorios = [
             { id: 'motivo', label: 'Motivo de consulta' },
             { id: 'sintomas', label: 'Síntomas' },
@@ -147,12 +148,12 @@ export default function Consultas() {
                 talla: parseFloat(formData.talla) || undefined,
                 presion: formData.presion_arterial 
             }
-
+      // Crear la consulta
       await crearConsulta(consultaData)
           
      mostrarMensaje('exito', 'Consulta guardada exitosamente')
      
-                // Eliminar de lista de espera SOLO si existe
+        // Eliminar de lista de espera SOLO si existe
         if (formData.numero_afiliacion) {
         try {
             await eliminarPacientePorAfiliacion(formData.numero_afiliacion)
@@ -162,7 +163,7 @@ export default function Consultas() {
         }
         }
 
-
+      // Volver a lista de espera después de 2 segundos
       setTimeout(() => {
         navigate('/lista-espera')
       }, 2000)
@@ -178,10 +179,10 @@ export default function Consultas() {
     return (
         <div className="contenedor-espera">
             <header className='header'>
-                <button onClick={() => navigate(-1)} className="btn-volver-minimal" type="button">
+                <button  title="Volver a la lista de espera" onClick={() => navigate(-1)} className="btn-volver-minimal" type="button">
                     <ChevronLeft size={32} strokeWidth={2.5} />
                 </button>
-                <h1 style={{ margin: 0 }}>Nueva consulta</h1>
+                <h1 className='nueva-consulta'>Nueva Consulta</h1>
             </header>
 
             <section>
@@ -323,7 +324,7 @@ export default function Consultas() {
                 </div>
 
                 {mensaje && (
-                    <div className={`mensaje-error-flotante_PR ${tipoMensaje}`} style={{ whiteSpace: 'pre-line' }}>
+                    <div className={`mensaje-flotante_C ${tipoMensaje}`} >
                         <AlertCircle size={18} />
                         <span>{mensaje}</span>
                     </div>

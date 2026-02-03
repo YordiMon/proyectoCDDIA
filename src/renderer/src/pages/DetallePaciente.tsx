@@ -2,9 +2,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   User,
   ChevronLeft,
-  FilePlus,
   ClipboardList,
-  Stethoscope
+  Search
 } from 'lucide-react';
 import '../styles/DetallePaciente.css';
 
@@ -68,7 +67,7 @@ export default function DetallePaciente() {
   return (
     <div className="contenedor-espera">
       <div className="header">
-        <button className="btn-volver" onClick={() => navigate(-1)}>
+        <button className="btn-volver" onClick={() => navigate(-1)} aria-label="Volver a la página anterior" >
           <ChevronLeft size={32} strokeWidth={2.5} />
         </button>
         <h1>Expediente del paciente</h1>
@@ -165,7 +164,7 @@ export default function DetallePaciente() {
           className="btn-flotante-añadir btn-historial"
           onClick={() => navigate(`/historial/${paciente.id}`, { state: { paciente } })}
         >
-          <ClipboardList size={24} />
+          <Search size={24} />
           <span>Historial de consultas</span>
         </button>
 
@@ -187,7 +186,7 @@ export default function DetallePaciente() {
   }}
   
 >
-  <Stethoscope size={24} />
+  <ClipboardList size={24} />
   <span>Nueva consulta</span>
 </button>
 

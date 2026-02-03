@@ -71,10 +71,7 @@ const formatearFechaHora = (fechaString: string) => {
     try {
       const fecha = new Date(fechaString);
 
-      // ---------------------------------------------------------
-      // CORRECCIÓN: Sumar 5 horas manualmente
-      // Esto compensa el desfase con el que vienen los datos del backend
-      // ---------------------------------------------------------
+
       fecha.setHours(fecha.getHours() - 7); 
 
       return new Intl.DateTimeFormat('es-MX', {
@@ -103,7 +100,9 @@ const formatearFechaHora = (fechaString: string) => {
   return (
     <div className="contenedor-espera">
       <div className="header">
-        <button className="btn-volver" onClick={() => navigate(-1)}>
+        <button
+           title="Volver"
+         className="btn-volver" onClick={() => navigate(-1)}>
           <ChevronLeft size={32} strokeWidth={2.5} />
         </button>
         <h1>Historial médico</h1>

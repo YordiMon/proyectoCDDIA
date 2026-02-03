@@ -14,6 +14,8 @@ import DetallePaciente from './pages/DetallePaciente'
 import HistorialConsultas from './pages/HistorialConsultas'
 import DetalleConsulta from './pages/DetalleConsulta';
 
+//import Inicio from './pages/Inicio';
+
 function App() {
   return (
     <Router>
