@@ -77,13 +77,6 @@
   border-color: #1976d2;
 }
 
-.tarjeta-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
-}
-
 .avatar-circle {
   width: 40px;
   height: 40px;
@@ -156,11 +149,11 @@
 }
 
 .mensaje-estado {
+  margin-top: -150px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px;
   text-align: center;
 }
 
@@ -173,7 +166,7 @@
 .mensaje-estado p {
   color: #666;
   max-width: 400px;
-  margin: 0 auto;
+  margin-top: 10px;
 }
 
 .btn-reintentar { 
@@ -181,13 +174,13 @@
   font-style: italic;
   cursor: pointer;
   font-weight: 500;
-  transition: 0.3s;
+  transition: 0.2s;
   text-decoration: underline;
   color: #1976d2;
 }
 
 .btn-reintentar:hover {
-  font-size: 15.9px;
+  font-size: 1.05rem;
 }
 
 @keyframes spin {
@@ -234,9 +227,4 @@
   text-decoration: none;
   font-size: 14px;
   transition: background 0.2s;
-}
-
-.zona-contenido {
-  width: 100%;
-  min-height: 400px;
 }

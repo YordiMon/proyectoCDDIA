@@ -259,45 +259,6 @@
   animation: rotate 1s linear infinite;
 }
 
-/* Centrar carga inicial */
-.centro-total {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
-}
-
-/* Cuadros de mensaje (Error y Vacío) */
-.mensaje-estado {
-  display: flex;
-  flex-direction: column;
-  padding: 60px;
-  margin-top: 40;
-}
-
-.mensaje-estado h4 {
-  margin: 20px 0 0 0;
-  color: #333;
-}
-
-.mensaje-estado p {
-  color: #666;
-  max-width: 300px;
-}
-
-.btn-reintentar { 
-  font-style: italic;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.3s;
-  text-decoration: underline;
-}
-
-.btn-reintentar:hover {
-  font-size: 15.9px;
-}
-
 .menu-filtros-areas {
   display: flex;
   gap: 20px;
@@ -328,4 +289,10 @@
   background-color: #1976d2;
   color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cabecera-espera {
+  display: flex;
+  margin-top: -13px;
+  margin-bottom: -15px;
 }

@@ -22,7 +22,6 @@ export default function AnadirPaciente() {
   const [formData, setFormData] = useState({
     nombre: '',
     numero_afiliacion: '',
-    area: ''
   });
 
   // 🔹 Estados para autocompletado
@@ -61,7 +60,7 @@ export default function AnadirPaciente() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.nombre.trim() || !formData.numero_afiliacion.trim() || !formData.area) {
+    if (!formData.nombre.trim() || !formData.numero_afiliacion.trim()) {
       mostrarError('Todos los campos son obligatorios, incluyendo el área.');
       return;
     }
@@ -89,7 +88,7 @@ export default function AnadirPaciente() {
 
   return (
     <div className="contenedor-espera">
-      <div className="cabecera-anadir">
+      <div className="header">
         <button
           onClick={() => navigate(-1)}
           className="btn-volver-minimal"
@@ -97,7 +96,7 @@ export default function AnadirPaciente() {
           type="button"
           tabIndex={-1}
         >
-          <ChevronLeft size={32} strokeWidth={2.5} />
+          <ChevronLeft className='btn-volver-minimal-icon'/>
         </button>
         <h1>Añadir paciente a la lista</h1>
       </div>
@@ -171,21 +170,6 @@ export default function AnadirPaciente() {
             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
             autoComplete="off"
           />
-        </div>
-
-        {/* ÁREA */}
-        <div className="campo-form">
-          <label htmlFor="area">Área de ingreso</label>
-          <select
-            id="area"
-            value={formData.area}
-            onChange={(e) => setFormData({ ...formData, area: e.target.value })}
-          >
-            <option value="" disabled hidden color='gray'>Seleccionar área</option>
-            {AREAS_DISPONIBLES.map(area => (
-              <option key={area} value={area}>{area}</option>
-            ))}
-          </select>
         </div>
 
         {errorMessage && (

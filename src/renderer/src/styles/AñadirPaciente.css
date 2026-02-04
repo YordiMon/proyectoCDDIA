@@ -17,12 +17,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s;
+  transition: transform 0.3s;
 }
 
 .btn-volver-minimal:hover {
   color: #1976d2;
-  transform: translateX(-3px);
+  transform: translateX(-5px);
+}
+
+.btn-volver-minimal-icon {
+  width: 25px;
+  height: 25px;
+  stroke-width: 2.5;
+}
+
+.btn-volver-minimal-icon:hover {
+  width: 25px;
+  height: 23px;
+  stroke-width: 2.5;
 }
 
 .formulario-limpio {
@@ -214,5 +226,9 @@
 .ola {
   margin-top: -1px;
   margin-bottom: 3px;
+  font-size: 0.8rem;
+}
+
+.minusp {
   font-size: 0.8rem;
 }

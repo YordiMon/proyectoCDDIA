@@ -76,8 +76,8 @@ export default function DetalleConsulta() {
   return (
     <div className="contenedor-espera">
       <div className="header">
-        <button className="btn-volver" onClick={() => navigate(-1)}>
-          <ChevronLeft size={32} strokeWidth={2.5} />
+        <button className="btn-volver-minimal" onClick={() => navigate(-1)}>
+          <ChevronLeft className='btn-volver-minimal-icon'/>
         </button>
         <h1>Detalle de la consulta</h1>
       </div>

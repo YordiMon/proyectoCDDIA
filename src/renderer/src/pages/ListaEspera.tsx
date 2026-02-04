@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePacientes } from '../hooks/pacientesEspera'
 import { 
@@ -8,8 +8,7 @@ import {
   UserPlus, 
   RefreshCcw, 
   Loader2, 
-  AlertCircle,
-  Users
+  AlertCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import '../styles/ListaEspera.css';
@@ -18,11 +17,9 @@ import { existePaciente } from '../services/pacienteservice';
 export default function ListaEspera() {
   const {
     pacientes,
-    totalEspera,
     loading,
     isRefreshing,
     error,
-    
     atenderPaciente,
     quitarPaciente,
     recargarLista
@@ -30,52 +27,28 @@ export default function ListaEspera() {
   
   const navigate = useNavigate()
   const botonAnadirRef = useRef<HTMLAnchorElement>(null)
-
-  // --- NUEVA LÓGICA DE FILTRADO ---
-  const [areaSeleccionada, setAreaSeleccionada] = useState<string>('General');
-
-  // Obtener áreas únicas de la lista de pacientes
-  const areasDisponibles = useMemo(() => {
-    const areas = pacientes.map(p => p.area).filter(Boolean);
-    return ['General', ...new Set(areas)];
-  }, [pacientes]);
-
-  // Filtrar pacientes según el área seleccionada
-  const pacientesFiltrados = useMemo(() => {
-    if (areaSeleccionada === 'General') return pacientes;
-    return pacientes.filter(p => p.area === areaSeleccionada);
-  }, [pacientes, areaSeleccionada]);
-  // --------------------------------
-
-  useEffect(() => {
-    if (!loading && botonAnadirRef.current) {
-      botonAnadirRef.current.focus();
-    }
-  }, [loading]);
-
-  // Mensaje temporal (en caso de error o éxito)
   const [mensaje, setMensaje] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!loading && !error && botonAnadirRef.current) {
+      botonAnadirRef.current.focus();
+    }
+  }, [loading, error]);
 
-
-  //boton para atender paciente
+  // Handlers
   const handleAtender = async (p: { id: number; nombre: string; numero_afiliacion: string }) => {
     try {
       const respuesta = await existePaciente(p.numero_afiliacion);
       await atenderPaciente(p.id);
       navigate('/consultas', {
         state: {
-            id: respuesta.paciente_id,      
-            idEspera: p.id,               
-            nombre: respuesta.nombre,
-            numero_afiliacion: respuesta.numero_afiliacion
+          id: respuesta.paciente_id,      
+          idEspera: p.id,               
+          nombre: respuesta.nombre,
+          numero_afiliacion: respuesta.numero_afiliacion
         }
       });
     } catch (error: any) {
-      setMensaje("Error al verificar paciente:");
-
-
-      // Si la API devolvió 404 → el paciente no existe aún
       await atenderPaciente(p.id);
       navigate('/registro-paciente', {
         state: { nombre: p.nombre, numero_afiliacion: p.numero_afiliacion }
@@ -83,73 +56,61 @@ export default function ListaEspera() {
     }
   };
 
-
-  //boton para quitar paciente con messaje de exito
-   const handleQuitarPaciente = async (id: number) => {
-  const ok = await quitarPaciente(id);
-
-  if (ok) {
-    setMensaje('Paciente eliminado correctamente');
-
-    //desaparecer después de 3 segundos
-    setTimeout(() => {
-      setMensaje(null);
-    }, 3000);
-  }
-};
- 
+  const handleQuitarPaciente = async (id: number) => {
+    const ok = await quitarPaciente(id);
+    if (ok) {
+      setMensaje('Paciente eliminado correctamente');
+      setTimeout(() => setMensaje(null), 3000);
+    }
+  };
 
   // 1. ESTADO DE CARGA (Pantalla completa)
-  // Al darle a Reintentar, loading vuelve a ser true y entra aquí inmediatamente
   if (loading) {
     return (
-      <div className="contenedor-espera centro-total">
+      <div className="contenedor-pacientes centro-total">
         <Loader2 className="spinner-animado" size={50} />
         <p>Conectando con el servidor...</p>
       </div>
     );
   }
 
+  // 2. ESTADO DE ERROR (Solo mensaje, sin nada más)
+  if (error) {
+    return (
+      <div className="contenedor-espera centro-total">
+        <div className="mensaje-estado error-box">
+          <AlertCircle size={48} color="#4c4c4c" />
+          <h4>Error de conexión</h4>
+          <p>{error}</p>
+          <p className='minusp'>No se cargó la lista de espera.</p>
+          <p className="btn-reintentar" onClick={() => recargarLista(false)}>
+            Reintentar conexión
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. RENDERIZADO NORMAL
   return (
     <div className="contenedor-espera">
       <h1>Lista de espera</h1>
       
-        {mensaje && (
-          <div className="mensaje-flotante exito">
-            {mensaje}
-          </div>
-        )}
-
-
-      <p className="texto-resumen">
-        Hay un total de <span className="contador-azul">{pacientesFiltrados.length}</span> paciente(s) en espera en <strong>{areaSeleccionada}</strong>.
+      <header className="cabecera-espera">
+         <p className="conteo-badge">
+        Hay un total de {pacientes.length} paciente/s en espera
       </p>
+      </header>
 
-      {/* --- MENÚ DE FILTROS (BOTONES) --- */}
-      <div className="menu-filtros-areas">
-        {areasDisponibles.map((area) => (
-          <button
-            key={area}
-            className={`btn-filtro-area ${areaSeleccionada === area ? 'activo' : ''}`}
-            onClick={() => setAreaSeleccionada(area)}
-          >
-            {area === 'General' ? <Users size={16} /> : null}
-            {area}
-          </button>
-        ))}
-      </div>
+      {mensaje && (
+        <div className="mensaje-flotante exito">
+          {mensaje}
+        </div>
+      )}
+     
 
       <div className="zona-contenido">
-        {error ? (
-          <div className="mensaje-estado error-box">
-            <AlertCircle size={38} color="#4c4c4c" />
-            <h4>Error de conexión</h4>
-            <p>{error}</p>
-            <p className="btn-reintentar" onClick={() => recargarLista(false)}>
-              Reintentar conexión
-            </p>
-          </div>
-        ) : pacientesFiltrados.length === 0 ? (
+        {pacientes.length === 0 ? (
           <div className="mensaje-estado vacio-box">
             <Info size={38} color="#4c4c4c" />
             <h4>No hay pacientes</h4>
@@ -169,20 +130,16 @@ export default function ListaEspera() {
                   <th className="col-afiliacion">Afiliación</th>
                   <th className="col-nombre">Nombre</th>
                   <th className="col-creado">Creado</th>
-                  {/* Solo mostrar encabezado de Area si es General */}
-                  {areaSeleccionada === 'General' && <th className="col-creado">Area</th>}
                   <th className="col-estado">Estado</th>
                   <th className="col-acciones">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {pacientesFiltrados.map((p) => (
+                {pacientes.map((p) => (
                   <tr key={p.id}>
                     <td className="col-afiliacion">{p.numero_afiliacion}</td>
                     <td className="col-nombre">{p.nombre}</td>
                     <td className="col-creado">{p.creado}</td>
-                    {/* Solo mostrar celda de Area si es General */}
-                    {areaSeleccionada === 'General' && <td className="col-creado">{p.area}</td>}
                     <td className="col-estado">
                       <span className={`status-badge ${p.estado === '2' ? 'estado-consulta' : ''}`}>
                         {p.estado === '1' ? 'En espera' : 'En consulta'}
@@ -205,8 +162,6 @@ export default function ListaEspera() {
                           <button 
                             className="btn-accion btn-eliminar" 
                             onClick={() => handleQuitarPaciente(p.id)}
-                            //disabled={p.estado === '2'}
-
                             tabIndex={0}
                           >
                             <Trash2 size={20} strokeWidth={2.5} />

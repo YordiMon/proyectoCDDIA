@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Calendar, AlertCircle, ChevronLeft, Save } from 'lucide-react'
+import { Calendar, AlertCircle, ChevronLeft, Save, CheckCircle } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearConsulta } from '../services/consultaservice'
 import '../styles/consulta.css'
@@ -150,7 +150,7 @@ export default function Consultas() {
 
       await crearConsulta(consultaData)
           
-     mostrarMensaje('exito', 'Consulta guardada exitosamente')
+     mostrarMensaje('exito', 'Consulta registrada correctamente')
      
                 // Eliminar de lista de espera SOLO si existe
         if (formData.numero_afiliacion) {
@@ -165,7 +165,7 @@ export default function Consultas() {
 
       setTimeout(() => {
         navigate('/lista-espera')
-      }, 2000)
+      }, 2500)
 
         } catch (error) {
             console.error(error)
@@ -179,9 +179,9 @@ export default function Consultas() {
         <div className="contenedor-espera">
             <header className='header'>
                 <button onClick={() => navigate(-1)} className="btn-volver-minimal" type="button">
-                    <ChevronLeft size={32} strokeWidth={2.5} />
+                    <ChevronLeft className='btn-volver-minimal-icon'/>
                 </button>
-                <h1 style={{ margin: 0 }}>Nueva consulta</h1>
+                <h1>Nueva consulta</h1>
             </header>
 
             <section>
@@ -322,11 +322,16 @@ export default function Consultas() {
                     <textarea name="observaciones" maxLength={299} placeholder="¿Alguna observación adicional?" rows={1} value={formData.observaciones} onChange={handleInputChange} />
                 </div>
 
-                {mensaje && (
-                    <div className={`mensaje-error-flotante_PR ${tipoMensaje}`} style={{ whiteSpace: 'pre-line' }}>
-                        <AlertCircle size={18} />
-                        <span>{mensaje}</span>
-                    </div>
+               {mensaje && (
+                <div className={`mensaje-error-flotante_PR ${tipoMensaje}`}>
+                    {/* Si es error muestra AlertCircle, si es exito muestra CheckCircle */}
+                    {tipoMensaje === 'error' ? (
+                    <AlertCircle size={20} style={{ marginTop: '2px' }} />
+                    ) : (
+                    <CheckCircle size={20} style={{ marginTop: '2px' }} />
+                    )}
+                    <span>{mensaje}</span>
+                </div>
                 )}
 
                 <div className="contenedor-botones-flotantes">

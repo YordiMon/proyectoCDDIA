@@ -1,17 +1,4 @@
-.contenedor-pacientes {
-  padding: 10px;
-  position: relative;
-  min-height: 100vh;
-  max-width: 1200px;
-  margin: 0 auto;
-}
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 25px;
-}
 
 .btn-volver {
   background: none;
@@ -39,59 +26,9 @@
   color: #64748b;
 }
 
-/* --- ESTADOS UNIFICADOS (IDÉNTICO A EXPEDIENTES) --- */
-.centro-total {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
-}
-
-.spinner-animado {
-  color: #1976d2;
-  animation: rotate 1s linear infinite;
-  margin-bottom: 10px;
-}
-
 @keyframes rotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-.mensaje-estado {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px;
-  text-align: center;
-}
-
-.mensaje-estado h4 {
-  margin: 20px 0 10px 0;
-  color: #333;
-  font-size: 1.2rem;
-}
-
-.mensaje-estado p {
-  color: #666;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.btn-reintentar { 
-  margin-top: 15px;
-  font-style: italic;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.3s;
-  text-decoration: underline;
-  color: #1976d2;
-}
-
-.btn-reintentar:hover {
-  font-size: 15.9px;
 }
 
 .zona-contenido {
@@ -124,15 +61,6 @@
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0,0,0,0.08);
   border-color: #1976d2;
-}
-
-.tarjeta-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
 .fecha-badge {
@@ -171,4 +99,13 @@
   border: 0;
   border-top: 1px solid #eaeaea;
   margin-top: 33px;
+}
+
+.tarjeta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
