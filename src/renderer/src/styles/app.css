@@ -1,4 +1,4 @@
-.app-container {
+.app-container_app {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -6,13 +6,13 @@
   overflow: hidden;
 }
 
-.sidebar {
+.sidebarapp {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-.content {
+.contentapp {
   flex: 1;
   padding: 20px;
   overflow-y: auto;

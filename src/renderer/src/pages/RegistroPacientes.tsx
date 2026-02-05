@@ -3,13 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeft, User, Save, AlertCircle, FilePlus } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearPaciente, Paciente } from '../services/pacienteservice'
-//import { marcarPacienteEnAtencion } from '../services/consultaservice'
 
 
 export default function RegistroPacientes() {
     const location = useLocation()
     const navigate = useNavigate()
-    const state = (location.state ?? {}) as { id?:  number;  idEspera: number; nombre?: string; numero_afiliacion?: string }
+    const state = (location.state ?? {}) as { id?:  number; number; nombre?: string; numero_afiliacion?: string }
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const [enfermedades, setEnfermedades] = useState(false)

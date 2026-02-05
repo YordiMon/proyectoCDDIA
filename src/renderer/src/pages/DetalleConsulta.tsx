@@ -112,37 +112,44 @@ export default function DetalleConsulta() {
 
         {/* BLOQUE 2: SIGNOS VITALES */}
         <div className="bloque-datos">
-          <div className="dato-columna2" >
 
-            <span className='signos_vitles' >
-              <Activity size={14} /> Signos Vitales
-            </span>
-          
-            
+          {/* Subtítulo */}
+          <div className="subtitulo-bloque">
+            <Activity size={14} />
+            <span>Signos Vitales</span>
           </div>
+
+          {/* Datos */}
           <div className="dato-columna">
             <span>Presión Arterial</span>
             <strong>{consulta.presion || 'N/A'} mmHg</strong>
           </div>
+
           <div className="dato-columna">
             <span>Frec. Cardíaca</span>
             <strong>{consulta.frecuencia_cardiaca || 'N/A'} lpm</strong>
           </div>
+
           <div className="dato-columna">
             <span>Frec. Respiratoria</span>
             <strong>{consulta.frecuencia_respiratoria || 'N/A'} lpm</strong>
           </div>
+
           <div className="dato-columna">
             <span>Temperatura</span>
             <strong>{consulta.temperatura || 'N/A'} °C</strong>
           </div>
+
           <div className="dato-columna">
             <span>Peso / Talla</span>
-            <strong>{consulta.peso || 'N/A'} kg / {consulta.talla || 'N/A'} cm</strong>
+            <strong>
+              {consulta.peso || 'N/A'} kg / {consulta.talla || 'N/A'} cm
+            </strong>
           </div>
         </div>
 
         <hr className="divisor-detalle" />
+
 
         {/* BLOQUE 3: DIAGNÓSTICO */}
         <div className="bloque-datos">

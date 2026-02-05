@@ -25,7 +25,7 @@ export default function AnadirPaciente() {
     area: ''
   });
 
-  // 🔹 Estados para autocompletado
+  //Estados para autocompletado
   const [sugerencias, setSugerencias] = useState<any[]>([]);
   const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
 
@@ -38,7 +38,7 @@ export default function AnadirPaciente() {
     setTimeout(() => setErrorMessage(null), 4000);
   };
 
-  // 🔹 Buscar pacientes en API
+  //Buscar pacientes en API
   const buscarPacientes = async (texto: string) => {
     if (texto.length < 2) {
       setSugerencias([]);

@@ -16,10 +16,12 @@ import { Link } from 'react-router-dom';
 import '../styles/ListaEspera.css';
 import { existePaciente } from '../services/pacienteservice';
 
+
+
 export default function ListaEspera() {
   const {
     pacientes,
-    //totalEspera,
+  //totalEspera,
     loading,
     isRefreshing,
     error,
@@ -28,7 +30,12 @@ export default function ListaEspera() {
     quitarPaciente,
     recargarLista
   } = usePacientes()
-  
+
+  //mostrar ventana modal
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [pacienteAEliminar, setPacienteAEliminar] = useState<number | null>(null);
+
+
   const navigate = useNavigate()
   const botonAnadirRef = useRef<HTMLAnchorElement>(null)
 
@@ -57,6 +64,11 @@ export default function ListaEspera() {
   // Mensaje temporal (en caso de error o éxito)
   const [mensaje, setMensaje] = useState<string | null>(null);
 
+  //funcion de ventana modal
+  const confirmarEliminacion = (id: number) => {
+    setPacienteAEliminar(id);
+    setMostrarModal(true);
+  };
 
 
   //boton para atender paciente
@@ -90,8 +102,7 @@ export default function ListaEspera() {
 
   if (ok) {
     setMensaje('Paciente eliminado correctamente');
-
-    //desaparecer después de 3 segundos
+    //desaparese despues de 3 segundos
     setTimeout(() => {
       setMensaje(null);
     }, 3000);
@@ -205,7 +216,9 @@ export default function ListaEspera() {
                           <button 
                            title="Quitar paciente de la lista de espera"
                             className="btn-accion btn-eliminar" 
-                            onClick={() => handleQuitarPaciente(p.id)}
+
+
+                            onClick={() => confirmarEliminacion(p.id)}
                             //disabled={p.estado === '2'}
 
                             tabIndex={0}
@@ -238,6 +251,45 @@ export default function ListaEspera() {
           <span>Añadir paciente</span>
         </Link>
       </div>
+
+         {mostrarModal && (
+  <div className="modal-overlay">
+    <div className="modal-confirmacion">
+      <AlertCircle size={48} color="#d32f2f" />
+      <h3>¿Desea quitar al paciente de la lista de espera?</h3>
+      <p>Esta acción no se puede deshacer.</p>
+
+      <div className="modal-botones">
+
+        <button
+          className="btn-confirmar"
+          onClick={async () => {
+            if (pacienteAEliminar !== null) {
+              await handleQuitarPaciente(pacienteAEliminar);
+            }
+            setMostrarModal(false);
+            setPacienteAEliminar(null);
+          }}
+        >
+          Eliminar
+        </button>
+        <button
+          className="btn-cancelar"
+          onClick={() => {
+            setMostrarModal(false);
+            setPacienteAEliminar(null);
+          }}
+        >
+          Cancelar
+        </button>
+
+        
+      </div>
+    </div>
+  </div>
+)}
+ 
+
     </div>
   );
 }

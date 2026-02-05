@@ -22,7 +22,7 @@ export default function Sidebar(): React.ReactNode {
     
     { type: 'divider' }, 
     
-    { name: 'Perfil', path: '/perfil', icon: <UserCircle size={18} /> },
+    { name: 'Inicio', path: '/inicio', icon: <UserCircle size={18} /> },
     { name: 'Usuarios', path: '/usuarios', icon: <UserSearch size={18} /> },
 
     { type: 'divider' }, 

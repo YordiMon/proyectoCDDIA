@@ -105,7 +105,7 @@ export default function DetallePaciente() {
           </div>
           <div className="dato-columna">
             <span>Emergencia</span>
-            <strong>{paciente.contacto_emergencia}</strong>
+          {renderDato(paciente.contacto_emergencia)}
           </div>
           <div className="dato-columna ancho-completo">
             <span>Dirección</span>

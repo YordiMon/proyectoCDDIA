@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Titlebar from './components/Titlebar' // Asegúrate de que la ruta sea correcta
+import Titlebar from './components/Titlebar' 
 import Sidebar from './components/Sidebar'
 import ListaEspera from './pages/ListaEspera'
 import Expedientes from './pages/Expedientes'
-import Perfil from './pages/Perfil'
+import Inicio from './pages/Inicio'
 import Estadisticas from './pages/Estadisticas'
 import Ajustes from './pages/Ajustes'
 import AñadirPaciente from './pages/AñadirPaciente'
@@ -12,9 +12,7 @@ import Consultas from './pages/Consultas'
 import RegistoP from './pages/RegistroPacientes'
 import DetallePaciente from './pages/DetallePaciente'
 import HistorialConsultas from './pages/HistorialConsultas'
-import DetalleConsulta from './pages/DetalleConsulta';
-
-//import Inicio from './pages/Inicio';
+import DetalleConsulta from './pages/DetalleConsulta'
 
 function App() {
   return (
@@ -40,9 +38,10 @@ function App() {
             position: 'relative' 
           }}>
             <Routes>
+              
               <Route path="/" element={<ListaEspera />} />
               <Route path="/expedientes" element={<Expedientes />} />
-              <Route path="/perfil" element={<Perfil />} />
+              <Route path='/inicio' element={<Inicio /> } />
               <Route path="/estadisticas" element={<Estadisticas />} />
               <Route path="/usuarios" element={<Usuarios />} />
               <Route path="/paciente/:id" element={<DetallePaciente />} />
