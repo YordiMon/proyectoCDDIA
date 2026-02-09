@@ -14,6 +14,7 @@ import DetallePaciente from './pages/DetallePaciente'
 import HistorialConsultas from './pages/HistorialConsultas'
 import DetalleConsulta from './pages/DetalleConsulta'
 
+
 function App() {
   return (
     <Router>
@@ -39,9 +40,10 @@ function App() {
           }}>
             <Routes>
               
-              <Route path="/" element={<ListaEspera />} />
+              <Route path='/' element={<Inicio /> } />
               <Route path="/expedientes" element={<Expedientes />} />
-              <Route path='/inicio' element={<Inicio /> } />
+             
+              <Route path="/lista-espera" element={<ListaEspera />} />
               <Route path="/estadisticas" element={<Estadisticas />} />
               <Route path="/usuarios" element={<Usuarios />} />
               <Route path="/paciente/:id" element={<DetallePaciente />} />
@@ -51,7 +53,7 @@ function App() {
               <Route path="/detalle-consulta/:id" element={<DetalleConsulta />} />
               <Route path="/registro-paciente" element={<RegistoP />} />
               <Route path="/consultas" element={<Consultas />} />
-              <Route path="/lista-espera" element={<ListaEspera />} />
+              <Route path='/inicio' element={<Inicio /> } />
             </Routes>
           </main>
         </div>

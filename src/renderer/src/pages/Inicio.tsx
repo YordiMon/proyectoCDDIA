@@ -1,10 +1,7 @@
 //import { useEffect, useRef, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/inicio.css';
-import { 
-  
-  ClipboardList
-} from 'lucide-react';
+import { ClipboardList } from 'lucide-react';
 
 export default function Inicio() {
   const navigate = useNavigate();
@@ -33,8 +30,8 @@ export default function Inicio() {
         onClick={() => navigate("/expedientes")}
       >
         <ClipboardList size={40} className="icono-card" />
-        <h3>Pacientes</h3>
-        <p>Ver y administrar expedientes</p>
+        <h3>Expedientes</h3>
+        <p>Ver y administrar expedientes y pacientes</p>
       </div>
 
       <div

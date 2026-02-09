@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Calendar, AlertCircle, ChevronLeft, Save } from 'lucide-react'
-import '../styles/pacientesReg.css'
 import { crearConsulta } from '../services/consultaservice'
-import '../styles/consulta.css'
 import { eliminarPacientePorAfiliacion } from '../services/pacienteservice'
 import { marcarPacienteEnAtencion } from '../services/consultaservice'
-
+import '../styles/pacientesReg.css'
+import '../styles/consulta.css'
 
 //const location = useLocation();
 
@@ -76,6 +75,8 @@ export default function Consultas() {
         // Damos 5 segundos para que puedan leer la lista de faltantes
         setTimeout(() => { setMensaje(null); setTipoMensaje(null); }, 5000);
     };
+
+  
 
     // Al cargar la página, verificar que haya datos del paciente
     useEffect(() => {
