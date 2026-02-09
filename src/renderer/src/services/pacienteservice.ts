@@ -18,6 +18,8 @@ export interface Paciente {
   medicamentos_actuales?: string;
 }
 
+
+
 export interface RespuestaCrearPaciente {
   mensaje: string
   id: number
@@ -114,6 +116,31 @@ export const eliminarPacientePorAfiliacion = async (
 
   if (!res.ok) {
     throw new Error('Paciente no encontrado');
+  }
+
+  return res.json();
+};
+
+/* Editar Pacientes */
+export const EditarPaciente = async (
+  numero_afiliacion: string,
+  datos: Partial<Paciente>
+): Promise<Paciente> => {
+
+  const res = await fetch(
+    `${API_BASE_URL}/editar_paciente/${numero_afiliacion}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datos),
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.mensaje || "Error al editar paciente");
   }
 
   return res.json();

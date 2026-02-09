@@ -221,45 +221,57 @@ export default function Pacientes() {
                   </p>
                 </div>
 
-                <div className="acciones-tarjeta">
-                  <button
-                    className="btn-ir-consulta"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate("/consultas", {
-                        state: {
-                          id: paciente.id,
-                          nombre: paciente.nombre,
-                          numero_afiliacion: paciente.numero_afiliacion,
-                          pacienteRegistrado: true
-                        }
-                      });
-                    }}
-                  >
-                    <ClipboardList size={18} />
-                    Nueva consulta
-                  </button>
-                </div>
+              {/* Badge informativo */}
+              <div className="seccion-clinica" >
+                <span className="conteo-badge">
+                  Abrir tarjeta para más información
+                </span>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
 
-      <div className="contenedor-botones-flotantes">
+              {/* BOTÓN EXPLÍCITO DE CONSULTA */}
+              <div className="acciones-tarjeta">
+                <button
+                  className="btn-ir-consulta"
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    navigate("/consultas", {
+                      state: {
+                        id: paciente.id,
+                        nombre: paciente.nombre,
+                        numero_afiliacion: paciente.numero_afiliacion,
+                        pacienteRegistrado: true
+                      }
+                    });
+                  }}
+                >
+                  <ClipboardList size={18} />
+                  Nueva consulta
+                </button>
+              </div>
+              
+            </div>
+          ))}
+        </div>
+      )}
+
+
+    </div>
+    <div className="contenedor-botones-flotantes">
+       <div className="contenedor-botones-flotantes">
         <button 
           className={`btn-flotante-secundario ${isRefreshing ? 'girando' : ''}`} 
           onClick={recargarLista} 
           title="Actualizar lista"
           disabled={isRefreshing}
         > 
-          <RefreshCw size={24} /> 
+        <RefreshCw size={24} /> 
         </button> 
         <Link to="/registro-paciente" className="btn-flotante-añadir">
           <UserPlus size={24} />
           <span>Añadir paciente</span>
         </Link>
       </div>
+    </div>
     </div>
   );
 }

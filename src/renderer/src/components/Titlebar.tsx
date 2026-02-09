@@ -33,13 +33,13 @@ export default function Titlebar() {
 
       {/* Los controles DEBEN estar fuera de las zonas de drag */}
       <div className="titlebar-controls">
-        <button onClick={handleMinimize} className="control-btn hover-gray">
+        <button onClick={handleMinimize} className="control-btn hover-gray" title='control M'>
           <Minus size={16} />
         </button>
-        <button onClick={handleMaximize} className="control-btn hover-gray">
+        <button onClick={handleMaximize} className="control-btn hover-gray" title='control X'>
           <Square size={12} />
         </button>
-        <button onClick={handleClose} className="control-btn hover-red">
+        <button onClick={handleClose} className="control-btn hover-red" title='control W'>
           <X size={17} />
         </button>
       </div>

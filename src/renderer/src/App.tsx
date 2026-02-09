@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Titlebar from './components/Titlebar' // Asegúrate de que la ruta sea correcta
+import Titlebar from './components/Titlebar' 
 import Sidebar from './components/Sidebar'
 import ListaEspera from './pages/ListaEspera'
 import Expedientes from './pages/Expedientes'
+import Inicio from './pages/Inicio'
 import Estadisticas from './pages/Estadisticas'
 import Ajustes from './pages/Ajustes'
 import AñadirPaciente from './pages/AñadirPaciente'
@@ -10,7 +11,8 @@ import Consultas from './pages/Consultas'
 import RegistoP from './pages/RegistroPacientes'
 import DetallePaciente from './pages/DetallePaciente'
 import HistorialConsultas from './pages/HistorialConsultas'
-import DetalleConsulta from './pages/DetalleConsulta';
+import DetalleConsulta from './pages/DetalleConsulta'
+
 
 function App() {
   return (
@@ -36,8 +38,11 @@ function App() {
             position: 'relative' 
           }}>
             <Routes>
-              <Route path="/" element={<ListaEspera />} />
+              
+              <Route path='/' element={<Inicio /> } />
               <Route path="/expedientes" element={<Expedientes />} />
+             
+              <Route path="/lista-espera" element={<ListaEspera />} />
               <Route path="/estadisticas" element={<Estadisticas />} />
               <Route path="/paciente/:id" element={<DetallePaciente />} />
               <Route path="/historial/:id" element={<HistorialConsultas />} />
@@ -46,7 +51,7 @@ function App() {
               <Route path="/detalle-consulta/:id" element={<DetalleConsulta />} />
               <Route path="/registro-paciente" element={<RegistoP />} />
               <Route path="/consultas" element={<Consultas />} />
-              <Route path="/lista-espera" element={<ListaEspera />} />
+              <Route path='/inicio' element={<Inicio /> } />
             </Routes>
           </main>
         </div>

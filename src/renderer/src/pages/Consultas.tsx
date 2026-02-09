@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Calendar, AlertCircle, ChevronLeft, Save, CheckCircle } from 'lucide-react'
-import '../styles/pacientesReg.css'
 import { crearConsulta } from '../services/consultaservice'
-import '../styles/consulta.css'
-//import { API_BASE_URL } from '../config'
-//import { verificarPacienteEnEspera } from '../services/listaEsperaService'
 import { eliminarPacientePorAfiliacion } from '../services/pacienteservice'
 import { marcarPacienteEnAtencion } from '../services/consultaservice'
-
+import '../styles/pacientesReg.css'
+import '../styles/consulta.css'
 
 //const location = useLocation();
 
@@ -18,7 +15,7 @@ interface FormData {
     nombre: string
     numero_afiliacion: string
     fecha_consulta: string
-    fecha_display: string
+    fecha_display: string 
     motivo: string
     sintomas: string
     tiempo_enfermedad: string
@@ -39,9 +36,9 @@ export default function Consultas() {
     const state = (location.state ?? {}) as { id?:  number; nombre?: string; numero_afiliacion?: string }
     const [mensaje, setMensaje] = useState<string | null>(null);
     const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
-   // const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
   
+    // Estado del formulario
     const [formData, setFormData] = useState<FormData>({
         paciente_id: 0,
         nombre: '',
@@ -62,7 +59,8 @@ export default function Consultas() {
         observaciones: ''
     })
 
-    const formatFechaHumana = (date: Date) => {
+    // Función para el formato de fecha: 
+    const formatFecha = (date: Date) => {
         const opciones: Intl.DateTimeFormatOptions = {
             day: 'numeric', month: 'long', year: 'numeric',
             hour: '2-digit', minute: '2-digit', hour12: true,
@@ -70,7 +68,7 @@ export default function Consultas() {
         };
         return new Intl.DateTimeFormat('es-MX', opciones).format(date);
     }
-
+    // Función para mostrar mensajes temporales
     const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
         setTipoMensaje(tipo);
         setMensaje(texto);
@@ -78,7 +76,9 @@ export default function Consultas() {
         setTimeout(() => { setMensaje(null); setTipoMensaje(null); }, 5000);
     };
 
-// Al cargar la página, verificar que haya datos del paciente
+  
+
+    // Al cargar la página, verificar que haya datos del paciente
     useEffect(() => {
         if (!state.id) {
             navigate('/expedientes');
@@ -88,8 +88,10 @@ export default function Consultas() {
         const now = new Date();
         const tzOffset = now.getTimezoneOffset() * 60000;
         const localISOTime = new Date(now.getTime() - tzOffset).toISOString().slice(0, -1);
-        const displayFecha = formatFechaHumana(now);
+        
+        const displayFecha = formatFecha(now);
 
+        // Rellenar datos iniciales del formulario
         setFormData(prev => ({
             ...prev,
             paciente_id: state.id!,
@@ -99,7 +101,7 @@ export default function Consultas() {
             fecha_display: displayFecha
         }))
 
-
+  // Marcar paciente como "En atención"
   if (state.numero_afiliacion) {
     marcarPacienteEnAtencion(state.numero_afiliacion)
       .catch(() => {
@@ -120,7 +122,7 @@ export default function Consultas() {
 
     // Guardar la consulta
     const handleGuardar = async () => {
-        // 1. Definición de campos obligatorios para Consulta
+        //campos obligatorios para Consulta
         const camposObligatorios = [
             { id: 'motivo', label: 'Motivo de consulta' },
             { id: 'sintomas', label: 'Síntomas' },
@@ -147,12 +149,12 @@ export default function Consultas() {
                 talla: parseFloat(formData.talla) || undefined,
                 presion: formData.presion_arterial 
             }
-
+      // Crear la consulta
       await crearConsulta(consultaData)
           
      mostrarMensaje('exito', 'Consulta registrada correctamente')
      
-                // Eliminar de lista de espera SOLO si existe
+        // Eliminar de lista de espera SOLO si existe
         if (formData.numero_afiliacion) {
         try {
             await eliminarPacientePorAfiliacion(formData.numero_afiliacion)
@@ -162,7 +164,7 @@ export default function Consultas() {
         }
         }
 
-
+      // Volver a lista de espera después de 2 segundos
       setTimeout(() => {
         navigate('/lista-espera')
       }, 2500)

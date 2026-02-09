@@ -1,0 +1,21 @@
+.app-container_app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.sidebarapp {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.contentapp {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #fdfdfdff;
+  position: relative;
+}

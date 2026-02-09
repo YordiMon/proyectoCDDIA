@@ -1,36 +1,20 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  User,
-  ChevronLeft,
-  ClipboardList,
-  Stethoscope
-} from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react'
+import { User, ChevronLeft, ClipboardList, Search, Edit,  Save } from 'lucide-react';
+import { EditarPaciente } from '../services/pacienteservice';
+import type { Paciente } from '../types/Paciente';
 import '../styles/DetallePaciente.css';
 
 export default function DetallePaciente() {
   const navigate = useNavigate();
   const location = useLocation();
-  
-  const state = location.state as {
-  paciente: {
-    id: number
-    nombre: string
-    numero_afiliacion: string
-      fecha_nacimiento: string;
-      sexo: string;
-      celular: string;
-      contacto_emergencia: string;
-      direccion: string;
-      tipo_sangre: string;
-      recibe_donaciones: boolean;
-      alergias: string;
-      enfermedades: string;
-      cirugias_previas: string;
-      medicamentos_actuales: string;
-      }
-} | null;
-  const paciente = state?.paciente;
+ 
 
+ const state = location.state as { paciente: Paciente } | null;
+
+
+  const paciente = state?.paciente;
+ 
   if (!paciente) {
     return (
       <div className="centro-total">
@@ -40,7 +24,29 @@ export default function DetallePaciente() {
     );
   }
 
-  
+const [editando, setEditando] = useState(false);
+const [formData, setFormData] = useState<Paciente>(paciente);
+const [guardando, setGuardando] = useState(false);
+
+
+//
+const guardarCambios = async () => {
+  if (!paciente) return;
+
+  try {
+    setGuardando(true);
+    await EditarPaciente(paciente.numero_afiliacion, formData);
+    setEditando(false);
+    navigate(0); // refresca vista
+  } catch (error: any) {
+    alert(error.message || 'Error al guardar cambios');
+  } finally {
+    setGuardando(false);
+  }
+};
+
+
+///  
   const formatearFecha = (fecha: string) => {
     if (!fecha) return 'N/A';
     const partes = fecha.split('-');
@@ -99,62 +105,183 @@ export default function DetallePaciente() {
             <span>Sexo</span>
             <strong>{paciente.sexo}</strong>
           </div>
-          <div className="dato-columna">
-            <span>Contacto</span>
-            <strong>{paciente.celular}</strong>
-          </div>
+       <div className="dato-columna">
+              <span>Contacto</span>
+
+              {editando ? (
+                <input
+                  type="text"
+                  value={formData.celular}
+                  onChange={(e) =>
+                    setFormData({ ...formData, celular: e.target.value })
+                  }
+                />
+              ) : (
+                <strong>{paciente.celular}</strong>
+              )}
+            </div>
+
           <div className="dato-columna">
             <span>Emergencia</span>
-            <strong>{paciente.contacto_emergencia}</strong>
+
+            {editando ? (
+              <input
+                type="text"
+                value={formData.contacto_emergencia || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, contacto_emergencia: e.target.value })
+                }
+              />
+            ) : (
+              renderDato(paciente.contacto_emergencia)
+            )}
           </div>
+
+
           <div className="dato-columna ancho-completo">
             <span>Dirección</span>
-            {renderDato(paciente.direccion)}
+
+            {editando ? (
+              <textarea
+                value={formData.direccion || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, direccion: e.target.value })
+                }
+                rows={2}
+              />
+            ) : (
+              renderDato(paciente.direccion)
+            )}
           </div>
+
+
+
         </div>
 
         <hr className="divisor-detalle" />
 
         <div className="bloque-datos">
+
           <div className="dato-columna">
-            <span>Tipo de Sangre</span>
-            <strong>{paciente.tipo_sangre}</strong>
-          </div>
+              <span>Tipo de Sangre</span>
+
+              {editando ? (
+                <select
+                  value={formData.tipo_sangre}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tipo_sangre: e.target.value })
+                  }
+                >
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                </select>
+              ) : (
+                <strong>{paciente.tipo_sangre}</strong>
+              )}
+            </div>
+
+
           <div className="dato-columna">
             <span>¿Recibe donaciones?</span>
-            <strong>{paciente.recibe_donaciones ? 'Sí' : 'No'}</strong>
+
+            {editando ? (
+              <input
+                type="checkbox"
+                checked={formData.recibe_donaciones}
+                onChange={(e) =>
+                  setFormData({ ...formData, recibe_donaciones: e.target.checked })
+                }
+              />
+            ) : (
+              <strong>{paciente.recibe_donaciones ? 'Sí' : 'No'}</strong>
+            )}
           </div>
-        </div>
+
 
         <hr className="divisor-detalle" />
 
         <div className="bloque-datos">
           <div className="dato-columna">
-            <span>Alergias</span>
-            {renderDato(paciente.alergias)}
-          </div>
-          <div className="dato-columna">
-            <span>Enfermedades</span>
-            {renderDato(paciente.enfermedades)}
-          </div>
+          <span>Alergias</span>
+
+          {editando ? (
+            <textarea
+              value={formData.alergias || ''}
+              onChange={(e) =>
+                setFormData({ ...formData, alergias: e.target.value })
+              }
+              rows={2}
+            />
+          ) : (
+            renderDato(paciente.alergias)
+          )}
+        </div>
+
+
+        
+            <div className="dato-columna">
+              <span>Enfermedades</span>
+
+              {editando ? (
+                <textarea
+                  value={formData.alergias || ''}
+                  onChange={(e) =>
+                    setFormData({ ...formData, enfermedades: e.target.value })
+                  }
+                  rows={2}
+                />
+              ) : (
+                renderDato(paciente.enfermedades)
+              )}
+            </div>
+
         </div>
 
         <hr className="divisor-detalle" />
 
         <div className="bloque-datos">
-          <div className="dato-columna ancho-completo">
-            <span>Cirugías previas</span>
-            {renderDato(paciente.cirugias_previas)}
-          </div>
+                <span>Cirugías previas</span>
+
+          {editando ? (
+            <textarea
+              value={formData.cirugias_previas || ''}
+              onChange={(e) =>
+                setFormData({ ...formData, cirugias_previas: e.target.value })
+              }
+              rows={2}
+            />
+          ) : (
+            renderDato(paciente.cirugias_previas)
+          )}
         </div>
+          <div className="dato-columna ancho-completo">
+          </div>
 
         <hr className="divisor-detalle" />
 
         <div className="bloque-datos">
           <div className="dato-columna ancho-completo">
-            <span>Medicación actual</span>
-            {renderDato(paciente.medicamentos_actuales)}
-          </div>
+              <span>Medicación actual</span>
+
+              {editando ? (
+                <textarea
+                  value={formData.medicamentos_actuales || ''}
+                  onChange={(e) =>
+                    setFormData({ ...formData, medicamentos_actuales: e.target.value })
+                  }
+                  rows={2}
+                />
+              ) : (
+                renderDato(paciente.medicamentos_actuales)
+              )}
+            </div>
+
         </div>
       </div>
 
@@ -164,7 +291,7 @@ export default function DetallePaciente() {
           className="btn-flotante-añadir btn-historial"
           onClick={() => navigate(`/historial/${paciente.id}`, { state: { paciente } })}
         >
-          <ClipboardList size={24} />
+          <Search size={24} />
           <span>Historial de consultas</span>
         </button>
 
@@ -183,14 +310,45 @@ export default function DetallePaciente() {
         pacienteRegistrado: true
       }
     });
-  }}
-  
->
-  <Stethoscope size={24} />
+  }}>
+     <ClipboardList size={24} />
   <span>Nueva consulta</span>
 </button>
+        {/* editar y cancelar*/}
+  {!editando && (
+    <button
+      className="btn-flotante-añadir"
+      onClick={() => setEditando(true)}
+    >
+      <Edit size={24} /> Editar expediente
+    </button>
+  )}
+
+  {editando && (
+    <>
+      <button
+        className="btn-flotante-añadirG"
+        onClick={guardarCambios}
+        disabled={guardando}
+      >
+        <Save size={24} /> {guardando ? 'Guardando...' : 'Guardar cambios'}
+      </button>
+
+      <button
+        className="btn-flotante-añadirC"
+        onClick={() => {
+          setFormData(paciente);
+          setEditando(false);
+        }}
+      >
+        X Cancelar
+      </button>
+    </>
+  )}
 
       </div>
-    </div>
+    </div>  
+     </div>
+    
   );
 }

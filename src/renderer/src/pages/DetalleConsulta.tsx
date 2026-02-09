@@ -98,7 +98,7 @@ export default function DetalleConsulta() {
 
         {/* BLOQUE 1: MOTIVO Y TIEMPO */}
         <div className="bloque-datos">
-          <div className="dato-columna" style={{ flex: '1 1 100%' }}>
+          <div className="dato-columna" >
             <span><Clipboard size={14} inline-block /> Motivo y síntomas</span>
             {renderDato(`${consulta.motivo} - ${consulta.sintomas}`)}
           </div>
@@ -112,38 +112,48 @@ export default function DetalleConsulta() {
 
         {/* BLOQUE 2: SIGNOS VITALES */}
         <div className="bloque-datos">
-          <div className="dato-columna" style={{ flex: '1 1 100%', marginBottom: '-10px' }}>
-            <span style={{ color: '#1976d2', fontWeight: 'bold' }}>
-              <Activity size={14} /> SIGNOS VITALES
-            </span>
+
+          {/* Subtítulo */}
+          <div className="subtitulo-bloque">
+            <Activity size={14} />
+            <span>Signos Vitales</span>
           </div>
+
+          {/* Datos */}
           <div className="dato-columna">
             <span>Presión Arterial</span>
             <strong>{consulta.presion || 'N/A'} mmHg</strong>
           </div>
+
           <div className="dato-columna">
             <span>Frec. Cardíaca</span>
             <strong>{consulta.frecuencia_cardiaca || 'N/A'} lpm</strong>
           </div>
+
           <div className="dato-columna">
             <span>Frec. Respiratoria</span>
             <strong>{consulta.frecuencia_respiratoria || 'N/A'} lpm</strong>
           </div>
+
           <div className="dato-columna">
             <span>Temperatura</span>
             <strong>{consulta.temperatura || 'N/A'} °C</strong>
           </div>
+
           <div className="dato-columna">
             <span>Peso / Talla</span>
-            <strong>{consulta.peso || 'N/A'} kg / {consulta.talla || 'N/A'} cm</strong>
+            <strong>
+              {consulta.peso || 'N/A'} kg / {consulta.talla || 'N/A'} cm
+            </strong>
           </div>
         </div>
 
         <hr className="divisor-detalle" />
 
+
         {/* BLOQUE 3: DIAGNÓSTICO */}
         <div className="bloque-datos">
-          <div className="dato-columna" style={{ flex: '1 1 100%' }}>
+          <div className="dato-columna">
             <span><Stethoscope size={14} /> Diagnóstico principal</span>
             {renderDato(consulta.diagnostico)}
           </div>
@@ -153,9 +163,9 @@ export default function DetalleConsulta() {
 
         {/* BLOQUE 4: MEDICAMENTOS */}
         <div className="bloque-datos">
-          <div className="dato-columna" style={{ flex: '1 1 100%' }}>
+          <div className="dato-columna" >
             <span><Pill size={14} /> Medicamentos recetados</span>
-            <div style={{ whiteSpace: 'pre-line', marginTop: '5px' }}>
+            <div >
                 {renderDato(consulta.medicamentos_recetados)}
             </div>
           </div>
@@ -165,9 +175,9 @@ export default function DetalleConsulta() {
           <>
             <hr className="divisor-detalle" />
             <div className="bloque-datos">
-              <div className="dato-columna" style={{ flex: '1 1 100%' }}>
+              <div className="dato-columna" >
                 <span>Observaciones adicionales</span>
-                <p style={{ margin: '5px 0', lineHeight: '1.5', color: '#333' }}>
+                <p className="observaciones-texto">
                   {consulta.observaciones}
                 </p>
               </div>

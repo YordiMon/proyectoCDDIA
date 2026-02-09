@@ -28,7 +28,7 @@ export function usePacientes() {
       }
       
       setError(null); 
-
+// Resetear error antes de la petición
       const response = await fetch(`${API_BASE_URL}/lista_pacientes_en_espera`);
       
       if (!response.ok) throw new Error('Servidor no disponible');
@@ -46,6 +46,7 @@ export function usePacientes() {
     }
   }, []);
 
+  // Función para atender paciente
   const atenderPaciente = async (id: number) => {
     try {
       const response = await fetch(`${API_BASE_URL}/atender_paciente/${id}`, { method: 'PUT' });
@@ -60,6 +61,7 @@ export function usePacientes() {
     return false;
   };
 
+  // Quitar paciente de la lista de espera
   const quitarPaciente = async (id: number) => {
     try {
       const response = await fetch(`${API_BASE_URL}/quitar_paciente/${id}`, { method: 'PUT' });

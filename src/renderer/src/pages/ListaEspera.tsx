@@ -6,13 +6,17 @@ import {
   Info, 
   Trash2, 
   UserPlus, 
-  RefreshCcw, 
+  
   Loader2, 
-  AlertCircle
+  AlertCircle,
+  RefreshCw
+  
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import '../styles/ListaEspera.css';
 import { existePaciente } from '../services/pacienteservice';
+
+
 
 export default function ListaEspera() {
   const {
@@ -24,7 +28,12 @@ export default function ListaEspera() {
     quitarPaciente,
     recargarLista
   } = usePacientes()
-  
+
+  //mostrar ventana modal
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [pacienteAEliminar, setPacienteAEliminar] = useState<number | null>(null);
+
+
   const navigate = useNavigate()
   const botonAnadirRef = useRef<HTMLAnchorElement>(null)
   const [mensaje, setMensaje] = useState<string | null>(null);
@@ -35,17 +44,25 @@ export default function ListaEspera() {
     }
   }, [loading, error]);
 
-  // Handlers
+
+
+  //funcion de ventana modal
+  const confirmarEliminacion = (id: number) => {
+    setPacienteAEliminar(id);
+    setMostrarModal(true);
+  };
+
+
+  //boton para atender paciente
   const handleAtender = async (p: { id: number; nombre: string; numero_afiliacion: string }) => {
     try {
       const respuesta = await existePaciente(p.numero_afiliacion);
       await atenderPaciente(p.id);
       navigate('/consultas', {
         state: {
-          id: respuesta.paciente_id,      
-          idEspera: p.id,               
-          nombre: respuesta.nombre,
-          numero_afiliacion: respuesta.numero_afiliacion
+            id: respuesta.paciente_id,                  
+            nombre: respuesta.nombre,
+            numero_afiliacion: respuesta.numero_afiliacion
         }
       });
     } catch (error: any) {
@@ -56,13 +73,20 @@ export default function ListaEspera() {
     }
   };
 
-  const handleQuitarPaciente = async (id: number) => {
-    const ok = await quitarPaciente(id);
-    if (ok) {
-      setMensaje('Paciente eliminado correctamente');
-      setTimeout(() => setMensaje(null), 3000);
-    }
-  };
+
+  //boton para quitar paciente con messaje de exito
+   const handleQuitarPaciente = async (id: number) => {
+  const ok = await quitarPaciente(id);
+
+  if (ok) {
+    setMensaje('Paciente eliminado correctamente');
+    //desaparese despues de 3 segundos
+    setTimeout(() => {
+      setMensaje(null);
+    }, 3000);
+  }
+};
+ 
 
   // 1. ESTADO DE CARGA (Pantalla completa)
   if (loading) {
@@ -160,8 +184,13 @@ export default function ListaEspera() {
                         <div className="divisor-interno"></div>
                         <div className="grupo-acciones">
                           <button 
+                           title="Quitar paciente de la lista de espera"
                             className="btn-accion btn-eliminar" 
-                            onClick={() => handleQuitarPaciente(p.id)}
+
+
+                            onClick={() => confirmarEliminacion(p.id)}
+                            //disabled={p.estado === '2'}
+
                             tabIndex={0}
                           >
                             <Trash2 size={20} strokeWidth={2.5} />
@@ -179,11 +208,12 @@ export default function ListaEspera() {
 
       <div className="contenedor-botones-flotantes">
         <button 
+         title="Refrescar lista"
           className={`btn-flotante-secundario ${isRefreshing ? 'girando' : ''}`} 
           onClick={() => recargarLista(true)} 
           disabled={isRefreshing}
         >
-          <RefreshCcw size={24} />
+          <RefreshCw size={24} />
         </button>
 
         <Link to="/añadirpaciente" className="btn-flotante-añadir" ref={botonAnadirRef}>
@@ -191,6 +221,45 @@ export default function ListaEspera() {
           <span>Añadir paciente</span>
         </Link>
       </div>
+
+         {mostrarModal && (
+  <div className="modal-overlay">
+    <div className="modal-confirmacion">
+      <AlertCircle size={48} color="#d32f2f" />
+      <h3>¿Desea quitar al paciente de la lista de espera?</h3>
+      <p>Esta acción no se puede deshacer.</p>
+
+      <div className="modal-botones">
+
+        <button
+          className="btn-confirmar"
+          onClick={async () => {
+            if (pacienteAEliminar !== null) {
+              await handleQuitarPaciente(pacienteAEliminar);
+            }
+            setMostrarModal(false);
+            setPacienteAEliminar(null);
+          }}
+        >
+          Eliminar
+        </button>
+        <button
+          className="btn-cancelar"
+          onClick={() => {
+            setMostrarModal(false);
+            setPacienteAEliminar(null);
+          }}
+        >
+          Cancelar
+        </button>
+
+        
+      </div>
+    </div>
+  </div>
+)}
+ 
+
     </div>
   );
 }

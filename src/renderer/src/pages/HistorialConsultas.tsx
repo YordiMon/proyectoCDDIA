@@ -69,7 +69,8 @@ export default function HistorialConsultas() {
   const formatearFechaHora = (fechaString: string) => {
     try {
       const fecha = new Date(fechaString);
-      // Corrección de desfase horario
+
+
       fecha.setHours(fecha.getHours() - 7); 
 
       return new Intl.DateTimeFormat('es-MX', {
