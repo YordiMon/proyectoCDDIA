@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect, useMemo } from 'react'
-import { User, ChevronLeft, ClipboardList, Search, Edit,  Save } from 'lucide-react';
+import { useState, useEffect, useMemo,  } from 'react'
+import { User, ChevronLeft, ClipboardList, Search, Edit,  Save, RefreshCw } from 'lucide-react';
 import { EditarPaciente } from '../services/pacienteservice';
 import type { Paciente } from '../types/Paciente';
 import '../styles/DetallePaciente.css';
@@ -8,14 +8,16 @@ import '../styles/DetallePaciente.css';
 export default function DetallePaciente() {
   const navigate = useNavigate();
   const location = useLocation();
- 
-
- const state = location.state as { paciente: Paciente } | null;
+   const [isRefreshing, setIsRefreshing] = useState(false)
 
 
-  const paciente = state?.paciente;
- 
-  if (!paciente) {
+  const state = location.state as { paciente: Paciente } | null;
+
+  const initialPaciente = state?.paciente ?? null;
+
+  const [pacienteState, setPacienteState] = useState<Paciente | null>(initialPaciente);
+
+  if (!pacienteState) {
     return (
       <div className="centro-total">
         <p>No se encontraron datos del paciente.</p>
@@ -25,26 +27,38 @@ export default function DetallePaciente() {
   }
 
 const [editando, setEditando] = useState(false);
-const [formData, setFormData] = useState<Paciente>(paciente);
 const [guardando, setGuardando] = useState(false);
+const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
 
 
 //
-const guardarCambios = async () => {
-  if (!paciente) return;
+  const guardarCambios = async () => {
+    if (!pacienteState?.id) return;
 
-  try {
-    setGuardando(true);
-    await EditarPaciente(paciente.numero_afiliacion, formData);
-    setEditando(false);
-    navigate(0); // refresca vista
-  } catch (error: any) {
-    alert(error.message || 'Error al guardar cambios');
-  } finally {
-    setGuardando(false);
+    try {
+      setGuardando(true);
+
+      await EditarPaciente(pacienteState.id, formData);
+
+      setPacienteState(formData);
+      setEditando(false);
+
+      try {
+        window.dispatchEvent(new CustomEvent('pacienteActualizado', { detail: formData }));
+      } catch (e) {
+      
+      }
+    } catch (error: any) {
+      alert(error.message || 'Error al guardar cambios');
+    } finally {
+      setGuardando(false);
+    }
+  };
+
+
+  const recargarLista = () => {
+    setIsRefreshing(true);
   }
-};
-
 
 ///  
   const formatearFecha = (fecha: string) => {
@@ -73,8 +87,8 @@ const guardarCambios = async () => {
   return (
     <div className="contenedor-espera">
       <div className="header">
-        <button className="btn-volver-minimal" onClick={() => navigate(-1)}>
-          <ChevronLeft className='btn-volver-minimal-icon'/>
+        <button className="btn-volver" onClick={() => navigate(-1)}>
+          <ChevronLeft size={32} strokeWidth={2.5} />
         </button>
         <h1>Expediente del paciente</h1>
       </div>
@@ -84,9 +98,9 @@ const guardarCambios = async () => {
           <div className="avatar-circle">
             <User size={40} />
           </div>
-          <div className="nombre-afiliacion">
-            <h2>{paciente.nombre}</h2>
-            <p>Afiliación: {paciente.numero_afiliacion}</p>
+            <div className="nombre-afiliacion">
+            <h2>{pacienteState.nombre}</h2>
+            <p>Afiliación: {pacienteState.numero_afiliacion}</p>
           </div>
         </header>
 
@@ -95,15 +109,15 @@ const guardarCambios = async () => {
         <div className="bloque-datos">
           <div className="dato-columna">
             <span>Fecha de nacimiento</span>
-            <strong>{formatearFecha(paciente.fecha_nacimiento)}</strong>
+            <strong>{formatearFecha(pacienteState.fecha_nacimiento)}</strong>
           </div>
           <div className="dato-columna">
             <span>Edad</span>
-            <strong>{calcularEdad(paciente.fecha_nacimiento)} años</strong>
+            <strong>{calcularEdad(pacienteState.fecha_nacimiento)} años</strong>
           </div>
           <div className="dato-columna">
             <span>Sexo</span>
-            <strong>{paciente.sexo}</strong>
+            <strong>{pacienteState.sexo}</strong>
           </div>
        <div className="dato-columna">
               <span>Contacto</span>
@@ -117,7 +131,7 @@ const guardarCambios = async () => {
                   }
                 />
               ) : (
-                <strong>{paciente.celular}</strong>
+                <strong>{pacienteState.celular}</strong>
               )}
             </div>
 
@@ -133,7 +147,7 @@ const guardarCambios = async () => {
                 }
               />
             ) : (
-              renderDato(paciente.contacto_emergencia)
+                renderDato(pacienteState.contacto_emergencia)
             )}
           </div>
 
@@ -150,7 +164,7 @@ const guardarCambios = async () => {
                 rows={2}
               />
             ) : (
-              renderDato(paciente.direccion)
+              renderDato(pacienteState.direccion)
             )}
           </div>
 
@@ -182,7 +196,7 @@ const guardarCambios = async () => {
                   <option value="AB-">AB-</option>
                 </select>
               ) : (
-                <strong>{paciente.tipo_sangre}</strong>
+                <strong>{pacienteState.tipo_sangre}</strong>
               )}
             </div>
 
@@ -199,7 +213,7 @@ const guardarCambios = async () => {
                 }
               />
             ) : (
-              <strong>{paciente.recibe_donaciones ? 'Sí' : 'No'}</strong>
+              <strong>{pacienteState.recibe_donaciones ? 'Sí' : 'No'}</strong>
             )}
           </div>
 
@@ -218,8 +232,8 @@ const guardarCambios = async () => {
               }
               rows={2}
             />
-          ) : (
-            renderDato(paciente.alergias)
+            ) : (
+            renderDato(pacienteState.alergias)
           )}
         </div>
 
@@ -237,7 +251,7 @@ const guardarCambios = async () => {
                   rows={2}
                 />
               ) : (
-                renderDato(paciente.enfermedades)
+                renderDato(pacienteState.enfermedades)
               )}
             </div>
 
@@ -256,8 +270,8 @@ const guardarCambios = async () => {
               }
               rows={2}
             />
-          ) : (
-            renderDato(paciente.cirugias_previas)
+            ) : (
+            renderDato(pacienteState.cirugias_previas)
           )}
         </div>
           <div className="dato-columna ancho-completo">
@@ -278,7 +292,7 @@ const guardarCambios = async () => {
                   rows={2}
                 />
               ) : (
-                renderDato(paciente.medicamentos_actuales)
+                renderDato(pacienteState.medicamentos_actuales)
               )}
             </div>
 
@@ -287,9 +301,18 @@ const guardarCambios = async () => {
 
       <div className="contenedor-botones-flotantes">
         {/* BOTÓN HISTORIAL CORREGIDO */}
+
+        <button
+          className={`btn-flotante-secundario ${isRefreshing ? 'girando' : ''}`}
+          onClick={recargarLista}
+          title="Actualizar lista"
+          disabled={isRefreshing}
+        >
+        <RefreshCw size={24} /> 
+        </button> 
         <button 
           className="btn-flotante-añadir btn-historial"
-          onClick={() => navigate(`/historial/${paciente.id}`, { state: { paciente } })}
+          onClick={() => navigate(`/historial/${pacienteState.id}`, { state: { paciente: pacienteState } })}
         >
           <Search size={24} />
           <span>Historial de consultas</span>
@@ -300,13 +323,13 @@ const guardarCambios = async () => {
   className="btn-flotante-añadir"
   onClick={(e) => {
     e.stopPropagation();
-    if (!state?.paciente) return;
+    if (!pacienteState) return;
 
     navigate("/consultas", {
       state: {
-        id: state.paciente.id,
-        nombre: state.paciente.nombre,
-        numero_afiliacion: state.paciente.numero_afiliacion,
+        id: pacienteState.id,
+        nombre: pacienteState.nombre,
+        numero_afiliacion: pacienteState.numero_afiliacion,
         pacienteRegistrado: true
       }
     });

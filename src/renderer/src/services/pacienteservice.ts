@@ -121,14 +121,13 @@ export const eliminarPacientePorAfiliacion = async (
   return res.json();
 };
 
-/* Editar Pacientes */
+//Editar paciente por ID
 export const EditarPaciente = async (
-  numero_afiliacion: string,
+  id: number,
   datos: Partial<Paciente>
-): Promise<Paciente> => {
-
+): Promise<any> => {
   const res = await fetch(
-    `${API_BASE_URL}/editar_paciente/${numero_afiliacion}`,
+    `${API_BASE_URL}/editar_paciente/${id}`,
     {
       method: "PUT",
       headers: {
