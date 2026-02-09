@@ -66,7 +66,7 @@ export default function AnadirPaciente() {
       });
 
       if (response.ok) {
-        navigate('/');
+        navigate('/lista-espera');
       } else {
         mostrarError('Error en el servidor al crear el paciente');
       }
