@@ -7,7 +7,6 @@ import Inicio from './pages/Inicio'
 import Estadisticas from './pages/Estadisticas'
 import Ajustes from './pages/Ajustes'
 import AñadirPaciente from './pages/AñadirPaciente'
-import Usuarios from './pages/Usuarios'
 import Consultas from './pages/Consultas'
 import RegistoP from './pages/RegistroPacientes'
 import DetallePaciente from './pages/DetallePaciente'
@@ -45,7 +44,6 @@ function App() {
              
               <Route path="/lista-espera" element={<ListaEspera />} />
               <Route path="/estadisticas" element={<Estadisticas />} />
-              <Route path="/usuarios" element={<Usuarios />} />
               <Route path="/paciente/:id" element={<DetallePaciente />} />
               <Route path="/historial/:id" element={<HistorialConsultas />} />
               <Route path="/ajustes" element={<Ajustes />} />

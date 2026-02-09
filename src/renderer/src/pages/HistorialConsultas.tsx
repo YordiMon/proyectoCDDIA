@@ -46,17 +46,17 @@ export default function HistorialConsultas() {
     setError(null);
     try {
       const response = await fetch(`${API_BASE_URL}/consultas/paciente/${id}`);
-      const data = await response.json();
-
+      
       if (response.status === 404) {
         setConsultas([]);
       } else if (!response.ok) {
         throw new Error('Error al obtener los datos');
       } else {
-        setConsultas(data); // El orden ya viene DESC desde el backend
+        const data = await response.json();
+        setConsultas(data); 
       }
     } catch (err: any) {
-      setError("No se pudo conectar con el servidor.");
+      setError("No se pudo conectar con el servidor. Verifica tu conexión a internet.");
     } finally {
       setLoading(false);
     }
@@ -66,8 +66,7 @@ export default function HistorialConsultas() {
     if (id) fetchConsultas();
   }, [id, fetchConsultas]);
 
-// --- FUNCIÓN ACTUALIZADA Y CORREGIDA ---
-const formatearFechaHora = (fechaString: string) => {
+  const formatearFechaHora = (fechaString: string) => {
     try {
       const fecha = new Date(fechaString);
 
@@ -88,6 +87,7 @@ const formatearFechaHora = (fechaString: string) => {
     }
   };
 
+  // 1. ESTADO DE CARGA (Pantalla completa)
   if (loading) {
     return (
       <div className="contenedor-pacientes centro-total">
@@ -97,13 +97,29 @@ const formatearFechaHora = (fechaString: string) => {
     );
   }
 
+  // 2. ESTADO DE ERROR (Solo mensaje, sin encabezados ni nada más)
+  if (error) {
+    return (
+      <div className="contenedor-espera centro-total">
+        <div className="mensaje-estado error-box">
+          <AlertCircle size={48} color="#4c4c4c" />
+          <h4>Error de conexión</h4>
+          <p>{error}</p>
+          <p className='minusp'>No se cargó el historial médico de {nombrePaciente}.</p>
+          <p className="btn-reintentar" onClick={fetchConsultas}>
+            Reintentar conexión
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. RENDERIZADO NORMAL
   return (
     <div className="contenedor-espera">
       <div className="header">
-        <button
-           title="Volver"
-         className="btn-volver" onClick={() => navigate(-1)}>
-          <ChevronLeft size={32} strokeWidth={2.5} />
+        <button className="btn-volver-minimal" onClick={() => navigate(-1)}>
+          <ChevronLeft className='btn-volver-minimal-icon'/>
         </button>
         <h1>Historial médico</h1>
       </div>
@@ -111,18 +127,11 @@ const formatearFechaHora = (fechaString: string) => {
       <div className="detalle-contenido">
         <div className="historial-intro">
           <h2>{nombrePaciente}</h2>
-          <p>Registro de evolución clínica</p>
+          <p>Registro de evolución médica</p>
         </div>
 
         <div className="zona-contenido">
-          {error ? (
-            <div className="mensaje-estado error-box">
-              <AlertCircle size={38} color="#4c4c4c" />
-              <h4>Error de conexión</h4>
-              <p>{error}</p>
-              <p className="btn-reintentar" onClick={fetchConsultas}>Reintentar</p>
-            </div>
-          ) : consultas.length === 0 ? (
+          {consultas.length === 0 ? (
             <div className="mensaje-estado vacio-box">
               <Info size={38} color="#4c4c4c" />
               <h4>No hay consultas</h4>
@@ -143,7 +152,7 @@ const formatearFechaHora = (fechaString: string) => {
                       <Calendar size={16} />
                       <span>{formatearFechaHora(consulta.fecha_consulta)}</span>
                     </div>
-                    <div className="diagnostico-badge">Abrir tarjeta para mas información</div>
+                    <div className="diagnostico-badge">Abrir tarjeta para más información</div>
                   </div>
 
                   <div className="seccion-principal">

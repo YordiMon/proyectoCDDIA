@@ -28,7 +28,7 @@ export default function Titlebar() {
 
       {/* El nombre del usuario también suele ser parte de la zona de arrastre */}
       <div className="titlebar-user">
-        <span className="app-user-welcome">Bienvenido, Yordi Monreal.</span>
+        <span className="app-user-welcome">Bienvenido/a.</span>
       </div>
 
       {/* Los controles DEBEN estar fuera de las zonas de drag */}

@@ -2,8 +2,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { 
   ClipboardList, 
   Stethoscope, 
-  UserCircle, 
-  UserSearch,
   BarChart3, 
   Settings 
 } from 'lucide-react';
@@ -22,6 +20,8 @@ export default function Sidebar(): React.ReactNode {
 
     { type: 'divider' }, 
 
+    { name: 'Métricas', path: '/estadisticas', icon: <BarChart3 size={18} /> },
+    
     { name: 'Estadísticas', path: '/estadisticas', icon: <BarChart3 size={18} /> },
     
     { type: 'divider' }, 

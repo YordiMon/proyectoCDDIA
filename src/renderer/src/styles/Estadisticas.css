@@ -1,0 +1,160 @@
+.stats-controls {
+  background: white;
+  border-radius: 7px;
+  padding: 20px;
+  border: 1px solid #eee;
+  margin-bottom: 24px;
+  
+  /* Grid para acomodar los inputs */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: center; /* Alinea el botón con los inputs */
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.control-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.control-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  box-sizing: border-box; /* Importante para que el padding no rompa el ancho */
+}
+
+.control-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.btn-consultar {
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-consultar:hover {
+  background-color: #1d4ed8;
+}
+
+/* --- Tabla de Resultados --- */
+.table-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Para redondear las esquinas de la tabla */
+  overflow-x: auto; /* Scroll horizontal si es necesario */
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.stats-table th {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stats-table td {
+  padding: 16px 24px;
+  font-size: 0.875rem;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stats-table tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Colores específicos para columnas */
+.col-hombres {
+  color: #2563eb; /* Azul */
+}
+.col-mujeres {
+  color: #db2777; /* Rosa fuerte */
+}
+.text-bold {
+  font-weight: 600;
+}
+
+/* Pie de tabla */
+.table-footer {
+  background-color: #f3f4f6;
+  font-weight: bold;
+}
+.table-footer td {
+  border-top: 2px solid #e5e7eb;
+}
+
+.no-data {
+  padding: 40px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.panel-totales-flotante {
+    position: fixed;
+    bottom: 20px;
+    left: 30px;
+    background: white;
+    border-radius: 7px;
+    padding: 20px;
+    border: 1px solid #eee;
+    box-shadow: 0 0.5px 2px rgba(0,0,0,0.15);
+    z-index: 100;
+    min-width: 180px;
+    margin-left: 250px;
+}
+
+.panel-totales-titulo {
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.panel-totales-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+}
+
+.panel-totales-label {
+    font-size: 0.8rem;
+}
+
+.panel-totales-valor {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.linea-div {
+  height: 1px;
+  background-color: #f3f3f3;
+    margin: 10px -20px; 
+    width: auto;
+}

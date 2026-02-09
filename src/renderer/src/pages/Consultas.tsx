@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Calendar, AlertCircle, ChevronLeft, Save } from 'lucide-react'
+import { Calendar, AlertCircle, ChevronLeft, Save, CheckCircle } from 'lucide-react'
 import { crearConsulta } from '../services/consultaservice'
 import { eliminarPacientePorAfiliacion } from '../services/pacienteservice'
 import { marcarPacienteEnAtencion } from '../services/consultaservice'
@@ -152,7 +152,7 @@ export default function Consultas() {
       // Crear la consulta
       await crearConsulta(consultaData)
           
-     mostrarMensaje('exito', 'Consulta guardada exitosamente')
+     mostrarMensaje('exito', 'Consulta registrada correctamente')
      
         // Eliminar de lista de espera SOLO si existe
         if (formData.numero_afiliacion) {
@@ -167,7 +167,7 @@ export default function Consultas() {
       // Volver a lista de espera después de 2 segundos
       setTimeout(() => {
         navigate('/lista-espera')
-      }, 2000)
+      }, 2500)
 
         } catch (error) {
             console.error(error)
@@ -180,10 +180,10 @@ export default function Consultas() {
     return (
         <div className="contenedor-espera">
             <header className='header'>
-                <button  title="Volver a la lista de espera" onClick={() => navigate(-1)} className="btn-volver-minimal" type="button">
-                    <ChevronLeft size={32} strokeWidth={2.5} />
+                <button onClick={() => navigate(-1)} className="btn-volver-minimal" type="button">
+                    <ChevronLeft className='btn-volver-minimal-icon'/>
                 </button>
-                <h1 className='nueva-consulta'>Nueva Consulta</h1>
+                <h1>Nueva consulta</h1>
             </header>
 
             <section>
@@ -324,11 +324,16 @@ export default function Consultas() {
                     <textarea name="observaciones" maxLength={299} placeholder="¿Alguna observación adicional?" rows={1} value={formData.observaciones} onChange={handleInputChange} />
                 </div>
 
-                {mensaje && (
-                    <div className={`mensaje-flotante_C ${tipoMensaje}`} >
-                        <AlertCircle size={18} />
-                        <span>{mensaje}</span>
-                    </div>
+               {mensaje && (
+                <div className={`mensaje-error-flotante_PR ${tipoMensaje}`}>
+                    {/* Si es error muestra AlertCircle, si es exito muestra CheckCircle */}
+                    {tipoMensaje === 'error' ? (
+                    <AlertCircle size={20} style={{ marginTop: '2px' }} />
+                    ) : (
+                    <CheckCircle size={20} style={{ marginTop: '2px' }} />
+                    )}
+                    <span>{mensaje}</span>
+                </div>
                 )}
 
                 <div className="contenedor-botones-flotantes">

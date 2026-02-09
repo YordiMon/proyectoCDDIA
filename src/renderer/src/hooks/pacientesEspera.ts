@@ -73,8 +73,6 @@ export function usePacientes() {
     return false;
   };
 
-
-
   useEffect(() => {
     fetchPacientes();
   }, [fetchPacientes]);

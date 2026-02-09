@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ChevronLeft, User, Save, AlertCircle, FilePlus } from 'lucide-react'
+import { ChevronLeft, User, Save, AlertCircle, FilePlus, CheckCircle } from 'lucide-react'
 import '../styles/pacientesReg.css'
 import { crearPaciente, Paciente } from '../services/pacienteservice'
 
@@ -8,7 +8,11 @@ import { crearPaciente, Paciente } from '../services/pacienteservice'
 export default function RegistroPacientes() {
     const location = useLocation()
     const navigate = useNavigate()
-    const state = (location.state ?? {}) as { id?:  number; number; nombre?: string; numero_afiliacion?: string }
+ const state = (location.state ?? {}) as { id?:  number; number; nombre?: string; numero_afiliacion?: string }    
+    // Estados para el sistema de mensajes dinámicos
+    const [mensaje, setMensaje] = useState<string | null>(null);
+    const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
+   
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const [enfermedades, setEnfermedades] = useState(false)
@@ -22,7 +26,7 @@ export default function RegistroPacientes() {
         fecha_nacimiento: '',
         sexo: '',
         tipo_sangre: '',
-        recibe_donaciones: false, // Por defecto false, pero validaremos si se tocó el select
+        recibe_donaciones: false,
         direccion: '',
         celular: '',
         contacto_emergencia: '',
@@ -35,10 +39,14 @@ export default function RegistroPacientes() {
     // Estado adicional para validar si el usuario seleccionó una opción en donaciones
     const [donacionSeleccionada, setDonacionSeleccionada] = useState(false);
 
-    const mostrarError = (mensaje: string) => {
-        setErrorMessage(mensaje);
-        // Aumentamos un poco el tiempo a 5s porque la lista es más larga de leer
-        setTimeout(() => setErrorMessage(null), 5000);
+    // Función unificada para mostrar mensajes
+    const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
+        setTipoMensaje(tipo);
+        setMensaje(texto);
+        setTimeout(() => { 
+            setMensaje(null); 
+            setTipoMensaje(null); 
+        }, 5000);
     };
 
     
@@ -49,7 +57,6 @@ export default function RegistroPacientes() {
     }
 
     const guardar = async (irAConsultas = false) => {
-        // 1. Definición de campos obligatorios
         const campos = [
             { id: 'nombre', label: 'Nombre completo' },
             { id: 'numero_afiliacion', label: 'Número de afiliación' },
@@ -60,32 +67,45 @@ export default function RegistroPacientes() {
             { id: 'tipo_sangre', label: 'Tipo de sangre' }
         ];
 
-        // 2. Verificar faltantes
         const faltantes = campos.filter(c => !String((paciente as any)[c.id]).trim());
         
-        // Validación manual para el booleano de donaciones (opcional si quieres forzar elección)
         if (!donacionSeleccionada) {
             faltantes.push({ id: 'recibe_donaciones', label: '¿Recibe donaciones?' });
         }
 
-        // 3. Mostrar mensaje si hay errores
         if (faltantes.length > 0) {
             const lista = faltantes.map(f => `• ${f.label}`).join('\n');
-            mostrarError(`Los siguientes campos son obligatorios:\n${lista}`);
+            mostrarMensaje('error', `Los siguientes campos son obligatorios:\n${lista}`);
             return;
         }
 
         try {
-            const resultado = await crearPaciente(paciente)
-            if (irAConsultas) {
-                navigate('/consultas', {
-                    state: { id: resultado.id,   nombre: paciente.nombre, numero_afiliacion: paciente.numero_afiliacion }
-                });
-            } else {
-                navigate('/expedientes');
-            }
+            const resultado = await crearPaciente(paciente);
+            
+            // --- Lógica de mensaje dinámico según el botón presionado ---
+            const textoExito = irAConsultas 
+                ? 'Paciente registrado correctamente. Redirigiendo a consulta...' 
+                : 'Paciente registrado correctamente';
+
+            mostrarMensaje('exito', textoExito);
+
+            // Esperar un momento para que el usuario vea el mensaje azul antes de navegar
+            setTimeout(() => {
+                if (irAConsultas) {
+                    navigate('/consultas', {
+                        state: { 
+                            id: resultado.id, 
+                            nombre: paciente.nombre, 
+                            numero_afiliacion: paciente.numero_afiliacion 
+                        }
+                    });
+                } else {
+                    navigate('/expedientes');
+                }
+            }, 2500);
+
         } catch (error: any) {
-            mostrarError('Error al registrar: ' + (error.message || 'Error en el servidor'));
+            mostrarMensaje('error', 'Error al registrar: ' + (error.message || 'Error en el servidor'));
         }
     };
 
@@ -94,10 +114,8 @@ export default function RegistroPacientes() {
     return (
         <div className="contenedor-espera">
             <header className='header'>
-                <button 
-                 title="Volver a expedientes"
-                onClick={() => navigate('/expedientes')} className="btn-volver-minimal" type="button">
-                    <ChevronLeft size={32} strokeWidth={2.5} />
+                <button onClick={() => navigate('/expedientes')} className="btn-volver-minimal" type="button">
+                    <ChevronLeft className='btn-volver-minimal-icon'/>
                 </button>
                 <h1>Registrar paciente</h1>
             </header>
@@ -202,7 +220,6 @@ export default function RegistroPacientes() {
                             <option value="O+">O+</option>
                             <option value="O-">O-</option>     
                         </select>
-
                     </div>
 
                     <div className="campo-form">
@@ -313,10 +330,14 @@ export default function RegistroPacientes() {
                     </div>
                 ))}
 
-                {errorMessage && (
-                    <div className="mensaje-error-flotante_PR">
-                        <AlertCircle size={18} />
-                        <span>{errorMessage}</span>
+                {mensaje && (
+                    <div className={`mensaje-error-flotante_PR ${tipoMensaje}`} style={{ whiteSpace: 'pre-line' }}>
+                        {tipoMensaje === 'error' ? (
+                            <AlertCircle size={18} />
+                        ) : (
+                            <CheckCircle size={18} />
+                        )}
+                        <span>{mensaje}</span>
                     </div>
                 )}
 
