@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   User,
   ChevronLeft,
-  FilePlus,
   ClipboardList,
   Stethoscope
 } from 'lucide-react';
