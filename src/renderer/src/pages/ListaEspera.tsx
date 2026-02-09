@@ -44,8 +44,7 @@ export default function ListaEspera() {
     }
   }, [loading, error]);
 
-  // Mensaje temporal (en caso de error o éxito)
-  const [mensaje, setMensaje] = useState<string | null>(null);
+
 
   //funcion de ventana modal
   const confirmarEliminacion = (id: number) => {

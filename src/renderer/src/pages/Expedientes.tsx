@@ -272,5 +272,6 @@ export default function Pacientes() {
         </Link>
       </div>
     </div>
+    </div>
   );
 }

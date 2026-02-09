@@ -3,7 +3,9 @@ import {
   ClipboardList, 
   Stethoscope, 
   BarChart3, 
-  Settings 
+  
+  Settings,
+  UserCircle
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -19,18 +21,11 @@ export default function Sidebar(): React.ReactNode {
     { name: 'Expedientes', path: '/expedientes', icon: <Stethoscope size={18} /> },
 
     { type: 'divider' }, 
-
-    { name: 'Métricas', path: '/estadisticas', icon: <BarChart3 size={18} /> },
     
     { name: 'Estadísticas', path: '/estadisticas', icon: <BarChart3 size={18} /> },
     
     { type: 'divider' }, 
-    
-    
-    { name: 'Usuarios', path: '/usuarios', icon: <UserSearch size={18} /> },
-
-    { type: 'divider' }, 
-    
+       
     { name: 'Ajustes', path: '/ajustes', icon: <Settings size={18} /> },
   ];
 

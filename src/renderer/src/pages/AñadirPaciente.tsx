@@ -4,15 +4,7 @@ import { ChevronLeft, UserPlus, AlertCircle } from 'lucide-react'
 import { API_BASE_URL } from '../config'
 import '../styles/AñadirPaciente.css'
 
-const AREAS_DISPONIBLES = [
-  "Urgencias",
-  "Consulta General",
-  "Pediatría",
-  "Ginecología",
-  "Traumatología",
-  "Cirugía",
-  "Medicina Interna"
-];
+
 
 export default function AnadirPaciente() {
   const navigate = useNavigate();
