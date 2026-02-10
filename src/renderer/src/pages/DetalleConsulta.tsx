@@ -85,7 +85,7 @@ export default function DetalleConsulta() {
       <div className="detalle-contenido">
         <header className="perfil-info">
           <div className="avatar-circle">
-             {/* Usamos el icono de Calendario para diferenciarlo del perfil de usuario */}
+             {/* */}
             <Calendar size={35} color="#1976d2" />
           </div>
           <div className="nombre-afiliacion">

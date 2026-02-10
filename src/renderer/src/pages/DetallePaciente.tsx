@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect, useMemo,  } from 'react'
-import { User, ChevronLeft, ClipboardList, Search, Edit,  Save, RefreshCw } from 'lucide-react';
+import { useState } from 'react'
+import { User, ChevronLeft, ClipboardList, Search, Edit,  Save, AlertCircle, CheckCircle } from 'lucide-react';
 import { EditarPaciente } from '../services/pacienteservice';
 import type { Paciente } from '../types/Paciente';
 import '../styles/DetallePaciente.css';
@@ -8,7 +8,7 @@ import '../styles/DetallePaciente.css';
 export default function DetallePaciente() {
   const navigate = useNavigate();
   const location = useLocation();
-   const [isRefreshing, setIsRefreshing] = useState(false)
+   //const [isRefreshing, setIsRefreshing] = useState(false)
 
 
   const state = location.state as { paciente: Paciente } | null;
@@ -16,6 +16,9 @@ export default function DetallePaciente() {
   const initialPaciente = state?.paciente ?? null;
 
   const [pacienteState, setPacienteState] = useState<Paciente | null>(initialPaciente);
+
+    const [mensaje, setMensaje] = useState<string | null>(null);
+    const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
 
   if (!pacienteState) {
     return (
@@ -30,35 +33,38 @@ const [editando, setEditando] = useState(false);
 const [guardando, setGuardando] = useState(false);
 const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
 
+   // Función para mostrar mensajes temporales
+    const mostrarMensaje = (tipo: 'error' | 'exito', texto: string) => {
+        setTipoMensaje(tipo);
+        setMensaje(texto);
+        // Damos 5 segundos para que puedan leer la lista de faltantes
+        setTimeout(() => { setMensaje(null); setTipoMensaje(null); }, 5000);
+    };
+
+    // Convierte una fecha a formato YYYY-MM-DD para inputs de tipo date
+    const fechaParaInput = (fecha) => {
+  if (!fecha) return '';
+  return new Date(fecha).toISOString().split('T')[0];
+};
 
 //
-  const guardarCambios = async () => {
-    if (!pacienteState?.id) return;
+const guardarCambios = async () => {
+  if (!pacienteState?.id) return;
 
-    try {
-      setGuardando(true);
-
-      await EditarPaciente(pacienteState.id, formData);
-
-      setPacienteState(formData);
-      setEditando(false);
-
-      try {
+  try {
+    setGuardando(true);
+    await EditarPaciente(pacienteState.id, formData);
+    setPacienteState(formData);
+    setEditando(false);
+    // Mueve el mensaje de éxito AQUÍ, fuera del catch interno
+    mostrarMensaje('exito', 'El Paciente se ha actualizado correctamente');
         window.dispatchEvent(new CustomEvent('pacienteActualizado', { detail: formData }));
-      } catch (e) {
-      
-      }
-    } catch (error: any) {
-      alert(error.message || 'Error al guardar cambios');
-    } finally {
-      setGuardando(false);
-    }
-  };
-
-
-  const recargarLista = () => {
-    setIsRefreshing(true);
+  } catch (error: any) {
+    mostrarMensaje('error', 'Error al guardar cambios');
+  } finally {
+    setGuardando(false);
   }
+};
 
 ///  
   const formatearFecha = (fecha: string) => {
@@ -99,8 +105,38 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
             <User size={40} />
           </div>
             <div className="nombre-afiliacion">
-            <h2>{pacienteState.nombre}</h2>
-            <p>Afiliación: {pacienteState.numero_afiliacion}</p>
+            <div className="dato-columna">
+            {editando ? (
+              <textarea
+                value={formData.nombre || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, nombre: e.target.value })
+                }
+                rows={2}
+              />
+            ) : (
+              renderDato(pacienteState.nombre)
+            )}
+          </div>
+
+                    <p>
+          Afiliación:{' '}
+          {editando ? (
+            <textarea
+              value={formData.numero_afiliacion || ''}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  numero_afiliacion: e.target.value
+                })
+              }
+              rows={1}
+            />
+          ) : (
+            pacienteState.numero_afiliacion
+          )}
+        </p>
+
           </div>
         </header>
 
@@ -108,8 +144,23 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
 
         <div className="bloque-datos">
           <div className="dato-columna">
-            <span>Fecha de nacimiento</span>
-            <strong>{formatearFecha(pacienteState.fecha_nacimiento)}</strong>
+             <span>Fecha de nacimiento</span>
+
+  {editando ? (
+    <input
+      type="date"
+      value={fechaParaInput(formData.fecha_nacimiento)}
+      onChange={(e) =>
+        setFormData({
+          ...formData,
+          fecha_nacimiento: e.target.value,
+        })
+      }
+    />
+  ) : (
+    <strong>{formatearFecha(pacienteState.fecha_nacimiento)}</strong>
+  )}
+
           </div>
           <div className="dato-columna">
             <span>Edad</span>
@@ -117,8 +168,24 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
           </div>
           <div className="dato-columna">
             <span>Sexo</span>
-            <strong>{pacienteState.sexo}</strong>
+            
+            
+            {editando ? (
+                <select
+                  value={formData.sexo}
+                  onChange={(e) =>
+                    setFormData({ ...formData, sexo: e.target.value })
+                  }
+                >
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+              
+                </select>
+              ) : (
+                <strong>{pacienteState.sexo}</strong>
+              )}
           </div>
+          
        <div className="dato-columna">
               <span>Contacto</span>
 
@@ -225,7 +292,7 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
           <span>Alergias</span>
 
           {editando ? (
-            <textarea
+            <textarea 
               value={formData.alergias || ''}
               onChange={(e) =>
                 setFormData({ ...formData, alergias: e.target.value })
@@ -244,7 +311,7 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
 
               {editando ? (
                 <textarea
-                  value={formData.alergias || ''}
+                  value={formData.enfermedades || ''}
                   onChange={(e) =>
                     setFormData({ ...formData, enfermedades: e.target.value })
                   }
@@ -259,7 +326,7 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
 
         <hr className="divisor-detalle" />
 
-        <div className="bloque-datos">
+        <div className="dato-columna">
                 <span>Cirugías previas</span>
 
           {editando ? (
@@ -274,13 +341,13 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
             renderDato(pacienteState.cirugias_previas)
           )}
         </div>
-          <div className="dato-columna ancho-completo">
+         <div className="dato-columna ancho-completo"> 
           </div>
 
         <hr className="divisor-detalle" />
 
-        <div className="bloque-datos">
-          <div className="dato-columna ancho-completo">
+        <div className="dato-columna">
+          <div className="dato-columna">
               <span>Medicación actual</span>
 
               {editando ? (
@@ -300,53 +367,70 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
       </div>
 
       <div className="contenedor-botones-flotantes">
-        {/* BOTÓN HISTORIAL CORREGIDO */}
-
-        <button
-          className={`btn-flotante-secundario ${isRefreshing ? 'girando' : ''}`}
-          onClick={recargarLista}
-          title="Actualizar lista"
-          disabled={isRefreshing}
-        >
-        <RefreshCw size={24} /> 
-        </button> 
-        <button 
-          className="btn-flotante-añadir btn-historial"
-          onClick={() => navigate(`/historial/${pacienteState.id}`, { state: { paciente: pacienteState } })}
-        >
-          <Search size={24} />
-          <span>Historial de consultas</span>
-        </button>
-
-          
-        <button
-  className="btn-flotante-añadir"
-  onClick={(e) => {
-    e.stopPropagation();
-    if (!pacienteState) return;
-
-    navigate("/consultas", {
-      state: {
-        id: pacienteState.id,
-        nombre: pacienteState.nombre,
-        numero_afiliacion: pacienteState.numero_afiliacion,
-        pacienteRegistrado: true
+      
+ 
+        
+        
+            
+           {mensaje && (
+                <div className={`mensaje-flotante_EP ${tipoMensaje}`}>
+                    {/* Si es error muestra AlertCircle, si es exito muestra CheckCircle */}
+                    {tipoMensaje === 'error' ? (
+                    <AlertCircle size={20} style={{ marginTop: '2px' }} />
+                    ) : (
+                    <CheckCircle size={20} style={{ marginTop: '2px' }} />
+                    )}
+                    <span>{mensaje}</span>
+                </div>
+                )}
+    {/* BOTONES SOLO CUANDO NO ESTÁ EDITANDO */}             
+{!editando && (
+  <>
+    {/* BOTÓN HISTORIAL */}
+    <button 
+      className="btn-flotante-añadir btn-historial"
+      onClick={() => 
+        navigate(`/historial/${pacienteState.id}`, { 
+          state: { paciente: pacienteState } 
+        })
       }
-    });
-  }}>
-     <ClipboardList size={24} />
-  <span>Nueva consulta</span>
-</button>
-        {/* editar y cancelar*/}
-  {!editando && (
+    >
+      <Search size={24} />
+      <span>Historial de consultas</span>
+    </button>
+
+    {/* NUEVA CONSULTA */}
+    <button
+      className="btn-flotante-añadir"
+      onClick={(e) => {
+        e.stopPropagation();
+        if (!pacienteState) return;
+
+        navigate("/consultas", {
+          state: {
+            id: pacienteState.id,
+            nombre: pacienteState.nombre,
+            numero_afiliacion: pacienteState.numero_afiliacion,
+            pacienteRegistrado: true
+          }
+        });
+      }}
+    >
+      <ClipboardList size={24} />
+      <span>Nueva consulta</span>
+    </button>
+
+    {/* EDITAR */}
     <button
       className="btn-flotante-añadir"
       onClick={() => setEditando(true)}
     >
       <Edit size={24} /> Editar expediente
     </button>
-  )}
+  </>
+)}
 
+  {/* BOTONES SOLO EN MODO EDICIÓN */}
   {editando && (
     <>
       <button
@@ -360,17 +444,21 @@ const [formData, setFormData] = useState<Paciente>(initialPaciente as Paciente);
       <button
         className="btn-flotante-añadirC"
         onClick={() => {
-          setFormData(paciente);
+          setFormData(pacienteState);
           setEditando(false);
         }}
       >
-        X Cancelar
+        ✕ Cancelar
       </button>
     </>
   )}
+  
+  
+  
 
       </div>
     </div>  
+  
      </div>
     
   );

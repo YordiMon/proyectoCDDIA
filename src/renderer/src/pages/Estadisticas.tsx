@@ -94,7 +94,7 @@ export default function Estadisticas() {
   const totalHombres = datos.reduce((acc, curr) => acc + curr.hombres, 0);
   const totalMujeres = datos.reduce((acc, curr) => acc + curr.mujeres, 0);
 
-  // 1. Pantalla de carga inicial (Mismo diseño que Expedientes)
+  // 1. Pantalla de carga inicial 
   if (cargando && !isRefreshing) {
     return (
       <div className="contenedor-pacientes centro-total">
@@ -104,7 +104,7 @@ export default function Estadisticas() {
     );
   }
 
-  // 2. Pantalla de error (Mismo diseño que Expedientes)
+  // 2. Pantalla de error 
   if (error) {
     return (
       <div className="contenedor-espera centro-total">

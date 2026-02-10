@@ -31,6 +31,7 @@ interface FormData {
 }
 
 export default function Consultas() {
+    
     const location = useLocation()
     const navigate = useNavigate()
     const state = (location.state ?? {}) as { id?:  number; nombre?: string; numero_afiliacion?: string }
