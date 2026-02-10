@@ -176,7 +176,7 @@ export default function Estadisticas() {
       <div className="zona-contenido">
         {datos.length === 0 ? (
           <div className="mensaje-estado vacio-box">
-             <Info size={38} color="#4c4c4c" />
+             <Info className="listaesp" size={38} color="#4c4c4c" />
              <h4>Sin resultados</h4>
              <p>No se encontraron registros para el periodo seleccionado.</p>
           </div>

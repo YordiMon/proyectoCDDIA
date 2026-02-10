@@ -133,7 +133,7 @@ export default function HistorialConsultas() {
         <div className="zona-contenido">
           {consultas.length === 0 ? (
             <div className="mensaje-estado vacio-box">
-              <Info size={38} color="#4c4c4c" />
+              <Info className="listaesp" size={38} color="#4c4c4c" />
               <h4>No hay consultas</h4>
               <p>El historial médico de este paciente está vacío.</p>
             </div>

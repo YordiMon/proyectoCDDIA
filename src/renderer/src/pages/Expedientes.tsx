@@ -172,7 +172,7 @@ export default function Pacientes() {
       <div className="zona-contenido">
         {pacientes.length === 0 ? (
           <div className="mensaje-estado vacio-box">
-            <Info size={38} color="#4c4c4c" />
+            <Info className="listaesp" size={38} color="#4c4c4c" />
             <h4>No hay pacientes</h4>
             <p>
               La lista de expedientes se encuentra vacía actualmente.

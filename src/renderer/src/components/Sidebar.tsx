@@ -1,6 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  ClipboardList, 
   Stethoscope, 
   BarChart3, 
   
@@ -22,7 +21,7 @@ export default function Sidebar(): React.ReactNode {
 
     { type: 'divider' }, 
     
-    { name: 'Estadísticas', path: '/estadisticas', icon: <BarChart3 size={18} /> },
+    { name: 'Métricas', path: '/estadisticas', icon: <BarChart3 size={18} /> },
     
     { type: 'divider' }, 
        

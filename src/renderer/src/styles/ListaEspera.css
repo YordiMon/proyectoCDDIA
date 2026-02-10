@@ -303,7 +303,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.40);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -312,48 +312,65 @@
 
 .modal-confirmacion {
   background: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  width: 320px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
   text-align: center;
+}
+
+.modal-confirmacion h3 {
+  margin-top: 10px;
 }
 
 .modal-botones {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 25px;
 }
 
 .btn-cancelar {
- 
-  background-color: #515b64;
-  font-size: 1rem;
+  background-color: #1976d2;
   color: white;
+  font-size: 1rem;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 12px 24px;
   border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-weight: 500;
   transition: all 0.3s ease;
   border: none; 
 }
 
+.btn-cancelar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background-color: #1266ba;
+}
+
 .btn-confirmar {
-  background: #d32f2f;
- 
-  font-size: 1rem;
+  background-color: #e7483c;
   color: white;
+  font-size: 1rem;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 12px 24px;
   border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-weight: 500;
   transition: all 0.3s ease;
   border: none; 
+}
+
+.btn-confirmar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background-color: #d03c31;
+}
+
+.listaesp {
+  margin-top: 250px;
 }
