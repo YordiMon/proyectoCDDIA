@@ -31,6 +31,7 @@ interface FormData {
 }
 
 export default function Consultas() {
+    
     const location = useLocation()
     const navigate = useNavigate()
     const state = (location.state ?? {}) as { id?:  number; nombre?: string; numero_afiliacion?: string }
@@ -196,11 +197,11 @@ export default function Consultas() {
                 </header>
 
                 <hr className="divisor-detalle" />
-
+                <p>Los datos con un <strong>*</strong> son obligatorios para completar la acción.</p>
                 <div className='fila-form'>
                     <div className="campo-form">
                         <div className="label-container">
-                            <label>Motivo de consulta</label>
+                            <label>Motivo de consulta *</label>
                             <span className={`contador ${(formData.motivo || '').length === 299 ? 'limite-alcanzado' : ''}`}>
                                 {(formData.motivo || '').length}/299
                             </span>
@@ -209,7 +210,7 @@ export default function Consultas() {
                     </div>
                     <div className="campo-form">
                         <div className="label-container">
-                            <label>Síntomas</label>
+                            <label>Síntomas *</label>
                             <span className={`contador ${(formData.sintomas || '').length === 299 ? 'limite-alcanzado' : ''}`}>
                                 {(formData.sintomas || '').length}/299
                             </span>
@@ -220,7 +221,7 @@ export default function Consultas() {
 
                 <div className="campo-form">
                     <div className="label-container">
-                        <label>Tiempo de evolución</label>
+                        <label>Tiempo de evolución *</label>
                         <span className={`contador ${(formData.tiempo_enfermedad || '').length === 15 ? 'limite-alcanzado' : ''}`}>
                             {(formData.tiempo_enfermedad || '').length}/15
                         </span>
@@ -339,7 +340,7 @@ export default function Consultas() {
                 <div className="contenedor-botones-flotantes">
                     <button type="button" className="btn-flotante-registrar" onClick={handleGuardar} disabled={loading}>
                         <Save size={20} />
-                        {loading ? 'Guardando...' : 'Finalizar Consulta'}
+                        {loading ? 'Guardando...' : 'Guardar Consulta'}
                     </button>
                 </div>
             </section>

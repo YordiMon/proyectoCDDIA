@@ -119,14 +119,14 @@ export default function RegistroPacientes() {
                 </button>
                 <h1>Registrar paciente</h1>
             </header>
-
+                <p>Los datos con un <strong>*</strong> son obligatorios para completar la acción.</p>
             <section>
                 {mostrarInputsPrincipales ? (
                     <div                  
                     className="fila-form" >
                         <div className="campo-form">
                             <div className="label-container">
-                                <label>Nombre completo</label>
+                                <label>Nombre completo *</label>
                                 <span className={`contador ${(paciente.nombre || '').length === 60 ? 'limite-alcanzado' : ''}`}>
                                     {(paciente.nombre || '').length}/60
                                 </span>
@@ -142,7 +142,7 @@ export default function RegistroPacientes() {
                         </div>
                         <div className="campo-form">
                             <div className="label-container">
-                                <label>Número de afiliación</label>
+                                <label>Número de afiliación *</label>
                                 <span className={`contador ${(paciente.numero_afiliacion || '').length === 8 ? 'limite-alcanzado' : ''}`}>
                                     {(paciente.numero_afiliacion || '').length}/8
                                 </span>
@@ -172,7 +172,7 @@ export default function RegistroPacientes() {
                 <hr className="divisor-detalle" />
 
                 <div className="campo-form">
-                    <label>Fecha de nacimiento</label>
+                    <label>Fecha de nacimiento *</label>
                     <input
                      title="Fecha de nacimiento"
                         type="date"
@@ -185,7 +185,7 @@ export default function RegistroPacientes() {
 
                 <div className="fila-form">
                     <div className="campo-form">
-                        <label>Sexo</label>
+                        <label>Sexo *</label>
                         <select
                         title="Sexo del paciente"
                             name="sexo"
@@ -200,7 +200,7 @@ export default function RegistroPacientes() {
                     </div>
 
                     <div className="campo-form">
-                        <label>Tipo de sangre</label>
+                        <label>Tipo de sangre *</label>
                         <select
                             title="Tipo de sangre del paciente"
                            name="tipo_sangre"
@@ -223,7 +223,7 @@ export default function RegistroPacientes() {
                     </div>
 
                     <div className="campo-form">
-                        <label>¿Recibe donaciones?</label>
+                        <label>¿Recibe donaciones? *</label>
                         <select 
                             title="¿El paciente recibe donaciones?"
                             name="recibe_donaciones" 
@@ -245,7 +245,7 @@ export default function RegistroPacientes() {
 
                 <div className="campo-form">
                     <div className="label-container">
-                        <label>Dirección</label>
+                        <label>Dirección *</label>
                         <span className={`contador ${(paciente.direccion || '').length === 120 ? 'limite-alcanzado' : ''}`}>
                             {(paciente.direccion || '').length}/120
                         </span>
@@ -263,7 +263,7 @@ export default function RegistroPacientes() {
                 <div className="fila-form">
                     <div className="campo-form">
                         <div className="label-container">
-                            <label>Celular</label>
+                            <label>Celular *</label>
                             <span className={`contador ${(paciente.celular || '').length === 15 ? 'limite-alcanzado' : ''}`}>
                                 {(paciente.celular || '').length}/15
                             </span>

@@ -156,14 +156,14 @@ export default function HistorialConsultas() {
                   </div>
 
                   <div className="seccion-principal">
-                    <h4>Motivo y síntomas</h4>
-                    <p>{consulta.motivo}   /   {consulta.sintomas}</p>
+                    <h4>Motivo, síntomas y tiempo de evolución</h4>
+                    <p>{consulta.motivo} &nbsp;&nbsp;/&nbsp;&nbsp; {consulta.sintomas} &nbsp;&nbsp;/&nbsp;&nbsp; {consulta.tiempo_enfermedad}</p>
                     <hr className="divisor-detalle" />
                   </div>
 
                   <div className="seccion-principal">
-                    <h4>Diagnóstico</h4>
-                    <p>{consulta.diagnostico}</p>
+                    <h4>Observaciones</h4>
+                    <p>{consulta.observaciones || '× Sin observaciones adicionales'}</p>
                   </div>
                 </div>
               ))}

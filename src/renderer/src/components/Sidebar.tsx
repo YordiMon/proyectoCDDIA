@@ -1,10 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  Stethoscope, 
   BarChart3, 
   
   Settings,
-  UserCircle
+  ClipboardList,
+  Users
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -15,9 +15,9 @@ export default function Sidebar(): React.ReactNode {
 
     //{ name: 'Inicio', path: '/', icon: <ClipboardList size={18} /> },
 
-    { name: 'Lista de espera', path: '/lista-espera', icon: <UserCircle size={18} /> },
+    { name: 'Lista de espera', path: '/lista-espera', icon: <Users size={18} /> },
     
-    { name: 'Expedientes', path: '/expedientes', icon: <Stethoscope size={18} /> },
+    { name: 'Expedientes', path: '/expedientes', icon: <ClipboardList size={18} /> },
 
     { type: 'divider' }, 
     

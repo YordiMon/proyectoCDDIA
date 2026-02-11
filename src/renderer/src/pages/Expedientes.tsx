@@ -1,18 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { 
-  Search, 
-  User, 
-  Phone, 
-  MapPin, 
-  Calendar1, 
-  Loader2, 
-  Info, 
-  AlertCircle,
-  RefreshCw, 
-  UserPlus, 
-  ClipboardList
-} from 'lucide-react';
+import { Search, User, Phone, MapPin, Calendar1, Loader2, Info,
+         AlertCircle, RefreshCw, UserPlus, 
+         Stethoscope} from 'lucide-react';
 import { API_BASE_URL } from '../config'
 import '../styles/Expedientes.css'
 
@@ -244,7 +234,7 @@ export default function Pacientes() {
                     });
                   }}
                 >
-                  <ClipboardList size={18} />
+                  <Stethoscope size={18} />
                   Nueva consulta
                 </button>
               </div>
