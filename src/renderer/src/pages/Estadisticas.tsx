@@ -3,7 +3,8 @@ import {
   RefreshCw, 
   Info, 
   AlertCircle, 
-  Loader2 
+  Loader2, 
+  Send
 } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 import '../styles/Estadisticas.css';
@@ -127,6 +128,7 @@ export default function Estadisticas() {
       <p className='minusp'>Visualiza el flujo de pacientes atendidos. No se toman en cuenta pacientes sin historial de consultas y los pacientes con una o múltiples consultas en un mismo periodo solo se toman en cuenta una vez.</p>
 
       <div className="stats-controls">
+        
         <div className="campo-form">
           <label>Agrupar por</label>
           <select 
@@ -161,15 +163,17 @@ export default function Estadisticas() {
             className="valor-real"
             placeholder={periodo === 'year' ? 'Ej: 2024' : ''}
           />
-        </div>
 
+          
+        </div>
+  
         <button 
           className="btn-flotante-registrar" 
           onClick={() => obtenerEstadisticas(true)} 
           disabled={isRefreshing}
         >
           <RefreshCw size={20} className={isRefreshing ? 'girando' : ''} />
-          <span>Actualizar</span>
+          <span>Generar Reporte</span>
         </button>
       </div>
 
@@ -182,6 +186,8 @@ export default function Estadisticas() {
           </div>
         ) : (
           <div className={`tabla-wrapper ${isRefreshing ? 'opacidad-baja' : ''}`}>
+
+            
             <table className="tabla-pacientes">
               <thead>
                 <tr>

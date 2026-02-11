@@ -42,6 +42,19 @@ export default function Inicio() {
         <h3>Lista de espera</h3>
         <p>Atender pacientes en espera</p>
       </div>
+
+       <div
+        className="card-inicio"
+        onClick={() => navigate("/estadisticas")}
+      >
+        <ClipboardList size={40} className="icono-card" />
+        <h3>Estadísticas</h3>
+        <p>Ver estadísticas de los pacientes atendidos </p>
+      </div>
+
+
+
+
      </div>
 
 

@@ -69,6 +69,7 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  margin-bottom: 25px;
 }
 
 .tarjeta-paciente-pro:hover {
@@ -257,4 +258,32 @@ line-height: 1.5;
 
 .seccion-clinica{
   margin-top: 15px;
+}
+
+
+.paginacion {
+    margin-top: 20px;
+    display: flex;
+    align-content: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+ .btn-anterior, .btn-siguiente {
+    background-color: #1976d2;
+    margin: 0 9px;
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+}
+
+.info-pagina {
+    align-self: center;
+    font-size: 0.9rem;
+    color: #0c0c0c;
 }
