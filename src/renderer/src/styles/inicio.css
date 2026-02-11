@@ -1,5 +1,5 @@
 .pagina-inicio {
-  min-height: 80vh;
+  min-height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
 }
@@ -15,15 +15,16 @@
   justify-content: center;
   align-items: center;
   gap: 40px;
-  margin-top: 40px;
+  margin-top: -120px;
 }
 
 .card-inicio {
   width: 270px;
   height: 180px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  border-radius: 7px;
+  padding: 20px;
+  border: 2px solid #eee;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,12 +35,13 @@
 }
 
 .card-inicio:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+  border-color: #1976d2;
 }
 
 .icono-card {
-  color: #5980d3;
+  color: #1976d2;
   margin-bottom: 10px;
 }
 
@@ -54,16 +56,8 @@
   margin: 0;
 }
 
-.textInferior {
-  text-align: right;
-  padding: 15px 20px;
-  font-size: 0.8rem;
-  color: #777;
-}
-
-
 .titulo-principal {
-  font-size: 2rem;
+
   font-weight: 700;
   letter-spacing: 0.5px;
   margin-bottom: 6px;
@@ -71,7 +65,7 @@
 }
 
 .subtitulo {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #6b6b6b;
   font-weight: 400;
 }
@@ -79,7 +73,7 @@
 .separador-inicio {
   width: 80px;
   height: 4px;
-  background: #79b4f7;
+  background: #1976d2;
   margin: 25px auto 0;
   border-radius: 10px;
 }
@@ -88,8 +82,7 @@
   display: flex;
   justify-content:right;
   gap: 8px;
-  padding: 15px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #888;
   letter-spacing: 0.5px;
 }

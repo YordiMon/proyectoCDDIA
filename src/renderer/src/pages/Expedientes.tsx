@@ -31,6 +31,8 @@ export default function Pacientes() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [paginaActual, setPaginaActual] = useState(1)
+  const pacientesPorPagina = 9
 
   const calcularEdad = (fecha: string) => {
     if (!fecha) return 'N/A'
@@ -107,10 +109,19 @@ export default function Pacientes() {
     })
   }, [busqueda, pacientes])
 
+  const indiceUltimo = paginaActual * pacientesPorPagina
+  const indicePrimero = indiceUltimo - pacientesPorPagina
+
+  const pacientesPaginados = pacientesFiltrados.slice(indicePrimero, indiceUltimo)
+
+  const totalPaginas = Math.ceil(pacientesFiltrados.length / pacientesPorPagina)
+
+    
+
   // 1. Pantalla de carga inicial (Full Screen)
   if (loading) {
     return (
-      <div className="contenedor-pacientes centro-total">
+      <div className="contenedor-pacientes cenaptro-total">
         <Loader2 className="spinner-animado" size={50} />
         <p>Conectando con el servidor...</p>
       </div>
@@ -159,6 +170,27 @@ export default function Pacientes() {
         </div>
       </header>
 
+      <div className="paginacion">
+            <button className="btn-anterior"
+              disabled={paginaActual === 1}
+              onClick={() => setPaginaActual(paginaActual - 1)}
+            >
+              Anterior
+            </button>
+
+            <span className="info-pagina">
+              Página {paginaActual} de {totalPaginas}
+            </span>
+
+            <button className='btn-siguiente'
+              disabled={paginaActual === totalPaginas}
+              onClick={() => setPaginaActual(paginaActual + 1)}
+            >
+              Siguiente
+            </button>
+            
+          </div>
+
       <div className="zona-contenido">
         {pacientes.length === 0 ? (
           <div className="mensaje-estado vacio-box">
@@ -170,8 +202,9 @@ export default function Pacientes() {
             </p>
           </div>
         ) : (
+          
           <div className={`lista-grid ${isRefreshing ? 'opacidad-baja' : ''}`}>
-            {pacientesFiltrados.map((paciente) => (
+              {pacientesPaginados.map((paciente) => (
               <div
                 key={paciente.id}
                 className="tarjeta-paciente-pro"
@@ -245,7 +278,30 @@ export default function Pacientes() {
       )}
 
 
-    </div>
+
+    </div>          
+    
+    <div className="paginacion">
+            <button className="btn-anterior"
+              disabled={paginaActual === 1}
+              onClick={() => setPaginaActual(paginaActual - 1)}
+            >
+              Anterior
+            </button>
+
+            <span className="info-pagina">
+              Página {paginaActual} de {totalPaginas}
+            </span>
+
+            <button className='btn-siguiente'
+              disabled={paginaActual === totalPaginas}
+              onClick={() => setPaginaActual(paginaActual + 1)}
+            >
+              Siguiente
+            </button>
+            
+          </div>
+
     <div className="contenedor-botones-flotantes">
        <div className="contenedor-botones-flotantes">
         <button 

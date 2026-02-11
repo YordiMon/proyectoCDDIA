@@ -9,7 +9,7 @@ import '../styles/consulta.css'
 
 //const location = useLocation();
 
-
+// Definir la estructura de los datos del formulario
 interface FormData {
     paciente_id: number
     nombre: string
@@ -190,12 +190,11 @@ export default function Consultas() {
             <section>
                 <header className="perfil-info">
                     <div className="avatar-circle"><Calendar size={32} /></div>
-                    <div className="nombre-afiliacion">
+                      <div className="nombre-afiliacion">
                         <h2>{formData.fecha_display}</h2>
                         <p>{formData.nombre} • {formData.numero_afiliacion}</p>
                     </div>
                 </header>
-
                 <hr className="divisor-detalle" />
                 <p>Los datos con un <strong>*</strong> son obligatorios para completar la acción.</p>
                 <div className='fila-form'>

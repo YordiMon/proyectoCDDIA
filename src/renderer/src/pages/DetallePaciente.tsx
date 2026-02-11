@@ -7,12 +7,11 @@ import '../styles/DetallePaciente.css';
 import '../styles/pacientesReg.css'; 
 
 export default function DetallePaciente() {
+
   const navigate = useNavigate();
   const location = useLocation();
-
   const state = location.state as { paciente: Paciente } | null;
   const initialPaciente = state?.paciente ?? null;
-
   const [pacienteState, setPacienteState] = useState<Paciente | null>(initialPaciente);
   const [mensaje, setMensaje] = useState<string | null>(null);
   const [tipoMensaje, setTipoMensaje] = useState<'error' | 'exito' | null>(null);
@@ -103,6 +102,7 @@ export default function DetallePaciente() {
     return partes.length !== 3 ? fecha : `${partes[2]}/${partes[1]}/${partes[0]}`;
   };
 
+  // Calcula la edad a partir de la fecha de nacimiento
   const calcularEdad = (fecha: string) => {
     if (!fecha) return 'N/A';
     const hoy = new Date();
@@ -113,6 +113,7 @@ export default function DetallePaciente() {
     return edad;
   };
 
+  // Renderiza un dato o "No aplica" si el valor es vacío, nulo o "ninguna"
   const renderDato = (valor: string) => {
     if (!valor || valor.trim() === "" || valor.toLowerCase() === "ninguna") {
       return <strong className="no-aplica">No aplica</strong>;
@@ -314,7 +315,6 @@ export default function DetallePaciente() {
         </div>
 
         <hr className="divisor-detalle" />
-
         <div className="bloque-datos">
            <div className="dato-columna">
               <span>Tipo de Sangre</span>

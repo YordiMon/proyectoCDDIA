@@ -116,7 +116,7 @@ export default function DetalleConsulta() {
           {/* Subtítulo */}
           <div className="subtitulo-bloque">
             <Activity size={14} />
-            <span>Signos Vitales</span>
+            <span>SIGNOS VITALES</span>
           </div>
 
           {/* Datos */}

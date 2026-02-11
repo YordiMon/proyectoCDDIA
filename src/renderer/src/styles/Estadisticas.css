@@ -40,14 +40,33 @@
 }
 
 .btn-consultar {
+      
   background-color: #2563eb;
   color: white;
-  font-weight: 600;
-  padding: 10px 16px;
+  font-weight: 700;
+  padding: 8px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
   cursor: pointer;
   transition: background-color 0.2s;
+  text-align: center;
+  margin: 0px 12px;
+  align-items: center;
+}
+
+.btn-filtro-area2 {
+  background-color: #1976d2;
+  color: white;
+  font-size: 1rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none; 
 }
 
 .btn-consultar:hover {
@@ -157,4 +176,19 @@
   background-color: #f3f3f3;
     margin: 10px -20px; 
     width: auto;
+}
+
+
+.campo-form-btn {
+  background-color: #756dec;
+  margin: 0 9px;
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    max-height: 35px;
+    max-width: 45px;
 }

@@ -23,9 +23,9 @@ export default function Sidebar(): React.ReactNode {
     
     { name: 'Métricas', path: '/estadisticas', icon: <BarChart3 size={18} /> },
     
-    { type: 'divider' }, 
+  //  { type: 'divider' }, 
        
-    { name: 'Ajustes', path: '/ajustes', icon: <Settings size={18} /> },
+   // { name: 'Ajustes', path: '/ajustes', icon: <Settings size={18} /> },
   ];
 
   return (

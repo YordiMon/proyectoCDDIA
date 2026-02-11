@@ -69,12 +69,12 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #0a20e9;
+  color: #1266ba;
   font-weight: bold;
-  font-size: 16px;
-
-  width: 100%;          
-  margin-bottom: 12px
+  font-size: 1rem;
+  letter-spacing: 0.6px;
+  width: 100%;      
+  margin-bottom: -12px;    
 }
 .dato-columna {
   display: flex;

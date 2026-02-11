@@ -7,15 +7,14 @@ import '../styles/AñadirPaciente.css'
 
 
 export default function AnadirPaciente() {
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const [formData, setFormData] = useState({
     nombre: '',
     numero_afiliacion: '',
   });
-
   //Estados para autocompletado
   const [sugerencias, setSugerencias] = useState<any[]>([]);
   const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
